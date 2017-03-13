@@ -6,10 +6,7 @@
       "type": "int",
       "defaultValue": 5,
       "minValue": 1,
-      "maxValue": 30,
-      "metadata": {
-        "description": "Number of virtual machines to provision for the cluster"
-      }
+      "maxValue": 30
     },
     "vmSize": {
       "type": "string",
