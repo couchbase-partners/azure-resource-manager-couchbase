@@ -31,7 +31,7 @@
     "steps": [
       {
         "name": "couchbaseConfig",
-        "label": "Couchbase` Config",
+        "label": "Couchbase Config",
         "subLabel": {
           "preValidation": "Configure the Cluster",
           "postValidation": "Done"
