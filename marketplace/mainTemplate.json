@@ -1,83 +1,79 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json# ",
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "artifactsBaseUrl": {
-      "type": "string",
-      "defaultValue": "https://rgcb.blob.core.windows.net/deployrg",
-      "metadata": {
-        "artifactsBaseUrl": "Base URL of template gallery package"
+    "parameters": {
+      "nodeCount": {
+        "type": "int",
+        "defaultValue": 5,
+        "minValue": 1,
+        "maxValue": 99,
+        "metadata": {
+          "description": "Number of virtual machines to provision for the cluster"
+        }
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_FS2",
+        "allowedValues": [
+          "Standard_DS1_v2",
+          "Standard_DS2_v2",
+          "Standard_DS3_v2",
+          "Standard_DS4_v2",
+          "Standard_DS5_v2",
+          "Standard_DS1",
+          "Standard_DS2",
+          "Standard_DS3",
+          "Standard_DS4",
+          "Standard_FS1",
+          "Standard_FS2",
+          "Standard_FS4",
+          "Standard_FS8",
+          "Standard_FS16",
+          "Standard_DS11_v2",
+          "Standard_DS12_v2",
+          "Standard_DS13_v2",
+          "Standard_DS14_v2",
+          "Standard_DS15_v2",
+          "Standard_DS11",
+          "Standard_DS12",
+          "Standard_DS13",
+          "Standard_DS14",
+          "Standard_GS1",
+          "Standard_GS2",
+          "Standard_GS3",
+          "Standard_GS4",
+          "Standard_GS5"
+        ],
+        "metadata": {
+          "description": "Size of virtual machine to provision for the cluster"
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Admin user name for the virtual machines"
+        }
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Admin password for the virtual machines"
+        }
+      },
+      "baseUrl": {
+        "type": "string",
+        "metadata": {
+          "description": "Not User Configurable -- The base URL for dependent assets",
+          "artifactsBaseUrl": ""
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Not User Configurable -- Dummy parameter required by portal"
+        }
       }
-    },
-    "clusterName": {
-      "type": "string"
-    },
-    "dataNodeCount": {
-      "type": "int"
-    },
-    "dataVmSize": {
-      "type": "string"
-    },
-    "cbUsername": {
-      "type": "securestring"
-    },
-    "cbPassword": {
-      "type": "securestring",
-      "defaultValue": ""
-    },
-    "adminUsername": {
-      "type": "securestring"
-    },
-    "adminPassword": {
-      "type": "securestring",
-      "defaultValue": ""
-    },
-    "sshKey": {
-      "type": "securestring",
-      "defaultValue": ""
-    },
-    "authenticationType": {
-      "type": "string",
-      "defaultValue": "password",
-      "allowedValues": [
-        "password",
-        "sshPublicKey"
-      ]
-    },
-    "vnetNewOrExisting": {
-      "type": "string",
-      "allowedValues": [
-        "new",
-        "existing"
-      ]
-    },
-    "vnetName": {
-      "type": "string"
-    },
-    "vnetSubnetName": {
-      "type": "string"
-    },
-    "vnetAddressPrefix": {
-      "type": "string",
-      "defaultValue": ""
-    },
-    "vnetSubnetAddressPrefix": {
-      "type": "string"
-    },
-    "vnetStartAddress": {
-      "type": "string"
-    },
-    "vnetRGName": {
-      "type": "string"
-    },
-    "offer": {
-      "type": "string"
-    },
-    "sku": {
-      "type": "string"
-    },
-    "location": {
-      "type": "string"
     }
   },
   "variables": {
