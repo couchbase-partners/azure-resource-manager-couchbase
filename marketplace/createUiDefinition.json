@@ -179,9 +179,9 @@
             "label": "Virtual Machine Size",
             "toolTip": "Size of VMs in the cluster",
             "recommendedSizes": [
-              "Standard_FS1",
               "Standard_FS2",
-              "Standard_FS4"
+              "Standard_FS4",
+              "Standard_FS16"
             ],
             "constraints": {
               "allowedSizes": [

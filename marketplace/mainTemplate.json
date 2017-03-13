@@ -7,7 +7,7 @@
         "type": "int",
         "defaultValue": 5,
         "minValue": 1,
-        "maxValue": 99,
+        "maxValue": 30,
         "metadata": {
           "description": "Number of virtual machines to provision for the cluster"
         }
@@ -77,41 +77,36 @@
     }
   },
   "variables": {
+    "templateUrl": "[concat(parameters('baseUrl'), '/')]",
+    "extensionUrl": "[concat(parameters('baseUrl'), '/')]",
+    "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]",
+    "location": "[resourcegroup().location]",
     "scriptUri": "[parameters('artifactsBaseUrl')]",
-    "storageAccountBasename": "[uniquestring(resourceGroup().id, deployment().name)]"
   },
   "resources": [
     {
-      "name": "[concat(parameters('clusterName'), '-vnet')]",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2016-02-01",
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "vnet",
+      "location": "[variables('location')]",
       "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(variables('scriptUri'), '/vnet_', parameters('vnetNewOrExisting'), '.json')]",
-          "contentVersion": "1.0.0.0"
+        "addressSpace": {
+          "addressPrefixes": [
+            "10.0.0.0/16"
+          ]
         },
-        "parameters": {
-          "vnetName": {
-            "value": "[parameters('vnetName')]"
-          },
-          "vnetAddressPrefix": {
-            "value": "[parameters('vnetAddressPrefix')]"
-          },
-          "vnetSubnetName": {
-            "value": "[parameters('vnetSubnetName')]"
-          },
-          "vnetSubnetAddressPrefix": {
-            "value": "[parameters('vnetSubnetAddressPrefix')]"
-          },
-          "location": {
-            "value": "[parameters('location')]"
+        "subnets": [
+          {
+            "name": "subnet",
+            "properties": {
+              "addressPrefix": "10.0.0.0/24"
+            }
           }
-        }
+        ]
       }
     },
     {
-      "name": "[concat(parameters('clusterName'), 'd')]",
+      "name": "nodes",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2016-02-01",
       "dependsOn": [
