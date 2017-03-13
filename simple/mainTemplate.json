@@ -61,25 +61,11 @@
           "description": "Admin password for the virtual machines"
         }
       },
-      "baseUrl": {
-        "type": "string",
-        "metadata": {
-          "description": "Not User Configurable -- The base URL for dependent assets",
-          "artifactsBaseUrl": ""
-        }
-      },
-      "location": {
-        "type": "string",
-        "metadata": {
-          "description": "Not User Configurable -- Dummy parameter required by portal"
-        }
-      }
     }
   },
   "variables": {
-    "templateUrl": "[concat(parameters('baseUrl'), '/')]",
-    "extensionUrl": "[concat(parameters('baseUrl'), '/')]",
-    "nodesTemplateUrl": "[concat(variables('templateUrl'), 'nodes.json')]",
+    "templateUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/simple/",
+    "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/extensions/",
     "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]",
     "location": "[resourcegroup().location]",
     "scriptUri": "[parameters('artifactsBaseUrl')]",
@@ -116,7 +102,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[variables('nodesTemplateUrl')]",
+          "uri": "[concat(variables('templateUrl'), 'nodes.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -181,16 +167,16 @@
       }
     },
     {
-      "name": "[concat(parameters('clusterName'), '-scripts')]",
+      "name": "scripts",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2016-02-01",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', parameters('clusterName'), 'd')]"
+        "Microsoft.Resources/deployments/nodes"
       ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(variables('scriptUri'), '/scripts.json')]",
+          "uri": "[concat(variables('templateUrl'), '/scripts.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
