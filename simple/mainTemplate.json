@@ -65,10 +65,10 @@
         },
         "parameters": {
           "nodeCount": {
-            "value": "[parameters('dataNodeCount')]"
+            "value": "[parameters('nodeCount')]"
           },
           "vmSize": {
-            "value": "[parameters('dataVmSize')]"
+            "value": "[parameters('vmSize')]"
           },
           "adminUsername": {
             "value": "[parameters('adminUsername')]"
