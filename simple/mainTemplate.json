@@ -75,9 +75,6 @@
           },
           "adminPassword": {
             "value": "[parameters('adminPassword')]"
-          },
-          "uniqueString": {
-            "value": "[variables('uniqueString')]"
           }
         }
       }
