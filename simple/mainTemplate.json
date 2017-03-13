@@ -11,7 +11,7 @@
       },
       "vmSize": {
         "type": "string",
-        "defaultValue": "Standard_FS2",
+        "defaultValue": "Standard_DS1_v2",
         "allowedValues": [
           "Standard_DS1_v2",
           "Standard_DS2_v2",
@@ -52,45 +52,17 @@
     }
   },
   "variables": {
-    "templateUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/simple/",
-    "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/extensions/",
-    "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]",
-    "location": "[resourcegroup().location]",
-    "scriptUri": "[parameters('artifactsBaseUrl')]",
+    "baseUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/"
   },
   "resources": [
-    {
-      "apiVersion": "2015-06-15",
-      "type": "Microsoft.Network/virtualNetworks",
-      "name": "vnet",
-      "location": "[variables('location')]",
-      "properties": {
-        "addressSpace": {
-          "addressPrefixes": [
-            "10.0.0.0/16"
-          ]
-        },
-        "subnets": [
-          {
-            "name": "subnet",
-            "properties": {
-              "addressPrefix": "10.0.0.0/24"
-            }
-          }
-        ]
-      }
-    },
     {
       "name": "nodes",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2016-02-01",
-      "dependsOn": [
-        "Microsoft.Network/virtualNetworks/vnet"
-      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(variables('templateUrl'), 'nodes.json')]",
+          "uri": "[concat(variables('baseUrl'), 'master/simple/nodes.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -100,56 +72,14 @@
           "vmSize": {
             "value": "[parameters('dataVmSize')]"
           },
-          "clusterName": {
-            "value": "[parameters('clusterName')]"
-          },
           "adminUsername": {
             "value": "[parameters('adminUsername')]"
           },
           "adminPassword": {
             "value": "[parameters('adminPassword')]"
           },
-          "sshKey": {
-            "value": "[parameters('sshKey')]"
-          },
-          "authenticationType": {
-            "value": "[parameters('authenticationType')]"
-          },
-          "location": {
-            "value": "[parameters('location')]"
-          },
-          "scriptUri": {
-            "value": "[variables('scriptUri')]"
-          },
-          "storageAccountBasename": {
-            "value": "[variables('storageAccountBasename')]"
-          },
-          "roleType": {
-            "value": "d"
-          },
-          "vmBasename": {
-            "value": "data"
-          },
-          "ipOffset": {
-            "value": 0
-          },
-          "vnetName": {
-            "value": "[parameters('vnetName')]"
-          },
-          "vnetSubnetName": {
-            "value": "[parameters('vnetSubnetName')]"
-          },
-          "vnetStartAddress": {
-            "value": "[parameters('vnetStartAddress')]"
-          },
-          "vnetRGName": {
-            "value": "[parameters('vnetRGName')]"
-          },
-          "offer": {
-            "value": "[parameters('offer')]"
-          },
-          "sku": {
-            "value": "[parameters('sku')]"
+          "uniqueString": {
+            "value": "[variables('uniqueString')]"
           }
         }
       }

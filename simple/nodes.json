@@ -5,31 +5,19 @@
     "nodeCount": {
       "type": "int"
     },
+    "vmSize": {
+      "value": "string"
+    },
     "adminUsername": {
-      "type": "string",
-      "metadata": {
-        "description": "Username for the Virtual Machine."
-      }
+      "type": "string"
     },
     "adminPassword": {
-      "type": "securestring",
-      "metadata": {
-        "description": "Password for the Virtual Machine."
-      }
-    },
-    "dnsLabelPrefix": {
-      "type": "string",
-      "metadata": {
-        "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
-      }
+      "type": "securestring"
     }
   },
   "variables": {
+    "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]",
     "location": "[resourceGroup().location]",
-    "imagePublisher": "Canonical",
-    "imageOffer": "UbuntuServer",
-	"imageSku": "14.04.2-LTS",
-    "nicName": "mynic",
     "addressPrefix": "10.0.0.0/8",
     "subnetName": "Subnet11",
     "subnetPrefix": "10.0.0.0/16",
@@ -40,12 +28,12 @@
     "virtualNetworkName": "myvnet",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
-	"storageAccountName": "[concat(uniquestring(resourceGroup().id),'storage')]",
+    "storageAccountName": "[concat(uniquestring(resourceGroup().id),'storage')]",
     "apiVersion": "2015-06-15",
     "computeResouresApiVersion": "2016-04-30-preview"
   },
   "resources": [
-      {
+    {
       "type": "Microsoft.Storage/storageAccounts",
       "name": "[variables('storageAccountName')]",
       "apiVersion": "[variables('apiVersion')]",
@@ -105,7 +93,7 @@
     {
       "apiVersion": "[variables('apiVersion')]",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat(variables('nicName'), copyindex())]",
+      "name": "['nic', copyindex())]",
       "location": "[variables('location')]",
       "copy": {
         "name": "nicLoop",
@@ -137,14 +125,14 @@
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[concat(variables('vmName'), copyindex())]",
       "location": "[variables('location')]",
-	  "copy": {
+      "copy": {
         "name": "VMLoop",
         "count": "[parameters('numberOfVMInstances')]"
       },
       "tags": {"Tag1": "ManagedVM"},
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'), copyindex())]",
-		"[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
+        "[concat('Microsoft.Network/networkInterfaces/', 'nic', copyindex())]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
       ],
       "properties": {
         "availabilitySet": {
@@ -160,16 +148,16 @@
         },
         "storageProfile": {
           "imageReference": {
-            "publisher": "[variables('imagePublisher')]",
-            "offer": "[variables('imageOffer')]",
-            "sku": "[variables('imageSku')]",
+            "publisher": "Canonical",
+            "offer": "UbuntuServer",
+            "sku": "14.04.2-LTS",
             "version": "latest"
           }
         },
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicName'), copyindex()))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', 'nic', copyindex()))]"
             }
           ]
         },

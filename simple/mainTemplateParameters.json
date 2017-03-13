@@ -1,0 +1,14 @@
+{
+  "nodeCount": {
+    "value": 5
+  },
+ "vmSize": {
+    "value": "Standard_DS1_v2"
+  },
+ "adminUsername": {
+    "value": "couchbase"
+  },
+  "adminPassword": {
+    "value": "foo123!"
+  }
+}
