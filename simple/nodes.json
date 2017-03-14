@@ -146,7 +146,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', 'nic', copyindex()))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat('nic', copyindex()))]"
             }
           ]
         },
