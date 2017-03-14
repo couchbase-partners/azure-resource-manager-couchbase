@@ -41,6 +41,9 @@
           },
           "adminPassword": {
             "value": "[parameters('adminPassword')]"
+          },
+          "baseUrl": {
+            "value": "[variables('baseUrl')]"
           }
         }
       }

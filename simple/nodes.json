@@ -13,13 +13,21 @@
     },
     "adminPassword": {
       "type": "securestring"
+    },
+    "baseUrl": {
+      "type": "string"
     }
   },
   "variables": {
     "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]",
     "storageAccountName": "[concat('storage', variables('uniqueString'))]",
     "vnetRef": "[resourceId('Microsoft.Network/virtualNetworks','vnet')]",
-    "subnetRef": "[concat(variables('vnetRef'),'/subnets/subnet')]"
+    "subnetRef": "[concat(variables('vnetRef'),'/subnets/subnet')]",
+    "fileUris": [
+      "[concat(parameters('baseUrl'), 'extensions/node.sh')]",
+      "[concat(parameters('baseUrl'), 'extensions/couchbase-azure-install.sh')]",
+      "[concat(parameters('baseUrl'), 'extensions/azure_cluster.py')]"
+    ],
   },
   "resources": [
     {
@@ -95,7 +103,7 @@
       "properties": {
         "ipConfigurations": [
           {
-            "name": "ipconfig1",
+            "name": "ipconfig",
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "publicIPAddress": {
@@ -115,10 +123,9 @@
       "name": "[concat('vm', copyindex())]",
       "location": "[resourceGroup().location]",
       "copy": {
-        "name": "VMLoop",
+        "name": "vmLoop",
         "count": "[parameters('nodeCount')]"
       },
-      "tags": {"Tag1": "ManagedVM"},
       "dependsOn": [
         "[concat('Microsoft.Network/networkInterfaces/', 'nic', copyindex())]",
         "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
@@ -149,6 +156,31 @@
               "id": "[resourceId('Microsoft.Network/networkInterfaces', concat('nic', copyindex()))]"
             }
           ]
+        }
+      }
+    },
+    {
+      "apiVersion": "2016-03-30",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat('extension', copyindex())]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "extensionLoop",
+        "count": "[parameters('nodeCount')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', 'vm', copyindex())]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.OSTCExtensions",
+        "type": "CustomScriptForLinux",
+        "typeHandlerVersion": "1.5",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "fileUris": "[variables('fileUris')]"
+        },
+        "protectedSettings": {
+          "commandToExecute": "node.sh"
         }
       }
     }
