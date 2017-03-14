@@ -128,7 +128,7 @@
           "imageReference": {
             "publisher": "Canonical",
             "offer": "UbuntuServer",
-            "sku": "14.04.2-LTS",
+            "sku": "16.04.0-LTS",
             "version": "latest"
           }
         },
@@ -160,9 +160,9 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "[concat(parameters('baseUrl'), 'extensions/node.sh')]",
-            "[concat(parameters('baseUrl'), 'extensions/couchbase-azure-install.sh')]",
-            "[concat(parameters('baseUrl'), 'extensions/azure_cluster.py')]"
+            "[concat(parameters('baseUrl'), 'master/extensions/node.sh')]",
+            "[concat(parameters('baseUrl'), 'master/extensions/couchbase-azure-install.sh')]",
+            "[concat(parameters('baseUrl'), 'master/extensions/azure_cluster.py')]"
           ]
         },
         "protectedSettings": {
