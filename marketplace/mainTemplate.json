@@ -75,7 +75,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(variables('baseUrl'), 'master/simple/nodes.json')]",
+          "uri": "[concat(variables('baseUrl'), 'nodes.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
