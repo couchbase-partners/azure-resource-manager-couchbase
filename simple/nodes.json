@@ -20,7 +20,6 @@
   },
   "variables": {
     "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]",
-    "storageAccountName": "[concat('storage', variables('uniqueString'))]",
     "vnetRef": "[resourceId('Microsoft.Network/virtualNetworks','vnet')]",
     "subnetRef": "[concat(variables('vnetRef'),'/subnets/subnet')]",
     "fileUris": [
@@ -30,15 +29,6 @@
     ],
   },
   "resources": [
-    {
-      "type": "Microsoft.Storage/storageAccounts",
-      "name": "[variables('storageAccountName')]",
-      "apiVersion": "2015-06-15",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "accountType": "Standard_LRS"
-      }
-    },
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/virtualNetworks",
@@ -127,8 +117,7 @@
         "count": "[parameters('nodeCount')]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', 'nic', copyindex())]",
-        "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
+        "[concat('Microsoft.Network/networkInterfaces/', 'nic', copyindex())]"
       ],
       "properties": {
         "availabilitySet": {
