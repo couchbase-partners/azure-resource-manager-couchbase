@@ -1,15 +1,22 @@
+#!/usr/bin/env bash
+
+# This script creates a zip of our archive to publish in the marketplace
+
 mkdir tmp
 cd tmp
 
-# Copy the files we're going to need
-cp ../* ./
+cp ../../extensions/* ./
+cp ../../simple/* ./
 
-# Remove some that should not be in the archive
+# Do this after and overwrite mainTemplate.json
+cp ../mainTemplate.json ./
+cp ../createUiDefinition.json ./
+
+# Drop some files that don't need to be in the archive
 rm README.md
 rm deploy.sh
 rm mainTemplateParameters.json
 
-# Zip it up and clean up after ourselves
 zip ../archive.zip *
 cd -
 rm -rf tmp
