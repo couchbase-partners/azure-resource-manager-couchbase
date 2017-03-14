@@ -70,7 +70,7 @@
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "publicIPLoop",
-        "count": "[parameters('numberOfVMInstances')]"
+        "count": "[parameters('nodeCount')]"
       },
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
@@ -86,7 +86,7 @@
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "nicLoop",
-        "count": "[parameters('numberOfVMInstances')]"
+        "count": "[parameters('nodeCount')]"
       },
       "dependsOn": [
         "[concat('Microsoft.Network/publicIPAddresses/pip', copyindex())]",
@@ -116,7 +116,7 @@
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "VMLoop",
-        "count": "[parameters('numberOfVMInstances')]"
+        "count": "[parameters('nodeCount')]"
       },
       "tags": {"Tag1": "ManagedVM"},
       "dependsOn": [
