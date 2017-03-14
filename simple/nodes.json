@@ -163,9 +163,7 @@
             "[concat(parameters('baseUrl'), 'master/extensions/node.sh')]",
             "[concat(parameters('baseUrl'), 'master/extensions/couchbase-azure-install.sh')]",
             "[concat(parameters('baseUrl'), 'master/extensions/azure_cluster.py')]"
-          ]
-        },
-        "protectedSettings": {
+          ],
           "commandToExecute": "node.sh"
         }
       }
