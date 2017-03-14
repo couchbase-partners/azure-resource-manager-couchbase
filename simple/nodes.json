@@ -19,14 +19,7 @@
     }
   },
   "variables": {
-    "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]",
-    "vnetRef": "[resourceId('Microsoft.Network/virtualNetworks','vnet')]",
-    "subnetRef": "[concat(variables('vnetRef'),'/subnets/subnet')]",
-    "fileUris": [
-      "[concat(parameters('baseUrl'), 'extensions/node.sh')]",
-      "[concat(parameters('baseUrl'), 'extensions/couchbase-azure-install.sh')]",
-      "[concat(parameters('baseUrl'), 'extensions/azure_cluster.py')]"
-    ],
+    "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]"
   },
   "resources": [
     {
@@ -100,7 +93,7 @@
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', copyindex()))]"
               },
               "subnet": {
-                "id": "[variables('subnetRef')]"
+                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks','vnet'),'/subnets/subnet')]"
               }
             }
           }
@@ -166,7 +159,11 @@
         "typeHandlerVersion": "1.5",
         "autoUpgradeMinorVersion": true,
         "settings": {
-          "fileUris": "[variables('fileUris')]"
+          "fileUris": [
+            "[concat(parameters('baseUrl'), 'extensions/node.sh')]",
+            "[concat(parameters('baseUrl'), 'extensions/couchbase-azure-install.sh')]",
+            "[concat(parameters('baseUrl'), 'extensions/azure_cluster.py')]"
+          ]
         },
         "protectedSettings": {
           "commandToExecute": "node.sh"
