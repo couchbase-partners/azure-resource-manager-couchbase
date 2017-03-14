@@ -140,35 +140,6 @@
           ]
         }
       }
-    },
-    {
-      "apiVersion": "2016-03-30",
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat('vm', copyindex(), '/installcouchbase')]",
-      "location": "[resourceGroup().location]",
-      "copy": {
-        "name": "vmLoop",
-        "count": "[parameters('nodeCount')]"
-      },
-      "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', 'vm', copyindex())]"
-      ],
-      "properties": {
-        "publisher": "Microsoft.OSTCExtensions",
-        "type": "CustomScriptForLinux",
-        "typeHandlerVersion": "1.5",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-          "fileUris": [
-            "[concat(parameters('baseUrl'), 'extensions/node.sh')]",
-            "[concat(parameters('baseUrl'), 'extensions/couchbase-azure-install.sh')]",
-            "[concat(parameters('baseUrl'), 'extensions/azure_cluster.py')]"
-          ]
-        },
-        "protectedSettings": {
-          "commandToExecute": "node.sh"
-        }
-      }
     }
   ]
 }
