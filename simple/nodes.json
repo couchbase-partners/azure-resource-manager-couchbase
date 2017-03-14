@@ -17,7 +17,7 @@
   },
   "variables": {
     "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]",
-    "storageAccountName": "[concat(variables('uniqueString'),'storage')]",
+    "storageAccountName": "[concat('storage', variables('uniqueString'))]",
     "vnetRef": "[resourceId('Microsoft.Network/virtualNetworks','vnet')]",
     "subnetRef": "[concat(variables('vnetRef'),'/subnets/subnet')]"
   },
@@ -54,12 +54,12 @@
     },
     {
       "type": "Microsoft.Compute/availabilitySets",
-      "name": "availabilitySet1",
+      "name": "availabilityset",
       "apiVersion": "2016-04-30-preview",
       "location": "[resourceGroup().location]",
       "properties": {
-        "platformFaultDomainCount": "2",
-        "platformUpdateDomainCount": "2",
+        "platformFaultDomainCount": "3",
+        "platformUpdateDomainCount": "20",
         "managed": "true"
       }
     },
@@ -75,7 +75,7 @@
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
-          "domainNameLabel": "[concat(parameters('dnsLabelPrefix'), copyindex())]"
+          "domainNameLabel": "[concat('vm', copyindex(), '-', variables('uniqueString'))]"
         }
       }
     },
@@ -125,7 +125,7 @@
       ],
       "properties": {
         "availabilitySet": {
-          "id": "[resourceId('Microsoft.Compute/availabilitySets', 'availabilitySet1')]"
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', 'availabilityset')]"
         },
         "hardwareProfile": {
           "vmSize": "[parameters('vmSize')]"
