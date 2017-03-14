@@ -82,7 +82,7 @@
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "['nic', copyindex())]",
+      "name": "[concat('nic', copyindex())]",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "nicLoop",
