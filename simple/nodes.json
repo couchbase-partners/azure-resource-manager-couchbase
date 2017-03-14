@@ -6,7 +6,7 @@
       "type": "int"
     },
     "vmSize": {
-      "value": "string"
+      "type": "string"
     },
     "adminUsername": {
       "type": "string"

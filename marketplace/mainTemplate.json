@@ -7,14 +7,11 @@
         "type": "int",
         "defaultValue": 5,
         "minValue": 1,
-        "maxValue": 30,
-        "metadata": {
-          "description": "Number of virtual machines to provision for the cluster"
-        }
+        "maxValue": 30
       },
       "vmSize": {
         "type": "string",
-        "defaultValue": "Standard_FS2",
+        "defaultValue": "Standard_DS2_v2",
         "allowedValues": [
           "Standard_DS1_v2",
           "Standard_DS2_v2",
@@ -44,22 +41,13 @@
           "Standard_GS3",
           "Standard_GS4",
           "Standard_GS5"
-        ],
-        "metadata": {
-          "description": "Size of virtual machine to provision for the cluster"
-        }
+        ]
       },
       "adminUsername": {
-        "type": "string",
-        "metadata": {
-          "description": "Admin user name for the virtual machines"
-        }
+        "type": "string"
       },
       "adminPassword": {
-        "type": "securestring",
-        "metadata": {
-          "description": "Admin password for the virtual machines"
-        }
+        "type": "securestring"
       },
       "baseUrl": {
         "type": "string",
@@ -77,143 +65,31 @@
     }
   },
   "variables": {
-    "templateUrl": "[concat(parameters('baseUrl'), '/')]",
-    "extensionUrl": "[concat(parameters('baseUrl'), '/')]",
-    "nodesTemplateUrl": "[concat(variables('templateUrl'), 'nodes.json')]",
-    "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]",
-    "location": "[resourcegroup().location]",
-    "scriptUri": "[parameters('artifactsBaseUrl')]",
+    "baseUrl": "[concat(parameters('baseUrl'), '/')]"
   },
   "resources": [
-    {
-      "apiVersion": "2015-06-15",
-      "type": "Microsoft.Network/virtualNetworks",
-      "name": "vnet",
-      "location": "[variables('location')]",
-      "properties": {
-        "addressSpace": {
-          "addressPrefixes": [
-            "10.0.0.0/16"
-          ]
-        },
-        "subnets": [
-          {
-            "name": "subnet",
-            "properties": {
-              "addressPrefix": "10.0.0.0/24"
-            }
-          }
-        ]
-      }
-    },
     {
       "name": "nodes",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2016-02-01",
-      "dependsOn": [
-        "Microsoft.Network/virtualNetworks/vnet"
-      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[variables('nodesTemplateUrl')]",
+          "uri": "[concat(variables('baseUrl'), 'master/simple/nodes.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
           "nodeCount": {
-            "value": "[parameters('dataNodeCount')]"
+            "value": "[parameters('nodeCount')]"
           },
           "vmSize": {
-            "value": "[parameters('dataVmSize')]"
-          },
-          "clusterName": {
-            "value": "[parameters('clusterName')]"
+            "value": "[parameters('vmSize')]"
           },
           "adminUsername": {
             "value": "[parameters('adminUsername')]"
           },
           "adminPassword": {
             "value": "[parameters('adminPassword')]"
-          },
-          "sshKey": {
-            "value": "[parameters('sshKey')]"
-          },
-          "authenticationType": {
-            "value": "[parameters('authenticationType')]"
-          },
-          "location": {
-            "value": "[parameters('location')]"
-          },
-          "scriptUri": {
-            "value": "[variables('scriptUri')]"
-          },
-          "storageAccountBasename": {
-            "value": "[variables('storageAccountBasename')]"
-          },
-          "roleType": {
-            "value": "d"
-          },
-          "vmBasename": {
-            "value": "data"
-          },
-          "ipOffset": {
-            "value": 0
-          },
-          "vnetName": {
-            "value": "[parameters('vnetName')]"
-          },
-          "vnetSubnetName": {
-            "value": "[parameters('vnetSubnetName')]"
-          },
-          "vnetStartAddress": {
-            "value": "[parameters('vnetStartAddress')]"
-          },
-          "vnetRGName": {
-            "value": "[parameters('vnetRGName')]"
-          },
-          "offer": {
-            "value": "[parameters('offer')]"
-          },
-          "sku": {
-            "value": "[parameters('sku')]"
-          }
-        }
-      }
-    },
-    {
-      "name": "[concat(parameters('clusterName'), '-scripts')]",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2016-02-01",
-      "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', parameters('clusterName'), 'd')]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(variables('scriptUri'), '/scripts.json')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "dataNodeCount": {
-            "value": "[parameters('dataNodeCount')]"
-          },
-          "clusterName": {
-            "value": "[parameters('clusterName')]"
-          },
-          "cbPassword": {
-            "value": "[parameters('cbPassword')]"
-          },
-          "cbUsername": {
-            "value": "[parameters('cbUsername')]"
-          },
-          "vmBasename": {
-            "value": "data"
-          },
-          "location": {
-            "value": "[parameters('location')]"
-          },
-          "scriptUri": {
-            "value": "[variables('scriptUri')]"
           }
         }
       }
