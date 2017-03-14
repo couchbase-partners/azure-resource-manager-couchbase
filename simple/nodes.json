@@ -162,10 +162,10 @@
     {
       "apiVersion": "2016-03-30",
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat('extension', copyindex())]",
+      "name": "[concat('vm', copyindex()), '/installcouchbase']",
       "location": "[resourceGroup().location]",
       "copy": {
-        "name": "extensionLoop",
+        "name": "vmLoop",
         "count": "[parameters('nodeCount')]"
       },
       "dependsOn": [
