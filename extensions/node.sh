@@ -5,11 +5,13 @@ echo "Running node.sh"
 adminUsername=$1
 adminPassword=$2
 nodeIndex=$3
+nodeCount=$4
 
 echo "Using the settings:"
 echo adminUsername \'$adminUsername\'
 echo adminPassword \'$adminPassword\'
 echo nodeIndex \'$nodeIndex\'
+echo nodeCount \'$nodeCount\'
 
 #############################
 ##### Install Couchbase #####
@@ -52,7 +54,7 @@ indexRAM=$((20 * $totalRAM / 100000))
 --cluster-username=$adminUsername \
 --cluster-password=$adminPassword
 
-# now add the node to the cluster
+# going to want to loop from 1 to <nodecount
 
 nodePrivateDNS=`host vm1 | awk '{print $1}'`
 
