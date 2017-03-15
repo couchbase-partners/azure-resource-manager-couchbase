@@ -5,15 +5,11 @@ echo "Running node.sh"
 adminUsername=$1
 adminPassword=$2
 nodeIndex=$3
-uniqueString=$4
-location=$5
 
 echo "Using the settings:"
 echo adminUsername \'$adminUsername\'
 echo adminPassword \'$adminPassword\'
 echo nodeIndex \'$nodeIndex\'
-echo uniqueString \'$uniqueString\'
-echo location \'$location\'
 
 #############################
 ##### Install Couchbase #####
@@ -41,28 +37,34 @@ cd /opt/couchbase/bin/
 
 # if we're the first node then we're going to create a new cluster, otherwise
 # we'll just join the existing one.
-if [[ $nodeIndex == "0" ]]
+if [[ $nodeIndex != "0" ]]
 then
-  totalRAM=$(grep MemTotal /proc/meminfo | awk '{print $2}')
-  dataRAM=$((60 * $totalRAM / 100000))
-  indexRAM=$((20 * $totalRAM / 100000))
-
-  ./couchbase-cli cluster-init \
-  --cluster-ramsize=$dataRAM \
-  --cluster-index-ramsize=$indexRAM \
-  --cluster-username=$adminUsername \
-  --cluster-password=$adminPassword
-else
-  rallyPointDNS="vm0-"$uniqueString"."$location".cloudapp.azure.com"
-  privateIP=`hostname -i`
-
-  ./couchbase-cli server-add \
-  --cluster=$rallyPointDNS \
-  --user=$adminUsername \
-  --pass=$adminPassword \
-  --server-add=$privateIP \
-  --server-add-username=$adminUsername \
-  --server-add-password=$adminPassword
+  exit
 fi
 
-# need to think about how to trigger a rebalance
+totalRAM=$(grep MemTotal /proc/meminfo | awk '{print $2}')
+dataRAM=$((60 * $totalRAM / 100000))
+indexRAM=$((20 * $totalRAM / 100000))
+
+./couchbase-cli cluster-init \
+--cluster-ramsize=$dataRAM \
+--cluster-index-ramsize=$indexRAM \
+--cluster-username=$adminUsername \
+--cluster-password=$adminPassword
+
+# now add the node to the cluster
+
+nodePrivateDNS=`host vm1 | awk '{print $1}'`
+
+./couchbase-cli server-add \
+--cluster=vm0 \
+--user=$adminUsername \
+--pass=$adminPassword \
+--server-add=$nodePrivateDNS \
+--server-add-username=$adminUsername \
+--server-add-password=$adminPassword
+
+./couchbase-cli rebalance \
+--cluster=vm0 \
+--user=$adminUsername \
+--pass=$adminPassword

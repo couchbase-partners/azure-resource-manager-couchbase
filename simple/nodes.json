@@ -164,7 +164,7 @@
           ]
         },
         "protectedSettings": {
-          "commandToExecute": "[concat('bash node.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', copyindex(), ' ', variables('uniqueString'), ' ', resourceGroup().location)]"
+          "commandToExecute": "[concat('bash node.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', copyindex())]"
         }
       }
     }
