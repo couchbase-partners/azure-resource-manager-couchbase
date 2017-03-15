@@ -63,6 +63,29 @@
           }
         }
       }
+    },
+    {
+      "apiVersion": "2016-04-30-preview",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "vm0/configure",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "Microsoft.Resources/deployments/nodes"
+      ],
+      "properties": {
+        "publisher": "Microsoft.OSTCExtensions",
+        "type": "CustomScriptForLinux",
+        "typeHandlerVersion": "1.5",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "fileUris": [
+            "[concat(parameters('baseUrl'), 'master/extensions/configure.sh')]"
+          ]
+        },
+        "protectedSettings": {
+          "commandToExecute": "[concat('bash configure.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', parameters('nodeCount'))]"
+        }
+      }
     }
   ],
   "outputs": {
