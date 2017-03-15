@@ -167,8 +167,8 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "[concat(parameters('baseUrl'), 'master/extensions/node.sh')]"
-            "[concat(parameters('baseUrl'), 'master/extensions/install.sh')]"
+            "[concat(parameters('baseUrl'), 'master/extensions/node.sh')]",
+            "[concat(parameters('baseUrl'), 'master/extensions/install.sh')]",
             "[concat(parameters('baseUrl'), 'master/extensions/configure.sh')]"
           ]
         },
