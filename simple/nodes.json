@@ -151,14 +151,14 @@
     {
       "apiVersion": "2016-04-30-preview",
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat('vm', copyindex(), '/install')]",
+      "name": "[concat('vm', add(copyindex(),1), '/install')]",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "vmLoop",
-        "count": "[parameters('nodeCount')]"
+        "count": "[add(parameters('nodeCount'),-1)]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/vm', copyindex())]"
+        "[concat('Microsoft.Compute/virtualMachines/vm', add(copyindex(),1))]"
       ],
       "properties": {
         "publisher": "Microsoft.OSTCExtensions",
@@ -178,7 +178,7 @@
     {
       "apiVersion": "2016-04-30-preview",
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "vm0/configure",
+      "name": "vm0/installandconfigure",
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "vmLoop"
@@ -190,11 +190,12 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
+            "[concat(parameters('baseUrl'), 'master/extensions/install.sh')]",
             "[concat(parameters('baseUrl'), 'master/extensions/configure.sh')]"
           ]
         },
         "protectedSettings": {
-          "commandToExecute": "[concat('bash configure.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', parameters('nodeCount'))]"
+          "commandToExecute": "[concat('bash install.sh ; configure.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', parameters('nodeCount'))]"
         }
       }
     }
