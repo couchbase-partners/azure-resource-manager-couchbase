@@ -12,6 +12,8 @@ We recommend using Azure Premium Storage.  Ephemeral drives present a risk of da
 
 Q: With managed storage do we need to provision multiple data disks for optimal IO?
 
+Q: If everything is in memory do we really need to use premium or can we use standard instead?
+
 ## Network
 
 We recommend attaching a public IP to each node.  The public IP can be used to connect application drivers and replicate across geographies with XDCR.
