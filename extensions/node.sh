@@ -60,17 +60,18 @@ indexRAM=$((20 * $totalRAM / 100000))
 --cluster-username=$adminUsername \
 --cluster-password=$adminPassword
 
-# going to want to loop from 1 to <nodecount
+for (( i=1; i<$nodeCount; i++ ))
+do
+  nodePrivateDNS=`host vm$i | awk '{print $1}'`
+  ./couchbase-cli server-add \
 
-nodePrivateDNS=`host vm1 | awk '{print $1}'`
-
-./couchbase-cli server-add \
---cluster=vm0 \
---user=$adminUsername \
---pass=$adminPassword \
---server-add=$nodePrivateDNS \
---server-add-username=$adminUsername \
---server-add-password=$adminPassword
+  --cluster=vm0 \
+  --user=$adminUsername \
+  --pass=$adminPassword \
+  --server-add=$nodePrivateDNS \
+  --server-add-username=$adminUsername \
+  --server-add-password=$adminPassword
+done
 
 ./couchbase-cli rebalance \
 --cluster=vm0 \
