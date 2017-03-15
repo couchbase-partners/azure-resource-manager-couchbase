@@ -1,0 +1,7 @@
+,
+"outputs": {
+  "nodeAdminURL": {
+    "type": "string",
+    "value": "[concat('http://vm0-', variables('uniqueString'), '.', variables('location'), '.cloudapp.azure.com:8091')]"
+  }
+}
