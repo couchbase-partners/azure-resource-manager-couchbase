@@ -1,3 +1,7 @@
 #!/usr/bin/env bash
 
-echo "Hello world"
+echo "Running node.sh"
+
+echo "Configuring nodes with the settings:"
+echo adminUsername \'$adminUsername\'
+echo adminPassword \'$adminPassword\'

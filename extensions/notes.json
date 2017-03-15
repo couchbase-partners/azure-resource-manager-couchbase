@@ -1,2 +1,0 @@
-"prepareDiskCommand": "bash ./couchbase-azure-install.sh",
-"setupCommand": "[concat('bash ./couchbase-azure-install.sh -n ', parameters('clusterName'), ' -i ', parameters('vmBasename'), '-', parameters('dataNodeCount'), ' -a ', parameters('cbUsername'), ' -p ', parameters('cbPassword'), ' -l')]",
