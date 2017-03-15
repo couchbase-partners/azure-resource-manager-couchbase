@@ -52,7 +52,7 @@
   "outputs": {
     "nodeAdminURL": {
       "type": "string",
-      "value": "[concat('hello ', 'world')]"
+      "value": "[concat('vm0-', variables('uniqueString'), '.', variables('location'), '.cloudapp.azure.com:8091')]"
     }
   }
 }
