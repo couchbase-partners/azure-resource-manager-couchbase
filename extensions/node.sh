@@ -53,10 +53,7 @@ then
   --cluster-username=$adminUsername \
   --cluster-password=$adminPassword
 else
-  # This is the rally point for our cluster
-  # an example DNS record is vm0-ixymcna6yezhc.westus.cloudapp.azure.com
   rallyPointDNS="vm0-"$uniqueString"."$location".cloudapp.azure.com"
-
   privateIP=`hostname -i`
 
   ./couchbase-cli server-add \
