@@ -48,5 +48,11 @@
         }
       }
     }
-  ]
+  ],
+  "outputs": {
+    "nodeAdminURL": {
+      "type": "string",
+      "value": "[concat('hello ', 'world')]"
+    }
+  }
 }
