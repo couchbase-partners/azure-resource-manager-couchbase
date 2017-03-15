@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-./install.sh
-
 echo "Running configure.sh"
 
 adminUsername=$1
