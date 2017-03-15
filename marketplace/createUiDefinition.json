@@ -217,9 +217,10 @@
             },
             "osPlatform": "Linux",
             "imageReference": {
-              "publisher": "couchbase",
-              "offer": "couchbase-server-40-enterprise",
-              "sku": "cbs_40_ee_gold"
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "16.04.0-LTS",
+              "version": "latest"
             }
           }
         ]

@@ -15,6 +15,7 @@ cp ../createUiDefinition.json ./
 # Drop some files that don't need to be in the archive
 rm README.md
 rm deploy.sh
+rm deploy.ps1
 rm mainTemplateParameters.json
 
 zip ../archive.zip *
