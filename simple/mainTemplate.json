@@ -64,7 +64,7 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "[concat(parameters('baseUrl'), 'master/extensions/configure.sh')]"
+            "[concat(variables('baseUrl'), 'master/extensions/configure.sh')]"
           ]
         },
         "protectedSettings": {
