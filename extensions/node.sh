@@ -16,5 +16,8 @@ echo nodeDNS \'$nodeDNS\'
 
 # Using these instructions
 # https://developer.couchbase.com/documentation/server/4.6/install/ubuntu-debian-install.html
-
-#curl -O http://packages.couchbase.com/releases/couchbase-release/couchbase-server-enterprise_4.6-1-debian8_amd64.deb
+# we're currently caching the binary in GitHub.  This is not a good solution.
+wget https://github.com/couchbase-partners/azure-resource-manager-couchbase/raw/master/extensions/couchbase-server-enterprise_4.6.1-debian8_amd64.deb
+dpkg -i couchbase-server-enterprise_4.6.1-debian8_amd64.deb
+apt-get update
+apt-get install couchbase-server
