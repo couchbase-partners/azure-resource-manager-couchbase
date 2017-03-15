@@ -191,11 +191,11 @@
         "settings": {
           "fileUris": [
             "[concat(parameters('baseUrl'), 'master/extensions/install.sh')]",
-            "[concat(parameters('baseUrl'), 'master/extensions/configure.sh')]"
+            "[concat(parameters('baseUrl'), 'master/extensions/installAndConfigure.sh')]"
           ]
         },
         "protectedSettings": {
-          "commandToExecute": "[concat('bash install.sh ; configure.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', parameters('nodeCount'))]"
+          "commandToExecute": "[concat('bash installAndConfigure.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', parameters('nodeCount'))]"
         }
       }
     }
