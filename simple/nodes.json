@@ -164,7 +164,7 @@
           ]
         },
         "protectedSettings": {
-          "commandToExecute": "[concat('bash node.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' vm', copyindex(), '-', variables('uniqueString'), '.', resourceGroup().location, '.cloudapp.azure.com']"
+          "commandToExecute": "[concat('bash node.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' vm', copyindex(), '-', variables('uniqueString'), '.', resourceGroup().location, '.cloudapp.azure.com')]"
         }
       }
     }
