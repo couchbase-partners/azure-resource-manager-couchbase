@@ -10,11 +10,15 @@ A variety of compute types support premium storage.  Any such node will work wel
 
 We recommend using Azure Premium Storage.  Ephemeral drives present a risk of data loss.  Standard Storage is based on spinning magnetic disks (HDD) and does not perform well enough for most database applications.
 
+Q: With managed storage do we need to provision multiple data disks for optimal IO?
+
 ## Network
 
 We recommend attaching a public IP to each node.  The public IP can be used to connect application drivers and replicate across geographies with XDCR.
 
 We do not recommend VPN Gateways or Express Route given the complexity of configuration, poor performance and significant expense of those solutions.
+
+Q: Do nodes need to bind to DNS/PIP somehow?  They don't seem to like the NAT.
 
 ## Security
 
