@@ -167,7 +167,7 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "https://github.com/couchbase-partners/azure-resource-manager-couchbase/raw/master/extensions/couchbase-server-enterprise_4.6.1-debian8_amd64.deb",
+            "http://packages.couchbase.com/releases/4.6.1/couchbase-server-enterprise_4.6.1-debian8_amd64.deb",
             "[concat(parameters('baseUrl'), 'master/extensions/install.sh')]"
           ]
         },
