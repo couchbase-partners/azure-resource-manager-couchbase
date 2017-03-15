@@ -37,8 +37,8 @@ apt-get -y install couchbase-server
 # https://developer.couchbase.com/documentation/server/4.6/install/init-setup.html
 cd /opt/couchbase/bin/
 
-# if we're the first node then we're going to create a new cluster, otherwise
-# we'll just join the existing one.
+# if we're the first node then we're going to create a new cluster and add nodes
+# otherwise we just exit
 if [[ $nodeIndex != "0" ]]
 then
   exit
