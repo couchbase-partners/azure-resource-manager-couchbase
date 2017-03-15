@@ -4,15 +4,16 @@ echo "Running node.sh"
 
 adminUsername=$1
 adminPassword=$2
-nodeDNS=$3
+nodeIndex=$3
+uniqueString=$4
+location=$5
 
 echo "Configuring nodes with the settings:"
 echo adminUsername \'$adminUsername\'
 echo adminPassword \'$adminPassword\'
-echo nodeDNS \'$nodeDNS\'
-
-# There are some post config steps including paging, NIC settings, etc that we should add
-# https://developer.couchbase.com/documentation/server/4.6/install/install-linux.html
+echo nodeIndex \'$nodeIndex\'
+echo uniqueString \'$uniqueString\'
+echo location \'$location\'
 
 ##### Install Couchbase
 
@@ -25,6 +26,9 @@ dpkg -i couchbase-server-enterprise_4.6.1-debian8_amd64.deb
 apt-get update
 apt-get -y install couchbase-server
 
+# There are some post config steps including paging, NIC settings, etc that we should add
+# https://developer.couchbase.com/documentation/server/4.6/install/install-linux.html
+
 ##### Configure Couchbase
 
 # Using these instructions
@@ -34,4 +38,3 @@ apt-get -y install couchbase-server
 
 # if we're the first node then we're going to create a new cluster, otherwise
 # we'll just join the existing one.
-# The $nodeDNS for the first node starts with vm0-
