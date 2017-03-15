@@ -31,7 +31,8 @@
     }
   },
   "variables": {
-    "baseUrl": "[concat(parameters('baseUrl'), '/')]"
+    "baseUrl": "[concat(parameters('baseUrl'), '/')]",
+    "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]"
   },
   "resources": [
     {
