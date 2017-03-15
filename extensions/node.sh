@@ -44,8 +44,8 @@ cd /opt/couchbase/bin/
 if [[ $nodeIndex == "0" ]]
 then
   totalRAM=$(grep MemTotal /proc/meminfo | awk '{print $2}')
-  dataRAM=$((60 * $totalRAM / 10000))
-  indexRAM=$((20 * $totalRAM / 10000))
+  dataRAM=$((60 * $totalRAM / 100000))
+  indexRAM=$((20 * $totalRAM / 100000))
 
   ./couchbase-cli cluster-init \
   --cluster-ramsize=$dataRAM \
