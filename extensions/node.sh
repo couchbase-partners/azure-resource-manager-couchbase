@@ -19,7 +19,7 @@ echo location \'$location\'
 ##### Install Couchbase #####
 #############################
 
-# we're currently caching the binary in GitHub.  This is not a good solution.
+# we're currently storing the binary in GitHub.  This is not a good solution.
 wget https://github.com/couchbase-partners/azure-resource-manager-couchbase/raw/master/extensions/couchbase-server-enterprise_4.6.1-debian8_amd64.deb
 
 # Using these instructions
