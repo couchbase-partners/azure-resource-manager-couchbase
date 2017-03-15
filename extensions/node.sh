@@ -62,9 +62,9 @@ indexRAM=$((20 * $totalRAM / 100000))
 
 for (( i=1; i<$nodeCount; i++ ))
 do
+  echo "Adding node vm$i to the cluster."
   nodePrivateDNS=`host vm$i | awk '{print $1}'`
   ./couchbase-cli server-add \
-
   --cluster=vm0 \
   --user=$adminUsername \
   --pass=$adminPassword \
