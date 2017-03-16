@@ -52,11 +52,11 @@ The Publish Portal could potentially print an error: "The SAS URL start date (st
 
     azure storage container sas create vhds rl 04/15/2017 -c $connection --start 03/14/2017
 
-The "Shared Access URL" should look like this:
+The Shared Access URL should look like this:
 
     https://sa34859435734.blob.core.windows.net/vhds?st=2017-03-14T07%3A00%3A00Z&se=2017-04-15T07%3A00%3A00Z&sp=rl&sv=2015-04-05&sr=c&sig=pgA1z3OVEBYKiU9d%2Fyk7dQlKGjCm0mmPYzVeYJ6C7bc%3D
 
-to get the sas url, add cli etc after vhds as follows:
+To get the SAS URL, add cli etc after vhds as follows:
 
     https://sa34859435734.blob.core.windows.net/vhds/osdisk_clpJayvwMm.vhd?st=2017-03-14T07%3A00%3A00Z&se=2017-04-15T07%3A00%3A00Z&sp=rl&sv=2015-04-05&sr=c&sig=pgA1z3OVEBYKiU9d%2Fyk7dQlKGjCm0mmPYzVeYJ6C7bc%3D
 
