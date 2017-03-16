@@ -65,4 +65,4 @@ Make sure it works by running:
     url="https://stosnrc0v8cyb40.blob.core.windows.net/vhds/cli4ba15cd2b2977623-os-1485296531848.vhd?st=2017-01-23T08%3A00%3A00Z&se=2017-02-24T08%3A00%3A00Z&sp=rl&sv=2015-04-05&sr=c&sig=woWQmN9YIm3jkWq8ZRzieUlX5SCigNDfOENzq7PzS7Y%3D"
     wget $url
 
-Once you can successfully get the image, proceed to the publisher portal.
+Once you can successfully get the image, proceed to the [Publisher Portal](https://publish.windowsazure.com).
