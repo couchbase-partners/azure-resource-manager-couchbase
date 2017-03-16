@@ -168,34 +168,13 @@
         "settings": {
           "fileUris": [
             "http://packages.couchbase.com/releases/4.6.1/couchbase-server-enterprise_4.6.1-debian8_amd64.deb",
-            "[concat(parameters('baseUrl'), 'master/extensions/install.sh')]"
+            "[concat(parameters('baseUrl'), 'master/extensions/install.sh')]",
+            "[concat(parameters('baseUrl'), 'master/extensions/configure.sh')]",
+            "[concat(parameters('baseUrl'), 'master/extensions/node.sh')]"
           ]
         },
         "protectedSettings": {
-          "commandToExecute": "bash install.sh"
-        }
-      }
-    },
-    {
-      "apiVersion": "2016-04-30-preview",
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "vm0/configure",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "vmloop"
-      ],
-      "properties": {
-        "publisher": "Microsoft.Azure.Extensions",
-        "type": "CustomScript",
-        "typeHandlerVersion": "2.0",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-          "fileUris": [
-            "[concat(parameters('baseUrl'), 'master/extensions/configure.sh')]"
-          ]
-        },
-        "protectedSettings": {
-          "commandToExecute": "[concat('bash configure.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', parameters('nodeCount'))]"
+          "commandToExecute": "[concat('bash node.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', copyindex(), ' ', parameters('nodeCount'))]"
         }
       }
     }
