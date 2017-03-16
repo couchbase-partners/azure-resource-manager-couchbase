@@ -16,7 +16,10 @@
     },
     "baseUrl": {
       "type": "string"
-    }
+    },
+    "couchbaseTag": {
+      "type": "string"
+    }    
   },
   "variables": {
     "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]"
@@ -24,6 +27,9 @@
   "resources": [
     {
       "apiVersion": "2015-06-15",
+      "tags": {
+        "provider": "[parameters('couchbaseTag')]"
+      },
       "type": "Microsoft.Network/virtualNetworks",
       "name": "vnet",
       "location": "[resourceGroup().location]",
@@ -47,6 +53,9 @@
       "type": "Microsoft.Compute/availabilitySets",
       "name": "availabilityset",
       "apiVersion": "2016-04-30-preview",
+      "tags": {
+        "provider": "[parameters('couchbaseTag')]"
+      },
       "location": "[resourceGroup().location]",
       "properties": {
         "platformFaultDomainCount": "3",
@@ -56,6 +65,9 @@
     },
     {
       "apiVersion": "2015-06-15",
+      "tags": {
+        "provider": "[parameters('couchbaseTag')]"
+      },
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[concat('pip', copyindex())]",
       "location": "[resourceGroup().location]",
@@ -72,6 +84,9 @@
     },
     {
       "apiVersion": "2015-06-15",
+      "tags": {
+        "provider": "[parameters('couchbaseTag')]"
+      },
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat('nic', copyindex())]",
       "location": "[resourceGroup().location]",
@@ -102,6 +117,9 @@
     },
     {
       "apiVersion": "2016-04-30-preview",
+      "tags": {
+        "provider": "[parameters('couchbaseTag')]"
+      },
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[concat('vm', copyindex())]",
       "location": "[resourceGroup().location]",
@@ -150,6 +168,9 @@
     },
     {
       "apiVersion": "2016-04-30-preview",
+      "tags": {
+        "provider": "[parameters('couchbaseTag')]"
+      },
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat('vm', copyindex(), '/install')]",
       "location": "[resourceGroup().location]",

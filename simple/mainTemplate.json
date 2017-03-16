@@ -17,13 +17,17 @@
   },
   "variables": {
     "baseUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/",
-    "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]"
+    "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]",
+    "couchbaseTag": "couchbase"
   },
   "resources": [
     {
       "name": "nodes",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2016-02-01",
+      "tags": {
+        "provider": "[variables('couchbaseTag')]"
+      },
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -45,6 +49,9 @@
           },
           "baseUrl": {
             "value": "[variables('baseUrl')]"
+          },
+          "couchbaseTag": {
+            "value": "[variables('couchbaseTag')]"
           }
         }
       }
