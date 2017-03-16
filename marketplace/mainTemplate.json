@@ -63,29 +63,6 @@
           }
         }
       }
-    },
-    {
-      "apiVersion": "2016-04-30-preview",
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "vm0/configure",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "Microsoft.Resources/deployments/nodes"
-      ],
-      "properties": {
-        "publisher": "Microsoft.Azure.Extensions",
-        "type": "CustomScript",
-        "typeHandlerVersion": "2.0",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-          "fileUris": [
-            "[concat(variables('baseUrl'), 'master/extensions/configure.sh')]"
-          ]
-        },
-        "protectedSettings": {
-          "commandToExecute": "[concat('bash configure.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', parameters('nodeCount'))]"
-        }
-      }
     }
   ],
   "outputs": {
