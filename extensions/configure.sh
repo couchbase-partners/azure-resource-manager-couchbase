@@ -21,10 +21,10 @@ then
   dataRAM=$((60 * $totalRAM / 100000))
   indexRAM=$((20 * $totalRAM / 100000))
 
-  ./couchbase-cli node-init
+  ./couchbase-cli node-init \
   --cluster=$vm0PrivateDNS \
-  --cluster-username=$adminUsername \
-  --cluster-password=$adminPassword
+  --user=$adminUsername \
+  --password=$adminPassword
 
   ./couchbase-cli cluster-init \
   --cluster=$vm0PrivateDNS \
