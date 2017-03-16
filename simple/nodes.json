@@ -174,7 +174,7 @@
           ]
         },
         "protectedSettings": {
-          "commandToExecute": "[concat('bash node.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', copyindex(), ' ', parameters('nodeCount'))]"
+          "commandToExecute": "[concat('bash node.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', copyindex())]"
         }
       }
     }

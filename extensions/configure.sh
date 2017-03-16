@@ -5,13 +5,11 @@ echo "Running configure.sh"
 adminUsername=$1
 adminPassword=$2
 nodeIndex=$3
-nodeCount=$4
 
 echo "Using the settings:"
 echo adminUsername \'$adminUsername\'
 echo adminPassword \'$adminPassword\'
 echo nodeIndex \'$nodeIndex\'
-echo nodeCount \'$nodeCount\'
 
 # Using these instructions
 # https://developer.couchbase.com/documentation/server/4.6/install/init-setup.html
