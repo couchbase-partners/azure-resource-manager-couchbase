@@ -11,8 +11,6 @@ echo adminUsername \'$adminUsername\'
 echo adminPassword \'$adminPassword\'
 echo nodeIndex \'$nodeIndex\'
 
-# Using these instructions
-# https://developer.couchbase.com/documentation/server/4.6/install/init-setup.html
 cd /opt/couchbase/bin/
 vm0PrivateDNS=`host vm0 | awk '{print $1}'`
 
