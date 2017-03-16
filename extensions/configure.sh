@@ -44,7 +44,7 @@ fi
 
 # Ideally we want to test if the cluster has added all the nodes and then call rebalance.
 # For now we're just going to call it every time we run this script
-./couchbase-cli rebalance \
---cluster=$vm0PrivateDNS \
---user=$adminUsername \
---pass=$adminPassword
+#./couchbase-cli rebalance \
+#--cluster=$vm0PrivateDNS \
+#--user=$adminUsername \
+#--pass=$adminPassword
