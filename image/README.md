@@ -2,6 +2,8 @@
 
 This README describes how we build the VM that the templates use.  Users should not need to do this.
 
+## Documentation
+
 Documentation on the process is here.  It is incomplete at best.
 * https://docs.microsoft.com/en-us/azure/virtual-machines/virtual-machines-linux-capture-image
 * https://azure.microsoft.com/en-us/documentation/articles/marketplace-publishing-vm-image-creation/
