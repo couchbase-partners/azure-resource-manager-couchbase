@@ -14,14 +14,17 @@ echo nodeIndex \'$nodeIndex\'
 # Using these instructions
 # https://developer.couchbase.com/documentation/server/4.6/install/init-setup.html
 cd /opt/couchbase/bin/
+vm0PrivateDNS=`host vm0 | awk '{print $1}'`
 
 if [[ $nodeIndex == "0" ]]
 then
+  echo "Initializing a new cluster."
   totalRAM=$(grep MemTotal /proc/meminfo | awk '{print $2}')
   dataRAM=$((60 * $totalRAM / 100000))
   indexRAM=$((20 * $totalRAM / 100000))
 
   ./couchbase-cli cluster-init \
+  --cluster=$vm0PrivateDNS \
   --cluster-ramsize=$dataRAM \
   --cluster-index-ramsize=$indexRAM \
   --cluster-username=$adminUsername \
@@ -31,7 +34,7 @@ else
   nodePrivateDNS=`host vm$nodeIndex | awk '{print $1}'`
 
   ./couchbase-cli server-add \
-  --cluster=vm0 \
+  --cluster=$vm0PrivateDNS \
   --user=$adminUsername \
   --pass=$adminPassword \
   --server-add=$nodePrivateDNS \
@@ -42,6 +45,6 @@ fi
 # Ideally we want to test if the cluster has added all the nodes and then call rebalance.
 # For now we're just going to call it every time we run this script
 ./couchbase-cli rebalance \
---cluster=vm0 \
+--cluster=$vm0PrivateDNS \
 --user=$adminUsername \
 --pass=$adminPassword
