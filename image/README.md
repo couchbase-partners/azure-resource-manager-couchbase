@@ -22,7 +22,7 @@ SSH into the image using the command:
 
     ssh couchbase@<publicIpAddress>
 
-## Clear the history
+## Clear the History
 
     sudo waagent -deprovision+user -force
     exit
