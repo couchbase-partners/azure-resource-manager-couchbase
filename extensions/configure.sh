@@ -21,11 +21,6 @@ then
   dataRAM=$((60 * $totalRAM / 100000))
   indexRAM=$((20 * $totalRAM / 100000))
 
-  ./couchbase-cli node-init \
-  --cluster=$vm0PrivateDNS \
-  --user=$adminUsername \
-  --password=$adminPassword
-
   ./couchbase-cli cluster-init \
   --cluster=$vm0PrivateDNS \
   --cluster-ramsize=$dataRAM \
@@ -36,20 +31,29 @@ else
   echo "Adding node vm$nodeIndex to the cluster."
   nodePrivateDNS=`host vm$nodeIndex | awk '{print $1}'`
 
-  # Need to handle this error
-  #Error: Failed to add server vm4.rtb52c2mq31ebnff3wi3cbqckb.dx.internal.cloudapp.net:8091: Adding nodes to not provisioned nodes is not allowed.
+  output="Error"
+  while [[ $output == "Error" ]]
+  do
+    echo "Running server-add"
+    output=`./couchbase-cli server-add \
+    --cluster=$vm0PrivateDNS \
+    --user=$adminUsername \
+    --pass=$adminPassword \
+    --server-add=$nodePrivateDNS \
+    --server-add-username=$adminUsername \
+    --server-add-password=$adminPassword`
+    output=`echo $output | cut -c 5-`
+  done
 
-  ./couchbase-cli server-add \
-  --cluster=$vm0PrivateDNS \
-  --user=$adminUsername \
-  --pass=$adminPassword \
-  --server-add=$nodePrivateDNS \
-  --server-add-username=$adminUsername \
-  --server-add-password=$adminPassword
+  output="Error"
+  while [[ $output == "Error" ]]
+  do
+    echo "Running rebalance"
+    output=`./couchbase-cli rebalance \
+    --cluster=$vm0PrivateDNS \
+    --user=$adminUsername \
+    --pass=$adminPassword`
+    output=`echo $output | cut -c 5-`
+  done
+
 fi
-
-# need to handle the rebalance error
-#./couchbase-cli rebalance \
-#--cluster=$vm0PrivateDNS \
-#--user=$adminUsername \
-#--pass=$adminPassword
