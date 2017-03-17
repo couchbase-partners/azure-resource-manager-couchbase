@@ -36,6 +36,9 @@ else
   echo "Adding node vm$nodeIndex to the cluster."
   nodePrivateDNS=`host vm$nodeIndex | awk '{print $1}'`
 
+  # Need to handle this error
+  #Error: Failed to add server vm4.rtb52c2mq31ebnff3wi3cbqckb.dx.internal.cloudapp.net:8091: Adding nodes to not provisioned nodes is not allowed.
+
   ./couchbase-cli server-add \
   --cluster=$vm0PrivateDNS \
   --user=$adminUsername \
@@ -45,8 +48,7 @@ else
   --server-add-password=$adminPassword
 fi
 
-# Ideally we want to test if the cluster has added all the nodes and then call rebalance.
-# For now we're just going to call it every time we run this script
+# need to handle the rebalance error
 #./couchbase-cli rebalance \
 #--cluster=$vm0PrivateDNS \
 #--user=$adminUsername \
