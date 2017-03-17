@@ -18,7 +18,7 @@ Documentation on the process is here.  It is incomplete at best.
 
     az group create --name resourcegroup --location westus
     az storage account create --sku Premium_LRS --resource-group resourcegroup --location westus --name sa34859435734
-    az vm create --name vm --resource-group resourcegroup --image Canonical:UbuntuServer:14.04.4-LTS:latest --admin-username couchbase --use-unmanaged-disk --storage-account sa34859435734
+    az vm create --name vm --resource-group resourcegroup --image Canonical:UbuntuServer:16.04.0-LTS:latest --admin-username couchbase --use-unmanaged-disk --storage-account sa34859435734
 
 SSH into the image using the command:
 
