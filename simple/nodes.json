@@ -145,7 +145,7 @@
           "imageReference": {
             "publisher": "Canonical",
             "offer": "UbuntuServer",
-            "sku": "16.04.0-LTS",
+            "sku": "14.04.4-LTS",
             "version": "latest"
           },
           "dataDisks": [
