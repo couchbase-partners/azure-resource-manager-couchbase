@@ -17,8 +17,7 @@
   },
   "variables": {
     "baseUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/",
-    "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]",
-    "couchbaseTag": "couchbase"
+    "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]"
   },
   "resources": [
     {
@@ -47,8 +46,8 @@
           "baseUrl": {
             "value": "[variables('baseUrl')]"
           },
-          "couchbaseTag": {
-            "value": "[variables('couchbaseTag')]"
+          "uniqueString": {
+            "value": "[variables('uniqueString')]"
           }
         }
       }

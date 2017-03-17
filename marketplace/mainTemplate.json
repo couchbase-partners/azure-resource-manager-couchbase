@@ -60,6 +60,9 @@
           },
           "baseUrl": {
             "value": "[variables('baseUrl')]"
+          },
+          "uniqueString": {
+            "value": "[variables('uniqueString')]"
           }
         }
       }

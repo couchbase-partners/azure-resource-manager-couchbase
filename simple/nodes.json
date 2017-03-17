@@ -17,18 +17,17 @@
     "baseUrl": {
       "type": "string"
     },
-    "couchbaseTag": {
+    "uniqueString": {
       "type": "string"
-    }    
+    }
   },
   "variables": {
-    "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]"
   },
   "resources": [
     {
       "apiVersion": "2015-06-15",
       "tags": {
-        "provider": "[parameters('couchbaseTag')]"
+        "provider": "couchbase"
       },
       "type": "Microsoft.Network/virtualNetworks",
       "name": "vnet",
@@ -54,7 +53,7 @@
       "name": "availabilityset",
       "apiVersion": "2016-04-30-preview",
       "tags": {
-        "provider": "[parameters('couchbaseTag')]"
+        "provider": "couchbase"
       },
       "location": "[resourceGroup().location]",
       "properties": {
@@ -78,14 +77,14 @@
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
-          "domainNameLabel": "[concat('vm', copyindex(), '-', variables('uniqueString'))]"
+          "domainNameLabel": "[concat('vm', copyindex(), '-', parameters('uniqueString'))]"
         }
       }
     },
     {
       "apiVersion": "2015-06-15",
       "tags": {
-        "provider": "[parameters('couchbaseTag')]"
+        "provider": "couchbase"
       },
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat('nic', copyindex())]",
@@ -118,7 +117,7 @@
     {
       "apiVersion": "2016-04-30-preview",
       "tags": {
-        "provider": "[parameters('couchbaseTag')]"
+        "provider": "couchbase"
       },
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[concat('vm', copyindex())]",
@@ -169,7 +168,7 @@
     {
       "apiVersion": "2016-04-30-preview",
       "tags": {
-        "provider": "[parameters('couchbaseTag')]"
+        "provider": "couchbase"
       },
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat('vm', copyindex(), '/install')]",
