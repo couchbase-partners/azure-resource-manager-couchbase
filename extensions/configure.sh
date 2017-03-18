@@ -43,17 +43,20 @@ else
     --server-add-username=$adminUsername \
     --server-add-password=$adminPassword`
     output=`echo $output | cut -c 5-`
+
+    #### Checking the error code doesn't seem sufficent as it's returning ok but not adding the server
+    # Maybe check that we're now part of the cluster?
   done
 
-  output="Error"
-  while [[ $output == "Error" ]]
-  do
-    echo "Running rebalance"
-    output=`./couchbase-cli rebalance \
-    --cluster=$vm0PrivateDNS \
-    --user=$adminUsername \
-    --pass=$adminPassword`
-    output=`echo $output | cut -c 5-`
-  done
+  #output="Error"
+  #while [[ $output == "Error" ]]
+  #do
+  #  echo "Running rebalance"
+  #  output=`./couchbase-cli rebalance \
+  #  --cluster=$vm0PrivateDNS \
+  #  --user=$adminUsername \
+  #  --pass=$adminPassword`
+  #  output=`echo $output | cut -c 5-`
+  #done
 
 fi
