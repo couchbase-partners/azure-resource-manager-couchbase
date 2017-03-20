@@ -33,7 +33,7 @@
       "name": "vnet",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "Microsoft.Network/networkSecurityGroups/networksecuritygroups"
+        "[resourceId('Microsoft.Network/networkSecurityGroups', 'networksecuritygroups')]"
       ],
       "properties": {
         "addressSpace": {
