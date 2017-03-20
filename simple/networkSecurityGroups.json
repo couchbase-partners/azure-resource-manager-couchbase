@@ -268,7 +268,7 @@
           {
             "name": "CouchbaseWebConsoleSSL",
             "properties": {
-              "description": "Used by the Couchbase Web Console for REST/HTTP traffic with SSL. ",
+              "description": "Used by the Couchbase Web Console for REST/HTTP traffic with SSL.",
               "protocol": "Tcp",
               "sourcePortRange": "*",
               "destinationPortRange": "118091",
