@@ -226,7 +226,7 @@
           {
             "name": "SmartClient",
             "properties": {
-              "description": "Used by smart client libraries or Moxi to directly connect to the data nodes. The XDCR client uses this port as well as the SDKs. This is a memcached port.",
+              "description": "Used by smart client libraries or Moxi to directly connect to the data nodes.",
               "protocol": "Tcp",
               "sourcePortRange": "*",
               "destinationPortRange": "11210",
