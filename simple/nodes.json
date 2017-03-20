@@ -14,7 +14,10 @@
     "adminPassword": {
       "type": "securestring"
     },
-    "baseUrl": {
+    "templateUrl": {
+      "type": "string"
+    },
+    "extensionUrl": {
       "type": "string"
     },
     "uniqueString": {
@@ -25,6 +28,20 @@
   },
   "resources": [
     {
+      "name": "networksecuritygroups",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2016-02-01",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('templateUrl'), 'networkSecurityGroups.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+        }
+      }
+    },
+    {
       "apiVersion": "2015-06-15",
       "tags": {
         "provider": "couchbase"
@@ -32,6 +49,9 @@
       "type": "Microsoft.Network/virtualNetworks",
       "name": "vnet",
       "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "Microsoft.Resources/deployments/networksecuritygroups"
+      ],
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
@@ -42,7 +62,10 @@
           {
             "name": "subnet",
             "properties": {
-              "addressPrefix": "10.0.0.0/16"
+              "addressPrefix": "10.0.0.0/16",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'networksecuritygroups')]"
+              }
             }
           }
         ]
@@ -188,9 +211,9 @@
         "settings": {
           "fileUris": [
             "http://packages.couchbase.com/releases/4.6.1/couchbase-server-enterprise_4.6.1-debian8_amd64.deb",
-            "[concat(parameters('baseUrl'), 'master/extensions/install.sh')]",
-            "[concat(parameters('baseUrl'), 'master/extensions/configure.sh')]",
-            "[concat(parameters('baseUrl'), 'master/extensions/node.sh')]"
+            "[concat(parameters('extensionUrl'), 'install.sh')]",
+            "[concat(parameters('extensionUrl'), 'configure.sh')]",
+            "[concat(parameters('extensionUrl'), 'node.sh')]"
           ]
         },
         "protectedSettings": {

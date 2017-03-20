@@ -16,7 +16,8 @@
     }
   },
   "variables": {
-    "baseUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/",
+    "templateUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/simple/",
+    "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/extensions/",
     "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]"
   },
   "resources": [
@@ -27,7 +28,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(variables('baseUrl'), 'master/simple/nodes.json')]",
+          "uri": "[concat(variables('templateUrl'), 'nodes.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -43,26 +44,15 @@
           "adminPassword": {
             "value": "[parameters('adminPassword')]"
           },
-          "baseUrl": {
-            "value": "[variables('baseUrl')]"
+          "templateUrl": {
+            "value": "[variables('templateUrl')]"
+          },
+          "extensionUrl": {
+            "value": "[variables('extensionUrl')]"
           },
           "uniqueString": {
             "value": "[variables('uniqueString')]"
           }
-        }
-      }
-    },
-    {
-      "name": "networksecuritygroups",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2016-02-01",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(variables('baseUrl'), 'master/simple/networkSecurityGroups.json')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
         }
       }
     }
