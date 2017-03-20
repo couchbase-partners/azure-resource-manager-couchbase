@@ -42,6 +42,7 @@ else
     --server-add-username=$adminUsername \
     --server-add-password=$adminPassword`
     echo server-add output \'$output\'
+    sleep 10
   done
 
   echo "Running couchbase-cli rebalance"
@@ -53,6 +54,7 @@ else
     --user=$adminUsername \
     --pass=$adminPassword`
     echo rebalance output \'$output\'
+    sleep 10
   done
 
 fi
