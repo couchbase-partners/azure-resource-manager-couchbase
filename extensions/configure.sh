@@ -42,6 +42,7 @@ else
     --server-add=$nodePrivateDNS \
     --server-add-username=$adminUsername \
     --server-add-password=$adminPassword`
+    echo $output
     output=`echo $output | cut -c 5-`
 
     #### Checking the error code doesn't seem sufficent as it's returning ok but not adding the server
@@ -56,6 +57,7 @@ else
     --cluster=$vm0PrivateDNS \
     --user=$adminUsername \
     --pass=$adminPassword`
+    echo $output
     output=`echo $output | cut -c 5-`
   done
 
