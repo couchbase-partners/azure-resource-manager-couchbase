@@ -32,6 +32,9 @@
       "type": "Microsoft.Network/virtualNetworks",
       "name": "vnet",
       "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "Microsoft.Network/networkSecurityGroups/networksecuritygroups"
+      ],
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
@@ -42,7 +45,10 @@
           {
             "name": "subnet",
             "properties": {
-              "addressPrefix": "10.0.0.0/16"
+              "addressPrefix": "10.0.0.0/16",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'networksecuritygroups')]"
+              }
             }
           }
         ]
