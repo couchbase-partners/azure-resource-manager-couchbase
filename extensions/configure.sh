@@ -31,10 +31,9 @@ else
   echo "Adding node vm$nodeIndex to the cluster."
   nodePrivateDNS=`host vm$nodeIndex | awk '{print $1}'`
 
-  output="Error"
-  while [[ $output == "Error" ]]
+  while [[ $output != "Server $nodePrivateDNS:8091 added" ]]
   do
-    echo "Running server-add"
+    echo "Running couchbase-cli server-add"
 
     output=`./couchbase-cli server-add \
     --cluster=$vm0PrivateDNS \
@@ -44,24 +43,19 @@ else
     --server-add-username=$adminUsername \
     --server-add-password=$adminPassword`
 
-    echo \'$output\'
-    output=`echo $output | cut -c 1-5`
-    echo \'$output\'
+    echo server-add output \'$output\'
   done
 
-  output="Error"
-  while [[ $output == "Error" ]]
+  while [[ $output != "INFO: rebalancing . SUCCESS: rebalanced cluster" ]]
   do
-    echo "Running rebalance"
+    echo "Running couchbase-cli rebalance"
 
     output=`./couchbase-cli rebalance \
     --cluster=$vm0PrivateDNS \
     --user=$adminUsername \
     --pass=$adminPassword`
 
-    echo \'$output\'
-    output=`echo $output | cut -c 1-5`
-    echo \'$output\'
+    echo rebalance output \'$output\'
   done
 
 fi
