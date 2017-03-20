@@ -66,6 +66,20 @@
           }
         }
       }
+    },
+    {
+      "name": "networksecuritygroups",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2016-02-01",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('baseUrl'), 'networkSecurityGroups.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+        }
+      }
     }
   ],
   "outputs": {
