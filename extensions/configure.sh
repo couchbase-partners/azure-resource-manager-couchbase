@@ -32,7 +32,7 @@ else
 
   echo "Running couchbase-cli server-add"
   output=""
-  while [[ $output != "Server $nodePrivateDNS:8091 added" ]]
+  while [[ $output != "Server $nodePrivateDNS:8091 added" && ! $output =~ "Node is already part of cluster."]]
   do
     output=`./couchbase-cli server-add \
     --cluster=$vm0PrivateDNS \
