@@ -51,7 +51,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 101,
+              "priority": 102,
               "direction": "Inbound"
             }
           },
@@ -65,7 +65,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 101,
+              "priority": 103,
               "direction": "Inbound"
             }
           },
@@ -79,7 +79,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 101,
+              "priority": 104,
               "direction": "Inbound"
             }
           },
@@ -93,7 +93,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 101,
+              "priority": 105,
               "direction": "Inbound"
             }
           },
@@ -107,7 +107,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 101,
+              "priority": 106,
               "direction": "Inbound"
             }
           },
@@ -121,7 +121,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 101,
+              "priority": 107,
               "direction": "Inbound"
             }
           },
@@ -135,7 +135,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 101,
+              "priority": 108,
               "direction": "Inbound"
             }
           },
@@ -149,7 +149,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 101,
+              "priority": 109,
               "direction": "Inbound"
             }
           },
@@ -163,7 +163,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 101,
+              "priority": 110,
               "direction": "Inbound"
             }
           },
@@ -177,7 +177,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 101,
+              "priority": 111,
               "direction": "Inbound"
             }
           },
@@ -191,7 +191,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 101,
+              "priority": 112,
               "direction": "Inbound"
             }
           },
@@ -205,7 +205,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 101,
+              "priority": 113,
               "direction": "Inbound"
             }
           },
@@ -219,7 +219,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 101,
+              "priority": 114,
               "direction": "Inbound"
             }
           },
@@ -233,7 +233,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 101,
+              "priority": 115,
               "direction": "Inbound"
             }
           },
@@ -247,7 +247,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 101,
+              "priority": 116,
               "direction": "Inbound"
             }
           },
@@ -261,7 +261,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 101,
+              "priority": 117,
               "direction": "Inbound"
             }
           },
@@ -275,7 +275,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 101,
+              "priority": 118,
               "direction": "Inbound"
             }
           },
@@ -289,7 +289,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 101,
+              "priority": 119,
               "direction": "Inbound"
             }
           },
@@ -303,7 +303,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 101,
+              "priority": 120,
               "direction": "Inbound"
             }
           },
@@ -317,7 +317,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 101,
+              "priority": 121,
               "direction": "Inbound"
             }
           }
