@@ -12,8 +12,8 @@
     {
       "apiVersion": "2016-06-01",
       "type": "Microsoft.Network/networkSecurityGroups",
-      "name": "[concat(parameters('clusterName'), '-', parameters('roleType'), '-nsg')]",
-      "location": "[parameters('location')]",
+      "name": "networksecuritygroups",
+      "location": "resourceGroup().location",
       "properties": {
         "securityRules": [
           {
