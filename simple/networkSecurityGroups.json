@@ -10,7 +10,7 @@
       "apiVersion": "2016-06-01",
       "type": "Microsoft.Network/networkSecurityGroups",
       "name": "networksecuritygroups",
-      "location": "resourceGroup().location",
+      "location": "[resourceGroup().location]",
       "properties": {
         "securityRules": [
           {
