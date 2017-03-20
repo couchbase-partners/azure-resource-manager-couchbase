@@ -31,9 +31,23 @@
             }
           },
           {
-            "name": "WebConsoleHTTP",
+            "name": "ErlangPortMapper",
             "properties": {
-              "description": "Couchbase Web Console for REST/HTTP traffic.",
+              "description": "Erlang Port Mapper ( epmd )",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "4369",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 101,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "CouchbaseWebConsole",
+            "properties": {
+              "description": "Used by the Couchbase Web Console for REST/HTTP traffic.",
               "protocol": "Tcp",
               "sourcePortRange": "*",
               "destinationPortRange": "8091",
@@ -45,128 +59,268 @@
             }
           },
           {
-            "name": "Queries",
+            "name": "ViewsQueriesXDCR",
             "properties": {
-              "description": "Access views, run queries, XDCR",
+              "description": "Used to access views, run queries, XDCR and update design documents.",
               "protocol": "Tcp",
               "sourcePortRange": "*",
               "destinationPortRange": "8092",
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 102,
+              "priority": 101,
               "direction": "Inbound"
             }
           },
           {
-            "name": "QueriesREST",
+            "name": "Query",
             "properties": {
-              "description": "Query services for REST/HTTP",
+              "description": "Used by query services for REST/HTTP traffic.",
               "protocol": "Tcp",
               "sourcePortRange": "*",
               "destinationPortRange": "8093",
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 103,
+              "priority": 101,
               "direction": "Inbound"
             }
           },
           {
             "name": "Search",
             "properties": {
-              "description": "HTTP port for the Search service",
+              "description": "External HTTP port for the Search service",
               "protocol": "Tcp",
               "sourcePortRange": "*",
               "destinationPortRange": "8094",
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 104,
+              "priority": 101,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "IndexAdmin",
+            "properties": {
+              "description": "Enternal index admin port (-adminPort).",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "9100",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 101,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "IndexScan",
+            "properties": {
+              "description": "Internal index scan port (-scanPort).",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "9101",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 101,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "IndexHTTP",
+            "properties": {
+              "description": "Internal index HTTP port (-httpPort).",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "9102",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 101,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "IndexBuildInit",
+            "properties": {
+              "description": "Internal index build port (-streamInitPort).",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "9103",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 101,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "IndexBuildCatchup",
+            "properties": {
+              "description": "Internal index build port (-streamCatchupPort ).",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "9104",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 101,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "IndexMaintenance",
+            "properties": {
+              "description": "Internal index maintenance port (-streamMaintPort).",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "9105",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 101,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "InternalREST",
+            "properties": {
+              "description": "Internal REST port.",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "9998",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 101,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "InternalGSI",
+            "properties": {
+              "description": "Internal GSI port used by the internal administrators.",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "9999",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 101,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "InternalBucket",
+            "properties": {
+              "description": "Internal Bucket Port.",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "11209",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 101,
               "direction": "Inbound"
             }
           },
           {
             "name": "SmartClient",
             "properties": {
-              "description": "Smart client libraries to access data nodes using SSL",
-              "protocol": "Tcp",
-              "sourcePortRange": "*",
-              "destinationPortRange": "11207",
-              "sourceAddressPrefix": "Internet",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 105,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "name": "SmartClientMoxi",
-            "properties": {
-              "description": "Smart client libraries or Moxi to directly connect to the data nodes",
+              "description": "Used by smart client libraries or Moxi to directly connect to the data nodes. The XDCR client uses this port as well as the SDKs. This is a memcached port.",
               "protocol": "Tcp",
               "sourcePortRange": "*",
               "destinationPortRange": "11210",
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 106,
+              "priority": 101,
               "direction": "Inbound"
             }
           },
           {
-            "name": "NonSmartClient",
+            "name": "Memcached",
             "properties": {
-              "description": "Used by pre-existing Couchbase Server and memcached client libraries",
+              "description": "Used by pre-existing Couchbase Server and memcached (non-smart) client libraries (such as Moxi).",
               "protocol": "Tcp",
               "sourcePortRange": "*",
               "destinationPortRange": "11211",
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 107,
+              "priority": 101,
               "direction": "Inbound"
             }
           },
           {
-            "name": "WebConsoleSSL",
+            "name": "SSLXDCR",
             "properties": {
-              "description": "Web Console for REST/HTTP with SSL",
+              "description": "Used for SSL XDCR data encryption.",
               "protocol": "Tcp",
               "sourcePortRange": "*",
-              "destinationPortRange": "18091",
+              "destinationPortRange": "11214-11215",
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 108,
+              "priority": 101,
               "direction": "Inbound"
             }
           },
           {
-            "name": "QueriesSSL",
+            "name": "CouchbaseWebConsoleSSL",
             "properties": {
-              "description": "Access views, run queries, XDCR with SSL",
+              "description": "Used by the Couchbase Web Console for REST/HTTP traffic with SSL.",
               "protocol": "Tcp",
               "sourcePortRange": "*",
-              "destinationPortRange": "18092",
+              "destinationPortRange": "118091",
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 109,
+              "priority": 101,
               "direction": "Inbound"
             }
           },
           {
-            "name": "N1SQLSSL",
+            "name": "ViewsQueriesXDCRSSL",
+            "properties": {
+              "description": "Used to access views, run queries, XDCR and update design documents with SSL.",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "118092",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 101,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "N1QL",
             "properties": {
               "description": "N1QL SSL port",
               "protocol": "Tcp",
               "sourcePortRange": "*",
-              "destinationPortRange": "18093",
+              "destinationPortRange": "118093",
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 110,
+              "priority": 101,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "NodeDataExchange",
+            "properties": {
+              "description": "Node data exchange.",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "21100-21299",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 101,
               "direction": "Inbound"
             }
           }
