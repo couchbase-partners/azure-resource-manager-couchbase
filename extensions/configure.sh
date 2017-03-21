@@ -37,6 +37,7 @@ then
   --cluster=$vm0PrivateDNS \
   --cluster-ramsize=$dataRAM \
   --cluster-index-ramsize=$indexRAM \
+  --services=data,index,query,fts \
   --cluster-username=$adminUsername \
   --cluster-password=$adminPassword
 else
