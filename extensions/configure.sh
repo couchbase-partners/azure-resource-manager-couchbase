@@ -13,23 +13,18 @@ echo nodeIndex \'$nodeIndex\'
 
 cd /opt/couchbase/bin/
 vm0PrivateDNS=`host vm0 | awk '{print $1}'`
+nodePrivateDNS=`host vm$nodeIndex | awk '{print $1}'`
 
 chown -R couchbase /datadisks
 chgrp -R couchbase /datadisks
 
-output=""
-while [[ ! $output =~ "SUCCESS" ]]
-do
-  echo "Running couchbase-cli node-init"
-  output=`./couchbase-cli node-init \
-  --cluster=$vm0PrivateDNS \
-  --node-init-data-path=/datadisks/disk1/data \
-  --node-init-index-path=/datadisks/disk1/index \
-  --user=$adminUsername \
-  --pass=$adminPassword`
-  echo node-init output \'$output\'
-  sleep 10
-done
+echo "Running couchbase-cli node-init"
+./couchbase-cli node-init \
+--cluster=$nodePrivateDNS \
+--node-init-data-path=/datadisks/disk1/data \
+--node-init-index-path=/datadisks/disk1/index \
+--user=$adminUsername \
+--pass=$adminPassword
 
 if [[ $nodeIndex == "0" ]]
 then
@@ -45,8 +40,6 @@ then
   --cluster-username=$adminUsername \
   --cluster-password=$adminPassword
 else
-  nodePrivateDNS=`host vm$nodeIndex | awk '{print $1}'`
-
   echo "Running couchbase-cli server-add"
   output=""
   while [[ $output != "Server $nodePrivateDNS:8091 added" && ! $output =~ "Node is already part of cluster." ]]
