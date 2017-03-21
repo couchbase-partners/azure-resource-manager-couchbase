@@ -5,8 +5,11 @@
 # sdb - Ephemeral
 # sdc - Attached Disk
 
-echo "Partitioning the disk."
 DISK="/dev/sdc"
+DEVICE="/dev/sdc1"
+MOUNTPOINT="/datadisks/disk1"
+
+echo "Partitioning the disk."
 echo "n
 p
 1
@@ -17,13 +20,11 @@ t
 w"| fdisk ${DISK}
 
 echo "Creating the filesystem."
-mkfs -j -t ext4 /dev/sdc1
+mkfs -j -t ext4 ${DEVICE}
 
 echo "Updating fstab"
-MOUNTPOINT="/datadisks/disk1"
-read UUID FS_TYPE < <(blkid -u filesystem ${PARTITION}|awk -F "[= ]" '{print $3" "$5}'|tr -d "\"")
-LINE="UUID=\"${UUID}\"\t${MOUNTPOINT}\text4\tnoatime,nodiratime,nodev,noexec,nosuid\t1 2"
-echo -e "${LINE}" >> /etc/fstab
+LINE="${DEVICE}\t${MOUNTPOINT}\text4\tnoatime,nodiratime,nodev,noexec,nosuid\t1\t2"
+echo -e ${LINE} >> /etc/fstab
 
 echo "Mounting the disk"
 mkdir -p ${MOUNTPOINT}
