@@ -64,6 +64,8 @@ fi
 # Base path for data disk mount points
 DATA_BASE="/datadisks"
 
+$RAID_CONFIGURATION=0
+
 while getopts b:sh optname; do
   log "Option $optname set with value ${OPTARG}"
   case ${optname} in
