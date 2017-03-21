@@ -10,6 +10,8 @@ A variety of compute types support premium storage.  Any such node will work wel
 
 We recommend using Azure Premium Storage.  Ephemeral drives present a risk of data loss.  Standard Storage is based on spinning magnetic disks (HDD) and does not perform well enough for most database applications.
 
+Q: Given that Couchbase prefers RAM will a P10 be sufficient or do we need other options?
+
 Q: With managed storage do we need to provision multiple data disks for optimal IO?
 
 Q: If everything is in memory do we really need to use premium or can we use standard instead?
