@@ -39,7 +39,7 @@ then
   --cluster-ramsize=$dataRAM \
   --cluster-index-ramsize=$indexRAM \
   --cluster-username=$adminUsername \
-  --cluster-password=$adminPassword
+  --cluster-password=$adminPassword \
   --services=data,index,query,fts
 else
   echo "Running couchbase-cli server-add"
