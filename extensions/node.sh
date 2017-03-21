@@ -11,6 +11,6 @@ echo adminUsername \'$adminUsername\'
 echo adminPassword \'$adminPassword\'
 echo nodeIndex \'$nodeIndex\'
 
-./vm-disk-utils-0.1.sh
+./format.sh
 ./install.sh
 ./configure.sh $adminUsername $adminPassword $nodeIndex

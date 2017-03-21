@@ -214,7 +214,7 @@
             "[concat(parameters('extensionUrl'), 'install.sh')]",
             "[concat(parameters('extensionUrl'), 'configure.sh')]",
             "[concat(parameters('extensionUrl'), 'node.sh')]",
-            "[concat(parameters('extensionUrl'), 'vm-disk-utils-0.1.sh')]"
+            "[concat(parameters('extensionUrl'), 'format.sh')]"
           ]
         },
         "protectedSettings": {
