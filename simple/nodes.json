@@ -173,7 +173,7 @@
           },
           "dataDisks": [
             {
-              "diskSizeGB": "500",
+              "diskSizeGB": "128",
               "lun": 0,
               "createOption": "Empty"
             }
