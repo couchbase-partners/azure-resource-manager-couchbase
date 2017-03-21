@@ -17,13 +17,19 @@ vm0PrivateDNS=`host vm0 | awk '{print $1}'`
 chown -R couchbase /datadisks
 chgrp -R couchbase /datadisks
 
-echo "Running couchbase-cli node-init"
-./couchbase-cli node-init \
---cluster=$vm0PrivateDNS \
---node-init-data-path=/datadisks/disk1/data \
---node-init-index-path=/datadisks/disk1/index \
---user=$adminUsername \
---pass=$adminPassword
+output=""
+while [[ ! $output =~ "SUCCESS" ]]
+do
+  echo "Running couchbase-cli node-init"
+  output=`./couchbase-cli node-init \
+  --cluster=$vm0PrivateDNS \
+  --node-init-data-path=/datadisks/disk1/data \
+  --node-init-index-path=/datadisks/disk1/index \
+  --user=$adminUsername \
+  --pass=$adminPassword`
+  echo node-init output \'$output\'
+  sleep 10
+done
 
 if [[ $nodeIndex == "0" ]]
 then
