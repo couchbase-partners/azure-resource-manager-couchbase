@@ -21,6 +21,7 @@ chgrp -R couchbase /datadisks
 echo "Running couchbase-cli node-init"
 ./couchbase-cli node-init \
 --cluster=$nodePrivateDNS \
+--node-init-hostname=$nodePrivateDNS \
 --node-init-data-path=/datadisks/disk1/data \
 --node-init-index-path=/datadisks/disk1/index \
 --user=$adminUsername \
