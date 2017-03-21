@@ -14,6 +14,9 @@ echo nodeIndex \'$nodeIndex\'
 cd /opt/couchbase/bin/
 vm0PrivateDNS=`host vm0 | awk '{print $1}'`
 
+chown -R couchbase /datadisks
+chgrp -R couchbase /datadisks
+
 echo "Running couchbase-cli node-init"
 ./couchbase-cli node-init \
 --cluster=$vm0PrivateDNS \
