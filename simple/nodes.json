@@ -213,7 +213,8 @@
             "http://packages.couchbase.com/releases/4.6.1/couchbase-server-enterprise_4.6.1-debian8_amd64.deb",
             "[concat(parameters('extensionUrl'), 'install.sh')]",
             "[concat(parameters('extensionUrl'), 'configure.sh')]",
-            "[concat(parameters('extensionUrl'), 'node.sh')]"
+            "[concat(parameters('extensionUrl'), 'node.sh')]",
+            "[concat(parameters('extensionUrl'), 'vm-disk-utils-0.1.sh')]"
           ]
         },
         "protectedSettings": {
