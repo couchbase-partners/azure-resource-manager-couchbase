@@ -37,9 +37,9 @@ then
   --cluster=$vm0PrivateDNS \
   --cluster-ramsize=$dataRAM \
   --cluster-index-ramsize=$indexRAM \
-  --services=data,index,query,fts \
   --cluster-username=$adminUsername \
   --cluster-password=$adminPassword
+  #--services=data,index,query,fts
 else
   echo "Running couchbase-cli server-add"
   output=""
