@@ -1,6 +1,6 @@
 # Simple
 
-This ARM template deploys a Couchbase cluster to Azure.  The template provisions an availability set, vnet, and a variety of virtual machines each with their own managed disks and public IP addresses.  It also sets up a network security group.
+This ARM template deploys a Couchbase Enterprise cluster to Azure.  The template provisions an availability set, vnet, and a variety of virtual machines each with their own managed disks and public IP addresses.  It also sets up a network security group.
 
 [deploy.sh](deploy.sh) has commands for both the 1 and 2 version of the Azure CLI.  [deploy.ps1](deploy.ps1) contains equivalent Azure PowerShell commands.  You can also deploy or inspect the template by clicking the buttons below:
 
