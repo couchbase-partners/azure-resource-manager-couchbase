@@ -2,6 +2,11 @@
 
 echo "Running install.sh"
 
+# We need libstdc++ 4.9
+# Ubuntu 14.04.5-LTS doesn't have it.
+# This will go away when we move to 16.04.0-LTS with the release of Couchbase 5.0
+add-apt-repository -y ppa:ubuntu-toolchain-r/test
+
 wget http://packages.couchbase.com/releases/4.6.1/couchbase-server-enterprise_4.6.1-debian8_amd64.deb
 
 # Using these instructions
