@@ -34,4 +34,8 @@ Q: Do nodes need to bind to DNS/PIP somehow?  They don't seem to like the NAT.
 
 ### Security
 
-We recommend configuring authentication and SSL for traffic between nodes.  We also recommend configuring a network security group (NSG) to close off communication to ports that are not actively used.
+A number of steps are necessary to secure a Couchbase cluster:
+* Configure authentication for the administrator tool
+* Enable SSL for traffic between nodes
+* Create a network security group (NSG) to close off communication to ports that are not actively used
+* Enable authentication for connections to the database as well.
