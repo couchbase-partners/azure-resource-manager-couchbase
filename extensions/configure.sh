@@ -52,7 +52,8 @@ else
     --pass=$adminPassword \
     --server-add=$nodePrivateDNS \
     --server-add-username=$adminUsername \
-    --server-add-password=$adminPassword`
+    --server-add-password=$adminPassword \
+    --services=data,index,query,fts`
     echo server-add output \'$output\'
     sleep 10
   done
