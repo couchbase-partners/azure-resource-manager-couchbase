@@ -1,4 +1,4 @@
-# Build Image
+# Build VM Image
 
 This README describes how we build the VM that the templates use.  Users should not need to do this.
 
