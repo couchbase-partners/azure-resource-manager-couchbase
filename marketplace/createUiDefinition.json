@@ -179,9 +179,9 @@
             "label": "Virtual Machine Size",
             "toolTip": "Size of VMs in the cluster",
             "recommendedSizes": [
-              "Standard_FS2",
-              "Standard_FS4",
-              "Standard_FS16"
+              "Standard_DS2",
+              "Standard_DS4",
+              "Standard_FS4"
             ],
             "constraints": {
               "allowedSizes": [
@@ -219,7 +219,7 @@
             "imageReference": {
               "publisher": "Canonical",
               "offer": "UbuntuServer",
-              "sku": "16.04.0-LTS",
+              "sku": "14.04.5-LTS",
               "version": "latest"
             }
           }
