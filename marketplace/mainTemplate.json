@@ -2,31 +2,29 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "parameters": {
-      "nodeCount": {
-        "type": "int"
-      },
-      "vmSize": {
-        "type": "string"
-      },
-      "adminUsername": {
-        "type": "string"
-      },
-      "adminPassword": {
-        "type": "securestring"
-      },
-      "baseUrl": {
-        "type": "string",
-        "metadata": {
-          "description": "Not User Configurable -- The base URL for dependent assets",
-          "artifactsBaseUrl": ""
-        }
-      },
-      "location": {
-        "type": "string",
-        "metadata": {
-          "description": "Not User Configurable -- Dummy parameter required by portal"
-        }
+    "nodeCount": {
+      "type": "int"
+    },
+    "vmSize": {
+      "type": "string"
+    },
+    "adminUsername": {
+      "type": "string"
+    },
+    "adminPassword": {
+      "type": "securestring"
+    },
+    "baseUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "Not User Configurable -- The base URL for dependent assets",
+        "artifactsBaseUrl": ""
+      }
+    },
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "Not User Configurable -- Dummy parameter required by portal"
       }
     }
   },
