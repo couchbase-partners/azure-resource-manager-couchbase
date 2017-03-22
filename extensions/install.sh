@@ -10,12 +10,6 @@ dpkg -i couchbase-server-enterprise_4.6.1-debian8_amd64.deb
 apt-get update
 apt-get -y install couchbase-server
 
-# We need libstdc++ 4.9
-# Ubuntu 14.04.5-LTS doesn't have it
-# This will go away when we move to 16.04.0-LTS with the release of Couchbase 5.0
-add-apt-repository -y ppa:ubuntu-toolchain-r/test
-apt-get -fy install
-
 #Warning: Transparent hugepages looks to be active and should not be.
 #Please look at http://bit.ly/1ZAcLjD as for how to PERMANENTLY alter this setting.
 
