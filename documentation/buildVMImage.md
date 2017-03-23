@@ -36,7 +36,7 @@ SSH into the image using the command:
 
 ## Get the SAS URL
 
-    azure storage account connectionstring show sa34859435734
+    azure storage account connectionstring show sa34859435734 --resource-group resourcegroup
     connection="DefaultEndpointsProtocol=https;AccountName=sa34859435734;AccountKey=<your key>"
     azure storage container list -c $connection
 
