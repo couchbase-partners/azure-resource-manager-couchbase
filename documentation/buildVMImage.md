@@ -52,15 +52,14 @@ The Publish Portal could potentially print an error: "The SAS URL start date (st
 
 The Shared Access URL should look like this:
 
-    https://sa34859435734.blob.core.windows.net/vhds?st=2017-03-14T07%3A00%3A00Z&se=2017-04-15T07%3A00%3A00Z&sp=rl&sv=2015-04-05&sr=c&sig=pgA1z3OVEBYKiU9d%2Fyk7dQlKGjCm0mmPYzVeYJ6C7bc%3D
+    https://sa34859435734.blob.core.windows.net/vhds?st=2017-03-22T07%3A00%3A00Z&se=2017-04-22T07%3A00%3A00Z&sp=rl&sv=2015-04-05&sr=c&sig=6lL4F5GHcsEJ6o3UV0kwFqmjskTv0IHX6kE%2FiY4MLz4%3D
 
-To get the SAS URL, add the name of the os disk as follows:
+To get the SAS URL, add the name of the os disk as follows.  You can find it early in your terminal session or in the [Portal](http://portal.azure.com).  Stick that value in a variable so we can use it later.
 
-    https://sa34859435734.blob.core.windows.net/vhds/osdisk_clpJayvwMm.vhd?st=2017-03-14T07%3A00%3A00Z&se=2017-04-15T07%3A00%3A00Z&sp=rl&sv=2015-04-05&sr=c&sig=pgA1z3OVEBYKiU9d%2Fyk7dQlKGjCm0mmPYzVeYJ6C7bc%3D
+    url="https://sa34859435734.blob.core.windows.net/vhds/osdisk_PgSDWOnoai.vhd?st=2017-03-22T07%3A00%3A00Z&se=2017-04-22T07%3A00%3A00Z&sp=rl&sv=2015-04-05&sr=c&sig=6lL4F5GHcsEJ6o3UV0kwFqmjskTv0IHX6kE%2FiY4MLz4%3D"
 
 Make sure it works by running:
 
-    url="https://stosnrc0v8cyb40.blob.core.windows.net/vhds/cli4ba15cd2b2977623-os-1485296531848.vhd?st=2017-01-23T08%3A00%3A00Z&se=2017-02-24T08%3A00%3A00Z&sp=rl&sv=2015-04-05&sr=c&sig=woWQmN9YIm3jkWq8ZRzieUlX5SCigNDfOENzq7PzS7Y%3D"
     wget $url
 
 Once you can successfully get the image, proceed to the [Publisher Portal](https://publish.windowsazure.com).
