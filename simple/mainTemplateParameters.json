@@ -1,6 +1,6 @@
 {
   "nodeCount": {
-    "value": 5
+    "value": 60
   },
  "vmSize": {
     "value": "Standard_DS2_v2"
