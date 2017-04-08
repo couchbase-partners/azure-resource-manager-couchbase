@@ -12,7 +12,6 @@ echo adminPassword \'$adminPassword\'
 echo nodeIndex \'$nodeIndex\'
 
 cd /opt/couchbase/bin/
-vm0PrivateDNS=`host vm0 | awk '{print $1}'`
 nodePrivateDNS=`host vm$nodeIndex | awk '{print $1}'`
 
 chown -R couchbase /datadisks
@@ -35,7 +34,7 @@ then
 
   echo "Running couchbase-cli cluster-init"
   ./couchbase-cli cluster-init \
-  --cluster=$vm0PrivateDNS \
+  --cluster=$nodePrivateDNS \
   --cluster-ramsize=$dataRAM \
   --cluster-index-ramsize=$indexRAM \
   --cluster-username=$adminUsername \
@@ -46,6 +45,7 @@ else
   output=""
   while [[ $output != "Server $nodePrivateDNS:8091 added" && ! $output =~ "Node is already part of cluster." ]]
   do
+    vm0PrivateDNS=`host vm0 | awk '{print $1}'`
     output=`./couchbase-cli server-add \
     --cluster=$vm0PrivateDNS \
     --user=$adminUsername \
