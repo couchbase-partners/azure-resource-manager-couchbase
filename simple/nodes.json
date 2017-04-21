@@ -109,6 +109,9 @@
               {
                 "lun": "1",
                 "createOption": "empty",
+                "managedDisk": {
+                  "storageAccountType": "Premium_LRS"
+                },
                 "caching": "None",
                 "diskSizeGB": "128"
               }
@@ -135,6 +138,26 @@
                       }
                     }
                   ]
+                }
+              }
+            ]
+          },
+          "extensionProfile": {
+            "extensions": [
+              {
+                "name": "extension",
+                "properties": {
+                  "publisher": "Microsoft.Azure.Extensions",
+                  "type": "CustomScript",
+                  "typeHandlerVersion": "2.0",
+                  "autoUpgradeMinorVersion": true,
+                  "settings": {
+                    "fileUris": [
+                      "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vmss-bottle-autoscale/installserver.sh",
+                      "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vmss-bottle-autoscale/workserver.py"
+                    ],
+                    "commandToExecute": "bash installserver.sh"
+                  }
                 }
               }
             ]
