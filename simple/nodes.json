@@ -72,157 +72,96 @@
       }
     },
     {
-      "type": "Microsoft.Compute/availabilitySets",
-      "name": "availabilityset",
+      "type": "Microsoft.Compute/virtualMachineScaleSets",
+      "name": "virtualmachinescaleset",
+      "location": "[resourceGroup().location]",
       "apiVersion": "2016-04-30-preview",
-      "tags": {
-        "provider": "couchbase"
-      },
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "platformFaultDomainCount": "3",
-        "platformUpdateDomainCount": "20",
-        "managed": "true"
-      }
-    },
-    {
-      "apiVersion": "2015-06-15",
-      "tags": {
-        "provider": "couchbase"
-      },
-      "type": "Microsoft.Network/publicIPAddresses",
-      "name": "[concat('pip', copyindex())]",
-      "location": "[resourceGroup().location]",
-      "copy": {
-        "name": "publicIPLoop",
-        "count": "[parameters('nodeCount')]"
-      },
-      "properties": {
-        "publicIPAllocationMethod": "Dynamic",
-        "dnsSettings": {
-          "domainNameLabel": "[concat('vm', copyindex(), '-', parameters('uniqueString'))]"
-        }
-      }
-    },
-    {
-      "apiVersion": "2015-06-15",
-      "tags": {
-        "provider": "couchbase"
-      },
-      "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat('nic', copyindex())]",
-      "location": "[resourceGroup().location]",
-      "copy": {
-        "name": "nicLoop",
-        "count": "[parameters('nodeCount')]"
-      },
       "dependsOn": [
-        "[concat('Microsoft.Network/publicIPAddresses/pip', copyindex())]",
         "Microsoft.Network/virtualNetworks/vnet"
-      ],
-      "properties": {
-        "ipConfigurations": [
-          {
-            "name": "ipconfig",
-            "properties": {
-              "privateIPAllocationMethod": "Dynamic",
-              "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', copyindex()))]"
-              },
-              "subnet": {
-                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks','vnet'),'/subnets/subnet')]"
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "apiVersion": "2016-04-30-preview",
-      "tags": {
-        "provider": "couchbase"
-      },
-      "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat('vm', copyindex())]",
-      "location": "[resourceGroup().location]",
-      "copy": {
-        "name": "vmLoop",
-        "count": "[parameters('nodeCount')]"
-      },
-      "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', 'nic', copyindex())]"
       ],
       "plan": {
         "publisher": "couchbase",
         "product": "couchbase-server-enterprise",
         "name": "silver_support"
       },
+      "sku": {
+        "name": "[parameters('vmSize')]",
+        "tier": "Standard",
+        "capacity": "[parameters('nodeCount')]"
+      },
       "properties": {
-        "availabilitySet": {
-          "id": "[resourceId('Microsoft.Compute/availabilitySets', 'availabilityset')]"
+        "overprovision": "true",
+        "upgradePolicy": {
+          "mode": "Manual"
         },
-        "hardwareProfile": {
-          "vmSize": "[parameters('vmSize')]"
-        },
-        "osProfile": {
-          "computerName": "[concat('vm', copyindex())]",
-          "adminUsername": "[parameters('adminUsername')]",
-          "adminPassword": "[parameters('adminPassword')]"
-        },
-        "storageProfile": {
-          "imageReference": {
-            "publisher": "couchbase",
-            "offer": "couchbase-server-enterprise",
-            "sku": "silver_support",
-            "version": "latest"
+        "virtualMachineProfile": {
+          "storageProfile": {
+            "osDisk": {
+              "createOption": "FromImage"
+            },
+            "imageReference": {
+              "publisher": "couchbase",
+              "offer": "couchbase-server-enterprise",
+              "sku": "silver_support",
+              "version": "latest"
+            },
+            "dataDisks": [
+              {
+                "lun": "1",
+                "createOption": "empty",
+                "managedDisk": {
+                  "storageAccountType": "Premium_LRS"
+                },
+                "caching": "None",
+                "diskSizeGB": "128"
+              }
+            ]
           },
-          "dataDisks": [
-            {
-              "diskSizeGB": "128",
-              "lun": 0,
-              "createOption": "Empty"
-            }
-          ]
-        },
-        "networkProfile": {
-          "networkInterfaces": [
-            {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat('nic', copyindex()))]"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "apiVersion": "2016-04-30-preview",
-      "tags": {
-        "provider": "couchbase"
-      },
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat('vm', copyindex(), '/install')]",
-      "location": "[resourceGroup().location]",
-      "copy": {
-        "name": "vmLoop",
-        "count": "[parameters('nodeCount')]"
-      },
-      "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/vm', copyindex())]"
-      ],
-      "properties": {
-        "publisher": "Microsoft.Azure.Extensions",
-        "type": "CustomScript",
-        "typeHandlerVersion": "2.0",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-          "fileUris": [
-            "[concat(parameters('extensionUrl'), 'install.sh')]",
-            "[concat(parameters('extensionUrl'), 'configure.sh')]",
-            "[concat(parameters('extensionUrl'), 'node.sh')]",
-            "[concat(parameters('extensionUrl'), 'format.sh')]"
-          ]
-        },
-        "protectedSettings": {
-          "commandToExecute": "[concat('bash node.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', copyindex())]"
+          "osProfile": {
+            "computerNamePrefix": "vm",
+            "adminUsername": "[parameters('adminUsername')]",
+            "adminPassword": "[parameters('adminPassword')]"
+          },
+          "networkProfile": {
+            "networkInterfaceConfigurations": [
+              {
+                "name": "nic",
+                "properties": {
+                  "primary": "true",
+                  "ipConfigurations": [
+                    {
+                      "name": "ipconfig",
+                      "properties": {
+                        "subnet": {
+                          "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/virtualNetworks/', 'vnet', '/subnets/', 'subnet')]"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "extensionProfile": {
+            "extensions": [
+              {
+                "name": "extension",
+                "properties": {
+                  "publisher": "Microsoft.Azure.Extensions",
+                  "type": "CustomScript",
+                  "typeHandlerVersion": "2.0",
+                  "autoUpgradeMinorVersion": true,
+                  "settings": {
+                    "fileUris": [
+                      "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vmss-bottle-autoscale/installserver.sh",
+                      "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vmss-bottle-autoscale/workserver.py"
+                    ],
+                    "commandToExecute": "bash installserver.sh"
+                  }
+                }
+              }
+            ]
+          }
         }
       }
     }
