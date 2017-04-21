@@ -158,7 +158,7 @@
                       "[concat(parameters('extensionUrl'), 'node.sh')]",
                       "[concat(parameters('extensionUrl'), 'format.sh')]"
                     ],
-                    "commandToExecute": "[concat('bash node.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', copyindex())]"
+                    "commandToExecute": "[concat('bash node.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', '0')]"
                   }
                 }
               }
