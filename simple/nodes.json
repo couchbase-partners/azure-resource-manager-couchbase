@@ -153,10 +153,12 @@
                   "autoUpgradeMinorVersion": true,
                   "settings": {
                     "fileUris": [
-                      "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vmss-bottle-autoscale/installserver.sh",
-                      "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vmss-bottle-autoscale/workserver.py"
+                      "[concat(parameters('extensionUrl'), 'install.sh')]",
+                      "[concat(parameters('extensionUrl'), 'configure.sh')]",
+                      "[concat(parameters('extensionUrl'), 'node.sh')]",
+                      "[concat(parameters('extensionUrl'), 'format.sh')]"
                     ],
-                    "commandToExecute": "bash installserver.sh"
+                    "commandToExecute": "[concat('bash node.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', copyindex())]"
                   }
                 }
               }
