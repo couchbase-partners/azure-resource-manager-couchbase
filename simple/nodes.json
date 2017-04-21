@@ -110,9 +110,6 @@
                 "lun": "1",
                 "createOption": "empty",
                 "caching": "None",
-                "manageDisk": {
-                  "storageAccountType": "Premium_LRS"
-                },
                 "diskSizeGB": "128"
               }
             ]
