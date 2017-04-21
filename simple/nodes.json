@@ -104,7 +104,18 @@
               "offer": "couchbase-server-enterprise",
               "sku": "silver_support",
               "version": "latest"
-            }
+            },
+            "dataDisks": [
+              {
+                "lun": "1",
+                "createOption": "empty",
+                "caching": "None",
+                "manageDisk": {
+                  "storageAccountType": "Premium_LRS"
+                },
+                "diskSizeGB": "128"
+              }
+            ]
           },
           "osProfile": {
             "computerNamePrefix": "vm",
@@ -122,7 +133,7 @@
                       "name": "ipconfig",
                       "properties": {
                         "subnet": {
-                          "id": "[concat(resourceId('Microsoft.Network/virtualNetworks', 'vnet'), '/subnets/subnet')]"
+                          "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/virtualNetworks/', 'vnet', '/subnets/', 'subnet')]"
                         }
                       }
                     }
