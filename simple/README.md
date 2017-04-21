@@ -1,4 +1,4 @@
-# Simple
+# simple
 
 This ARM template deploys a Couchbase Enterprise cluster to Azure.  The template provisions an availability set, vnet, and a variety of virtual machines each with their own managed disks and public IP addresses.  It also sets up a network security group.
 
