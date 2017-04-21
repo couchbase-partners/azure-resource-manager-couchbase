@@ -75,7 +75,7 @@
       "type": "Microsoft.Compute/virtualMachineScaleSets",
       "name": "virtualmachinescaleset",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2016-04-30-preview",
+      "apiVersion": "2017-03-30",
       "dependsOn": [
         "Microsoft.Network/virtualNetworks/vnet"
       ],
@@ -134,6 +134,12 @@
                       "properties": {
                         "subnet": {
                           "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/virtualNetworks/', 'vnet', '/subnets/', 'subnet')]"
+                        },
+                        "publicipaddressconfiguration": {
+                          "name": "public",
+                          "properties": {
+                            "idleTimeoutInMinutes": 15
+                          }
                         }
                       }
                     }
