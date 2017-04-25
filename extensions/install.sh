@@ -10,8 +10,38 @@ dpkg -i couchbase-server-enterprise_4.6.1-ubuntu14.04_amd64.deb
 apt-get update
 apt-get -y install couchbase-server
 
-#Warning: Transparent hugepages looks to be active and should not be.
-#Please look at http://bit.ly/1ZAcLjD as for how to PERMANENTLY alter this setting.
+#######################################################
+############ Turn Off Transparent Hugepages ###########
+#######################################################
 
-#Warning: Swappiness is not set to 0.
-#Please look at http://bit.ly/1k2CtNn as for how to PERMANENTLY alter this setting.
+# Please look at http://bit.ly/1ZAcLjD as for how to PERMANENTLY alter this setting.
+
+echo "#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          disable-thp
+# Required-Start:    $local_fs
+# Required-Stop:
+# X-Start-Before:    couchbase-server
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Disable THP
+# Description:       disables Transparent Huge Pages (THP) on boot
+### END INIT INFO
+
+echo 'never' > /sys/kernel/mm/transparent_hugepage/enabled
+echo 'never' > /sys/kernel/mm/transparent_hugepage/defrag
+" > /etc/init.d/disable-thp
+chmod 755 /etc/init.d/disable-thp
+service disable-thp start
+update-rc.d disable-thp defaults
+
+#######################################################
+################# Set Swappiness to 0 #################
+#######################################################
+
+# Please look at http://bit.ly/1k2CtNn as for how to PERMANENTLY alter this setting.
+
+sysctl vm.swappiness=0
+echo "
+# Required for Couchbase
+vm.swappiness = 0" >> /etc/sysctl.conf
