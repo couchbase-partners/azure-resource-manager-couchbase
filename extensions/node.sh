@@ -11,6 +11,6 @@ echo adminUsername \'$adminUsername\'
 echo adminPassword \'$adminPassword\'
 echo nodeIndex \'$nodeIndex\'
 
-./format.sh
 ./install.sh
+./format.sh
 ./configure.sh $adminUsername $adminPassword $nodeIndex
