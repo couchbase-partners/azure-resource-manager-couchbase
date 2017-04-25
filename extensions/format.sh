@@ -7,7 +7,7 @@
 
 DISK="/dev/sdc"
 DEVICE="/dev/sdc1"
-MOUNTPOINT="/datadisks/disk1"
+MOUNTPOINT="/mnt/datadisk"
 
 echo "Partitioning the disk."
 echo "n
