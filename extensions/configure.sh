@@ -19,12 +19,12 @@ chgrp -R couchbase /datadisks
 
 echo "Running couchbase-cli node-init"
 ./couchbase-cli node-init \
---cluster=$nodePrivateDNS \
---node-init-hostname=$nodePrivateDNS \
---node-init-data-path=/datadisks/disk1/data \
---node-init-index-path=/datadisks/disk1/index \
---user=$adminUsername \
---pass=$adminPassword
+  --cluster=$nodePrivateDNS \
+  --node-init-hostname=$nodePrivateDNS \
+  --node-init-data-path=/datadisks/disk1/data \
+  --node-init-index-path=/datadisks/disk1/index \
+  --user=$adminUsername \
+  --pass=$adminPassword
 
 if [[ $nodeIndex == "0" ]]
 then
@@ -34,12 +34,12 @@ then
 
   echo "Running couchbase-cli cluster-init"
   ./couchbase-cli cluster-init \
-  --cluster=$nodePrivateDNS \
-  --cluster-ramsize=$dataRAM \
-  --cluster-index-ramsize=$indexRAM \
-  --cluster-username=$adminUsername \
-  --cluster-password=$adminPassword \
-  --services=data,index,query,fts
+    --cluster=$nodePrivateDNS \
+    --cluster-ramsize=$dataRAM \
+    --cluster-index-ramsize=$indexRAM \
+    --cluster-username=$adminUsername \
+    --cluster-password=$adminPassword \
+    --services=data,index,query,fts
 else
   echo "Running couchbase-cli server-add"
   output=""
@@ -47,13 +47,13 @@ else
   do
     vm0PrivateDNS=`host vm0 | awk '{print $1}'`
     output=`./couchbase-cli server-add \
-    --cluster=$vm0PrivateDNS \
-    --user=$adminUsername \
-    --pass=$adminPassword \
-    --server-add=$nodePrivateDNS \
-    --server-add-username=$adminUsername \
-    --server-add-password=$adminPassword \
-    --services=data,index,query,fts`
+      --cluster=$vm0PrivateDNS \
+      --user=$adminUsername \
+      --pass=$adminPassword \
+      --server-add=$nodePrivateDNS \
+      --server-add-username=$adminUsername \
+      --server-add-password=$adminPassword \
+      --services=data,index,query,fts`
     echo server-add output \'$output\'
     sleep 10
   done
@@ -63,9 +63,9 @@ else
   while [[ ! $output =~ "SUCCESS" ]]
   do
     output=`./couchbase-cli rebalance \
-    --cluster=$vm0PrivateDNS \
-    --user=$adminUsername \
-    --pass=$adminPassword`
+      --cluster=$vm0PrivateDNS \
+      --user=$adminUsername \
+      --pass=$adminPassword`
     echo rebalance output \'$output\'
     sleep 10
   done
