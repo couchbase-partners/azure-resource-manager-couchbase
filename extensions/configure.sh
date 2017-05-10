@@ -5,14 +5,25 @@ echo "Running configure.sh"
 adminUsername=$1
 adminPassword=$2
 nodeIndex=$3
+uniqueString=$4
+location=$5
 
 echo "Using the settings:"
 echo adminUsername \'$adminUsername\'
 echo adminPassword \'$adminPassword\'
 echo nodeIndex \'$nodeIndex\'
+echo uniqueString \'$uniqueString\'
+echo location \'$location\'
 
 cd /opt/couchbase/bin/
 nodePrivateDNS=`host vm$nodeIndex | awk '{print $1}'`
+nodePublicDNS='vm'$nodeIndex'-'$uniqueString'.'$location'.cloudapp.azure.com'
+
+echo "Adding an entry to /etc/hosts to simulate split brain DNS"
+echo "" >> /etc/hosts
+echo "Simulate split brain DNS for Couchbase" >> /etc/hosts
+echo "127.0.0.1 $nodePublicDNS" >> /etc/hosts
+echo "" >> /etc/hosts
 
 echo "Running couchbase-cli node-init"
 ./couchbase-cli node-init \
