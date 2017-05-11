@@ -15,8 +15,7 @@ echo nodeIndex \'$nodeIndex\'
 echo uniqueString \'$uniqueString\'
 echo location \'$location\'
 
-cd /opt/couchbase/bin/
-nodePrivateDNS=`host vm$nodeIndex | awk '{print $1}'`
+rallyPublicDNS='vm0-'$uniqueString'.'$location'.cloudapp.azure.com'
 nodePublicDNS='vm'$nodeIndex'-'$uniqueString'.'$location'.cloudapp.azure.com'
 
 echo "Adding an entry to /etc/hosts to simulate split brain DNS"
@@ -25,10 +24,12 @@ echo "Simulate split brain DNS for Couchbase" >> /etc/hosts
 echo "127.0.0.1 $nodePublicDNS" >> /etc/hosts
 echo "" >> /etc/hosts
 
+cd /opt/couchbase/bin/
+
 echo "Running couchbase-cli node-init"
 ./couchbase-cli node-init \
-  --cluster=$nodePrivateDNS \
-  --node-init-hostname=$nodePrivateDNS \
+  --cluster=$nodePublicDNS \
+  --node-init-hostname=$nodePublicDNS \
   --node-init-data-path=/mnt/datadisk/data \
   --node-init-index-path=/mnt/datadisk/index \
   --user=$adminUsername \
@@ -42,7 +43,7 @@ then
 
   echo "Running couchbase-cli cluster-init"
   ./couchbase-cli cluster-init \
-    --cluster=$nodePrivateDNS \
+    --cluster=$nodePublicDNS \
     --cluster-ramsize=$dataRAM \
     --cluster-index-ramsize=$indexRAM \
     --cluster-username=$adminUsername \
@@ -51,14 +52,14 @@ then
 else
   echo "Running couchbase-cli server-add"
   output=""
-  while [[ $output != "Server $nodePrivateDNS:8091 added" && ! $output =~ "Node is already part of cluster." ]]
+  while [[ $output != "Server $nodePublicDNS:8091 added" && ! $output =~ "Node is already part of cluster." ]]
   do
     vm0PrivateDNS=`host vm0 | awk '{print $1}'`
     output=`./couchbase-cli server-add \
-      --cluster=$vm0PrivateDNS \
+      --cluster=$rallyPublicDNS \
       --user=$adminUsername \
       --pass=$adminPassword \
-      --server-add=$nodePrivateDNS \
+      --server-add=$nodePublicDNS \
       --server-add-username=$adminUsername \
       --server-add-password=$adminPassword \
       --services=data,index,query,fts`
@@ -71,7 +72,7 @@ else
   while [[ ! $output =~ "SUCCESS" ]]
   do
     output=`./couchbase-cli rebalance \
-      --cluster=$vm0PrivateDNS \
+      --cluster=$rallyPublicDNS \
       --user=$adminUsername \
       --pass=$adminPassword`
     echo rebalance output \'$output\'
