@@ -24,8 +24,7 @@
       "type": "string"
     }
   },
-  "variables": {
-  },
+  "variables": {},
   "resources": [
     {
       "name": "networksecuritygroups",
@@ -37,8 +36,7 @@
           "uri": "[concat(parameters('templateUrl'), 'networkSecurityGroups.json')]",
           "contentVersion": "1.0.0.0"
         },
-        "parameters": {
-        }
+        "parameters": {}
       }
     },
     {
@@ -138,7 +136,10 @@
                         "publicipaddressconfiguration": {
                           "name": "public",
                           "properties": {
-                            "idleTimeoutInMinutes": 15
+                            "idleTimeoutInMinutes": 15,
+                            "dnsSettings": {
+                              "domainNameLabel": "rgcbvmss4"
+                            }
                           }
                         }
                       }
