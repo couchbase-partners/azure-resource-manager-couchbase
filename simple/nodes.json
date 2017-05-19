@@ -138,7 +138,7 @@
                           "properties": {
                             "idleTimeoutInMinutes": 15,
                             "dnsSettings": {
-                              "domainNameLabel": "rgcbvmss4"
+                              "domainNameLabel": "[parameters('uniqueString')]"
                             }
                           }
                         }
