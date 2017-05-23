@@ -15,6 +15,7 @@ echo nodeIndex \'$nodeIndex\'
 echo uniqueString \'$uniqueString\'
 echo location \'$location\'
 
+./adjust_tcp_keepalive.sh
 ./install.sh
 ./format.sh
 ./configure.sh $adminUsername $adminPassword $nodeIndex $uniqueString $location

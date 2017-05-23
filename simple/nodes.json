@@ -215,6 +215,7 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
+            "[concat(parameters('extensionUrl'), 'adjust_tcp_keepalive.sh')]",
             "[concat(parameters('extensionUrl'), 'install.sh')]",
             "[concat(parameters('extensionUrl'), 'configure.sh')]",
             "[concat(parameters('extensionUrl'), 'node.sh')]",

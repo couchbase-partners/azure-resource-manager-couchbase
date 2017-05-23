@@ -1,9 +1,9 @@
 {
   "nodeCount": {
-    "value": 20
+    "value": 5
   },
  "vmSize": {
-    "value": "Standard_DS2_v2"
+    "value": "Standard_DS3_v2"
   },
  "adminUsername": {
     "value": "couchbase"
