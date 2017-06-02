@@ -88,7 +88,7 @@
         "capacity": "[parameters('nodeCount')]"
       },
       "properties": {
-        "overprovision": "true",
+        "overprovision": false,
         "upgradePolicy": {
           "mode": "Manual"
         },
