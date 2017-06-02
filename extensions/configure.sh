@@ -7,22 +7,16 @@ echo "Running configure.sh"
 
 adminUsername=$1
 adminPassword=$2
-<<<<<<< HEAD
-=======
 nodeIndex=$3
 uniqueString=$4
 location=$5
->>>>>>> master
 
 echo "Using the settings:"
 echo adminUsername \'$adminUsername\'
 echo adminPassword \'$adminPassword\'
-<<<<<<< HEAD
-=======
 echo nodeIndex \'$nodeIndex\'
 echo uniqueString \'$uniqueString\'
 echo location \'$location\'
->>>>>>> master
 
 rallyPublicDNS='vm0-'$uniqueString'.'$location'.cloudapp.azure.com'
 nodePublicDNS='vm'$nodeIndex'-'$uniqueString'.'$location'.cloudapp.azure.com'
