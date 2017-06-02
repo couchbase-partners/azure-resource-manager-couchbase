@@ -7,7 +7,7 @@
 
 DISK="/dev/sdc"
 DEVICE="/dev/sdc1"
-MOUNTPOINT="/datadisks/disk1"
+MOUNTPOINT="/mnt/datadisk"
 
 echo "Partitioning the disk."
 echo "n
@@ -27,5 +27,9 @@ LINE="${DEVICE}\t${MOUNTPOINT}\text4\tnoatime,nodiratime,nodev,noexec,nosuid\t1\
 echo -e ${LINE} >> /etc/fstab
 
 echo "Mounting the disk"
-mkdir -p ${MOUNTPOINT}
-mount ${MOUNTPOINT}
+mkdir -p $MOUNTPOINT
+mount -a
+
+echo "Changing permissions"
+chown couchbase $MOUNTPOINT
+chgrp couchbase $MOUNTPOINT
