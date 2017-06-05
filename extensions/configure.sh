@@ -18,8 +18,8 @@ echo nodeIndex \'$nodeIndex\'
 echo uniqueString \'$uniqueString\'
 echo location \'$location\'
 
-rallyPublicDNS='vm0-'$uniqueString'.'$location'.cloudapp.azure.com'
-nodePublicDNS='vm'$nodeIndex'-'$uniqueString'.'$location'.cloudapp.azure.com'
+rallyPublicDNS='vm0.'$uniqueString'.'$location'.cloudapp.azure.com'
+nodePublicDNS='vm'$nodeIndex'.'$uniqueString'.'$location'.cloudapp.azure.com'
 
 echo "Adding an entry to /etc/hosts to simulate split brain DNS"
 echo "" >> /etc/hosts
@@ -57,7 +57,6 @@ else
   output=""
   while [[ $output != "Server $nodePublicDNS:8091 added" && ! $output =~ "Node is already part of cluster." ]]
   do
-    vm0PrivateDNS=`host vm0 | awk '{print $1}'`
     output=`./couchbase-cli server-add \
       --cluster=$rallyPublicDNS \
       --user=$adminUsername \
