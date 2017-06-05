@@ -4,22 +4,16 @@ echo "Running node.sh"
 
 adminUsername=$1
 adminPassword=$2
-nodeIndex=$3
-uniqueString=$4
-location=$5
+uniqueString=$3
+location=$4
 
 echo "Using the settings:"
 echo adminUsername \'$adminUsername\'
 echo adminPassword \'$adminPassword\'
-echo nodeIndex \'$nodeIndex\'
 echo uniqueString \'$uniqueString\'
 echo location \'$location\'
 
 ./adjust_tcp_keepalive.sh
 ./install.sh
-<<<<<<< HEAD
-#./configure.sh $adminUsername $adminPassword
-=======
 ./format.sh
-./configure.sh $adminUsername $adminPassword $nodeIndex $uniqueString $location
->>>>>>> master
+./configure.sh $adminUsername $adminPassword $uniqueString $location

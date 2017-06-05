@@ -165,7 +165,7 @@
                       "[concat(parameters('extensionUrl'), 'node.sh')]",
                       "[concat(parameters('extensionUrl'), 'format.sh')]"
                     ],
-                    "commandToExecute": "[concat('bash node.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'))]"
+                    "commandToExecute": "[concat('bash node.sh ', parameters('adminUsername'), ' ', parameters('adminPassword')), ' ', parameters('uniqueString'), ' ', resourceGroup().location]"
                   }
                 }
               }
