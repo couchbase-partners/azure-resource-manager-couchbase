@@ -16,4 +16,4 @@ echo location \'$location\'
 ./adjust_tcp_keepalive.sh
 ./install.sh
 ./format.sh
-./configure.sh $adminUsername $adminPassword $uniqueString $location
+#./configure.sh $adminUsername $adminPassword $uniqueString $location
