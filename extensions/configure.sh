@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-#### There's a bunch of stuff with VM naming in here that's not going to work right now.
-
-
 echo "Running configure.sh"
 
 adminUsername=$1
