@@ -16,9 +16,14 @@ echo adminPassword \'$adminPassword\'
 echo uniqueString \'$uniqueString\'
 echo location \'$location\'
 
+apt-get -y install jq
+nodeIndex=`curl -H Metadata:true "http://169.254.169.254/metadata/instance/compute?api-version=2017-03-01" \
+  | jq ".name" \
+  | sed 's/.*_//' \
+  | sed 's/"//'`
+
 rallyPublicDNS='vm0.'$uniqueString'.'$location'.cloudapp.azure.com'
-hostname=`hostname`
-nodePublicDNS=$hostname'.'$uniqueString'.'$location'.cloudapp.azure.com'
+nodePublicDNS='vm'$nodeIndex'.'$uniqueString'.'$location'.cloudapp.azure.com'
 
 echo "Adding an entry to /etc/hosts to simulate split brain DNS"
 echo "" >> /etc/hosts
