@@ -34,7 +34,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(parameters('templateUrl'), 'networkSecurityGroups.json')]",
+          "uri": "[concat(variables('templateUrl'), 'networkSecurityGroups.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {}
