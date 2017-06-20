@@ -113,6 +113,7 @@
                 "managedDisk": {
                   "storageAccountType": "Premium_LRS"
                 },
+                "caching": "ReadOnly",
                 "diskSizeGB": "[parameters('diskSize')]"
               }
             ]
