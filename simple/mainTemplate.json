@@ -28,41 +28,46 @@
   },
   "resources": [
     {
-      "name": "server",
+      "name": "networksecuritygroups",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2016-02-01",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(variables('templateUrl'), 'server.json')]",
+          "uri": "[concat(parameters('templateUrl'), 'networkSecurityGroups.json')]",
           "contentVersion": "1.0.0.0"
         },
-        "parameters": {
-          "nodeCount": {
-            "value": "[parameters('serverNodeCount')]"
-          },
-          "vmSize": {
-            "value": "[parameters('vmSize')]"
-          },
-          "diskSize": {
-            "value": "[parameters('serverDiskSize')]"
-          },
-          "adminUsername": {
-            "value": "[parameters('adminUsername')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('adminPassword')]"
-          },
-          "templateUrl": {
-            "value": "[variables('templateUrl')]"
-          },
-          "extensionUrl": {
-            "value": "[variables('extensionUrl')]"
-          },
-          "uniqueString": {
-            "value": "[variables('uniqueString')]"
+        "parameters": {}
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "tags": {
+        "provider": "couchbase"
+      },
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "vnet",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "Microsoft.Resources/deployments/networksecuritygroups"
+      ],
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "10.0.0.0/8"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "subnet",
+            "properties": {
+              "addressPrefix": "10.0.0.0/16",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'networksecuritygroups')]"
+              }
+            }
           }
-        }
+        ]
       }
     }
   ],
