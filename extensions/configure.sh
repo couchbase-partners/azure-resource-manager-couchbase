@@ -4,19 +4,23 @@ echo "Running configure.sh"
 
 adminUsername=$1
 adminPassword=$2
-nodeIndex=$3
-uniqueString=$4
-location=$5
+uniqueString=$3
+location=$4
 
 echo "Using the settings:"
 echo adminUsername \'$adminUsername\'
 echo adminPassword \'$adminPassword\'
-echo nodeIndex \'$nodeIndex\'
 echo uniqueString \'$uniqueString\'
 echo location \'$location\'
 
-rallyPublicDNS='vm0-'$uniqueString'.'$location'.cloudapp.azure.com'
-nodePublicDNS='vm'$nodeIndex'-'$uniqueString'.'$location'.cloudapp.azure.com'
+apt-get -y install jq
+nodeIndex=`curl -H Metadata:true "http://169.254.169.254/metadata/instance/compute?api-version=2017-03-01" \
+  | jq ".name" \
+  | sed 's/.*_//' \
+  | sed 's/"//'`
+
+rallyPublicDNS='vm0.'$uniqueString'.'$location'.cloudapp.azure.com'
+nodePublicDNS='vm'$nodeIndex'.'$uniqueString'.'$location'.cloudapp.azure.com'
 
 echo "Adding an entry to /etc/hosts to simulate split brain DNS"
 echo "" >> /etc/hosts
@@ -54,7 +58,6 @@ else
   output=""
   while [[ $output != "Server $nodePublicDNS:8091 added" && ! $output =~ "Node is already part of cluster." ]]
   do
-    vm0PrivateDNS=`host vm0 | awk '{print $1}'`
     output=`./couchbase-cli server-add \
       --cluster=$rallyPublicDNS \
       --user=$adminUsername \
