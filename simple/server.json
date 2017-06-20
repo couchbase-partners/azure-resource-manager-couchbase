@@ -31,7 +31,7 @@
   "resources": [
     {
       "type": "Microsoft.Compute/virtualMachineScaleSets",
-      "name": "virtualmachinescaleset",
+      "name": "server",
       "location": "[resourceGroup().location]",
       "apiVersion": "2017-03-30",
       "dependsOn": [
@@ -91,7 +91,7 @@
                       "name": "ipconfig",
                       "properties": {
                         "subnet": {
-                          "id": "[concat(resourceId('Microsoft.Network/virtualNetworks/', 'vnet'), '/subnets/', 'subnet')]"
+                          "id": ""
                         },
                         "publicipaddressconfiguration": {
                           "name": "public",
