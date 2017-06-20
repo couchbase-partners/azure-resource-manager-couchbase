@@ -1,0 +1,139 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "nodeCount": {
+      "type": "int"
+    },
+    "vmSize": {
+      "type": "string"
+    },
+    "diskSize": {
+      "type": "int"
+    },
+    "adminUsername": {
+      "type": "string"
+    },
+    "adminPassword": {
+      "type": "securestring"
+    },
+    "templateUrl": {
+      "type": "string"
+    },
+    "extensionUrl": {
+      "type": "string"
+    },
+    "uniqueString": {
+      "type": "string"
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "type": "Microsoft.Compute/virtualMachineScaleSets",
+      "name": "virtualmachinescaleset",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2017-03-30",
+      "dependsOn": [
+        "Microsoft.Network/virtualNetworks/vnet"
+      ],
+      "plan": {
+        "publisher": "couchbase",
+        "product": "couchbase-server-enterprise",
+        "name": "byol"
+      },
+      "sku": {
+        "name": "[parameters('vmSize')]",
+        "tier": "Standard",
+        "capacity": "[parameters('nodeCount')]"
+      },
+      "properties": {
+        "overprovision": false,
+        "upgradePolicy": {
+          "mode": "Manual"
+        },
+        "virtualMachineProfile": {
+          "storageProfile": {
+            "osDisk": {
+              "createOption": "FromImage"
+            },
+            "imageReference": {
+              "publisher": "couchbase",
+              "offer": "couchbase-server-enterprise",
+              "sku": "byol",
+              "version": "latest"
+            },
+            "dataDisks": [
+              {
+                "lun": "1",
+                "createOption": "empty",
+                "managedDisk": {
+                  "storageAccountType": "Premium_LRS"
+                },
+                "caching": "None",
+                "diskSizeGB": "[parameters('diskSize')]"
+              }
+            ]
+          },
+          "osProfile": {
+            "computerNamePrefix": "vm",
+            "adminUsername": "[parameters('adminUsername')]",
+            "adminPassword": "[parameters('adminPassword')]"
+          },
+          "networkProfile": {
+            "networkInterfaceConfigurations": [
+              {
+                "name": "nic",
+                "properties": {
+                  "primary": "true",
+                  "ipConfigurations": [
+                    {
+                      "name": "ipconfig",
+                      "properties": {
+                        "subnet": {
+                          "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/virtualNetworks/', 'vnet', '/subnets/', 'subnet')]"
+                        },
+                        "publicipaddressconfiguration": {
+                          "name": "public",
+                          "properties": {
+                            "idleTimeoutInMinutes": 15,
+                            "dnsSettings": {
+                              "domainNameLabel": "[parameters('uniqueString')]"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "extensionProfile": {
+            "extensions": [
+              {
+                "name": "extension",
+                "properties": {
+                  "publisher": "Microsoft.Azure.Extensions",
+                  "type": "CustomScript",
+                  "typeHandlerVersion": "2.0",
+                  "autoUpgradeMinorVersion": true,
+                  "settings": {
+                    "fileUris": [
+                      "[concat(parameters('extensionUrl'), 'adjust_tcp_keepalive.sh')]",
+                      "[concat(parameters('extensionUrl'), 'install.sh')]",
+                      "[concat(parameters('extensionUrl'), 'configure.sh')]",
+                      "[concat(parameters('extensionUrl'), 'node.sh')]",
+                      "[concat(parameters('extensionUrl'), 'format.sh')]"
+                    ],
+                    "commandToExecute": "[concat('bash node.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', parameters('uniqueString'), ' ', resourceGroup().location)]"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

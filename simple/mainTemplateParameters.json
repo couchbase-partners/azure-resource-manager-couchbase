@@ -1,12 +1,15 @@
 {
-  "nodeCount": {
-    "value": 5
+  "serverNodeCount": {
+    "value": 3
+  },
+  "serverDiskSize": {
+     "value": 32
+  },
+  "syncGatewayNodeCount": {
+    "value": 2
   },
   "vmSize": {
     "value": "Standard_DS3_v2"
-  },
-  "diskSize": {
-     "value": 32
   },
   "adminUsername": {
     "value": "couchbase"

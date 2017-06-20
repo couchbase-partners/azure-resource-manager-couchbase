@@ -2,14 +2,17 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "nodeCount": {
+    "serverNodeCount": {
+      "type": "int"
+    },
+    "serverDiskSize": {
+      "type": "int"
+    },
+    "syncGatewayNodeCount": {
       "type": "int"
     },
     "vmSize": {
       "type": "string"
-    },
-    "diskSize": {
-      "type": "int"
     },
     "adminUsername": {
       "type": "string"
@@ -25,24 +28,67 @@
   },
   "resources": [
     {
-      "name": "nodes",
+      "name": "networksecuritygroups",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2016-02-01",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(variables('templateUrl'), 'nodes.json')]",
+          "uri": "[concat(parameters('templateUrl'), 'networkSecurityGroups.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {}
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "tags": {
+        "provider": "couchbase"
+      },
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "vnet",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "Microsoft.Resources/deployments/networksecuritygroups"
+      ],
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "10.0.0.0/8"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "subnet",
+            "properties": {
+              "addressPrefix": "10.0.0.0/16",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'networksecuritygroups')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "server",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2016-02-01",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templateUrl'), 'server.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
           "nodeCount": {
-            "value": "[parameters('nodeCount')]"
+            "value": "[parameters('serverNodeCount')]"
           },
           "vmSize": {
             "value": "[parameters('vmSize')]"
           },
           "diskSize": {
-            "value": "[parameters('diskSize')]"
+            "value": "[parameters('serverDiskSize')]"
           },
           "adminUsername": {
             "value": "[parameters('adminUsername')]"
@@ -64,7 +110,7 @@
     }
   ],
   "outputs": {
-    "nodeAdminURL": {
+    "serverAdminURL": {
       "type": "string",
       "value": "[concat('http://vm0.', variables('uniqueString'), '.', resourceGroup().location, '.cloudapp.azure.com:8091')]"
     }
