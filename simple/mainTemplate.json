@@ -69,44 +69,6 @@
           }
         ]
       }
-    },
-    {
-      "name": "server",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2016-02-01",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(variables('templateUrl'), 'server.json')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "nodeCount": {
-            "value": "[parameters('serverNodeCount')]"
-          },
-          "vmSize": {
-            "value": "[parameters('vmSize')]"
-          },
-          "diskSize": {
-            "value": "[parameters('serverDiskSize')]"
-          },
-          "adminUsername": {
-            "value": "[parameters('adminUsername')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('adminPassword')]"
-          },
-          "templateUrl": {
-            "value": "[variables('templateUrl')]"
-          },
-          "extensionUrl": {
-            "value": "[variables('extensionUrl')]"
-          },
-          "uniqueString": {
-            "value": "[variables('uniqueString')]"
-          }
-        }
-      }
     }
   ],
   "outputs": {
