@@ -17,9 +17,6 @@
     "adminPassword": {
       "type": "securestring"
     },
-    "templateUrl": {
-      "type": "string"
-    },
     "extensionUrl": {
       "type": "string"
     },
