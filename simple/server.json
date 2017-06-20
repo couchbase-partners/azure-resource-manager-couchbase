@@ -35,7 +35,6 @@
       "location": "[resourceGroup().location]",
       "apiVersion": "2017-03-30",
       "dependsOn": [
-        ""
       ],
       "plan": {
         "publisher": "couchbase",
