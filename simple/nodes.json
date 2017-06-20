@@ -8,6 +8,9 @@
     "vmSize": {
       "type": "string"
     },
+    "diskSize": {
+      "type": "int"
+    },
     "adminUsername": {
       "type": "string"
     },
@@ -111,7 +114,7 @@
                   "storageAccountType": "Premium_LRS"
                 },
                 "caching": "None",
-                "diskSizeGB": "128"
+                "diskSizeGB": "[parameters('diskSize')]"
               }
             ]
           },

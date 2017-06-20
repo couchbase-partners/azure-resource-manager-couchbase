@@ -222,6 +222,45 @@
               "sku": "14.04.5-LTS",
               "version": "latest"
             }
+          },
+          {
+            "name": "diskSize",
+            "type": "Microsoft.Common.DropDown",
+            "label": "Disk Size",
+            "defaultValue": "32",
+            "toolTip": "Size of disk on each node in the cluster",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "32 GB",
+                  "value": 32
+                },
+                {
+                  "label": "64 GB",
+                  "value": 64
+                },
+                {
+                  "label": "128 GB",
+                  "value": 128
+                },
+                {
+                  "label": "512 GB",
+                  "value": 512
+                },
+                {
+                  "label": "1 TB",
+                  "value": 1024
+                },
+                {
+                  "label": "2 TB",
+                  "value": 2048
+                },
+                {
+                  "label": "4 TB",
+                  "value": 4095
+                }
+              ]
+            }
           }
         ]
       }

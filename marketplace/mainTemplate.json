@@ -8,6 +8,9 @@
     "vmSize": {
       "type": "string"
     },
+    "diskSize": {
+      "type": "int"
+    },
     "adminUsername": {
       "type": "string"
     },
@@ -50,6 +53,9 @@
           },
           "vmSize": {
             "value": "[parameters('vmSize')]"
+          },
+          "diskSize": {
+            "type": "[parameters('diskSize')]"
           },
           "adminUsername": {
             "value": "[parameters('adminUsername')]"
