@@ -42,7 +42,7 @@
             "value": "[parameters('vmSize')]"
           },
           "diskSize": {
-            "type": "[parameters('diskSize')]"
+            "value": "[parameters('diskSize')]"
           },
           "adminUsername": {
             "value": "[parameters('adminUsername')]"
