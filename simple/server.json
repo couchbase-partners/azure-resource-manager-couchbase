@@ -35,7 +35,7 @@
       "location": "[resourceGroup().location]",
       "apiVersion": "2017-03-30",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks/', 'vnet')]"
+        ""
       ],
       "plan": {
         "publisher": "couchbase",
