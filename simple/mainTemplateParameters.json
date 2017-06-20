@@ -2,13 +2,13 @@
   "nodeCount": {
     "value": 5
   },
- "vmSize": {
+  "vmSize": {
     "value": "Standard_DS3_v2"
   },
   "diskSize": {
      "value": 32
-   },
- "adminUsername": {
+  },
+  "adminUsername": {
     "value": "couchbase"
   },
   "adminPassword": {
