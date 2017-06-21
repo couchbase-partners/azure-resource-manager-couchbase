@@ -115,12 +115,12 @@
                   "settings": {
                     "fileUris": [
                       "[concat(parameters('extensionUrl'), 'adjust_tcp_keepalive.sh')]",
-                      "[concat(parameters('extensionUrl'), 'install.sh')]",
-                      "[concat(parameters('extensionUrl'), 'configure.sh')]",
-                      "[concat(parameters('extensionUrl'), 'node.sh')]",
+                      "[concat(parameters('extensionUrl'), 'installServer.sh')]",
+                      "[concat(parameters('extensionUrl'), 'configureServer.sh')]",
+                      "[concat(parameters('extensionUrl'), 'server.sh')]",
                       "[concat(parameters('extensionUrl'), 'format.sh')]"
                     ],
-                    "commandToExecute": "[concat('bash node.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', parameters('uniqueString'), ' ', resourceGroup().location)]"
+                    "commandToExecute": "[concat('bash server.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', parameters('uniqueString'), ' ', resourceGroup().location)]"
                   }
                 }
               }

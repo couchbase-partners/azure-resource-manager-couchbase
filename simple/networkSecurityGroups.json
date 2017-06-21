@@ -320,6 +320,20 @@
               "priority": 121,
               "direction": "Inbound"
             }
+          },
+          {
+            "name": "SyncGatewayAdmin",
+            "properties": {
+              "description": "Sync Gateway Admin",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "4984",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 122,
+              "direction": "Inbound"
+            }
           }
         ]
       }

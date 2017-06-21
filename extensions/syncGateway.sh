@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "Running node.sh"
+echo "Running syncGateway.sh"
 
 adminUsername=$1
 adminPassword=$2
@@ -14,6 +14,5 @@ echo uniqueString \'$uniqueString\'
 echo location \'$location\'
 
 ./adjust_tcp_keepalive.sh
-./install.sh
-./format.sh
-./configure.sh $adminUsername $adminPassword $uniqueString $location
+./installSyncGateway.sh
+./configureSyncGateway.sh $adminUsername $adminPassword $uniqueString $location

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "Running configure.sh"
+echo "Running configureServer.sh"
 
 adminUsername=$1
 adminPassword=$2

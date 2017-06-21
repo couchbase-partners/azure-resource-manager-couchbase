@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "Running install.sh"
+echo "Running installServer.sh"
 
 #######################################################
 ############ Turn Off Transparent Hugepages ###########
