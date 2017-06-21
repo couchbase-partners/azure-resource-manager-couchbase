@@ -38,6 +38,6 @@ The templates configure each Couchbase node with the public DNS.  Because the pu
 
 The template automatically sets up a username and password for the Couchbase Web Administrator.  The template also configures a [Network Security Group (NSG)](https://docs.microsoft.com/en-us/azure/virtual-network/virtual-networks-nsg) that closes off unused ports.  If you are not using XDCR and do not need to connect drivers remotely, we recommend changing the NSG settings to "VirtualNetwork" for Couchbase ports other than 8091 and 4984.
 
-Azure automatically configures disk encryption.  More detail is available [here](https://azure.microsoft.com/en-us/blog/azure-managed-disks-sse).
+Azure automatically configures disk encryption for Managed Disks that use Premium Storage.  More detail is available [here](https://azure.microsoft.com/en-us/blog/azure-managed-disks-sse).
 
 The template does not currently configure SSL.  We recommend setting it up for production applications.
