@@ -106,7 +106,7 @@
           "extensionProfile": {
             "extensions": [
               {
-                "name": "server",
+                "name": "extension",
                 "properties": {
                   "publisher": "Microsoft.Azure.Extensions",
                   "type": "CustomScript",

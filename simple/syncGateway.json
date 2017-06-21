@@ -28,12 +28,12 @@
   "resources": [
     {
       "type": "Microsoft.Compute/virtualMachineScaleSets",
-      "name": "server",
+      "name": "syncgateway",
       "location": "[resourceGroup().location]",
       "apiVersion": "2017-03-30",
       "plan": {
         "publisher": "couchbase",
-        "product": "couchbase-server-enterprise",
+        "product": "couchbase-sync-gateway-enterprise",
         "name": "byol"
       },
       "sku": {
@@ -56,21 +56,10 @@
               "offer": "couchbase-server-enterprise",
               "sku": "byol",
               "version": "latest"
-            },
-            "dataDisks": [
-              {
-                "lun": "1",
-                "createOption": "empty",
-                "managedDisk": {
-                  "storageAccountType": "Premium_LRS"
-                },
-                "caching": "None",
-                "diskSizeGB": "[parameters('diskSize')]"
-              }
-            ]
+            }
           },
           "osProfile": {
-            "computerNamePrefix": "vm",
+            "computerNamePrefix": "syncgateway",
             "adminUsername": "[parameters('adminUsername')]",
             "adminPassword": "[parameters('adminPassword')]"
           },
