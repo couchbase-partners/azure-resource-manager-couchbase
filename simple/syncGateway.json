@@ -30,7 +30,7 @@
       "apiVersion": "2017-03-30",
       "plan": {
         "publisher": "couchbase",
-        "product": "couchbase-sync-gateway-enterprise",
+        "product": "couchbase-server-enterprise",
         "name": "byol"
       },
       "sku": {
