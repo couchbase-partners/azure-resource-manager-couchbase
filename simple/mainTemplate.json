@@ -107,12 +107,51 @@
           }
         }
       }
+    },
+    {
+      "name": "syncgateway",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2016-02-01",
+      "dependsOn": [
+        "Microsoft.Network/virtualNetworks/vnet"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templateUrl'), 'syncGateway.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "nodeCount": {
+            "value": "[parameters('syncGatewayNodeCount')]"
+          },
+          "vmSize": {
+            "value": "[parameters('vmSize')]"
+          },
+          "adminUsername": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "extensionUrl": {
+            "value": "[variables('extensionUrl')]"
+          },
+          "uniqueString": {
+            "value": "[variables('uniqueString')]"
+          }
+        }
+      }
     }
   ],
   "outputs": {
     "serverAdminURL": {
       "type": "string",
-      "value": "[concat('http://vm0.', variables('uniqueString'), '.', resourceGroup().location, '.cloudapp.azure.com:8091')]"
+      "value": "[concat('http://vm0.server-', variables('uniqueString'), '.', resourceGroup().location, '.cloudapp.azure.com:8091')]"
+    },
+    "syncGatewayAdminURL": {
+      "type": "string",
+      "value": "[concat('http://vm0.syncgateway-', variables('uniqueString'), '.', resourceGroup().location, '.cloudapp.azure.com:4984')]"
     }
   }
 }

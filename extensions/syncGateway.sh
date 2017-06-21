@@ -15,4 +15,4 @@ echo location \'$location\'
 
 ./adjust_tcp_keepalive.sh
 ./installSyncGateway.sh
-./configureSyncGateway.sh $adminUsername $adminPassword $uniqueString $location
+#./configureSyncGateway.sh $adminUsername $adminPassword $uniqueString $location
