@@ -4,7 +4,7 @@ The Azure Resource Manager (ARM) templates aim to configure Couchbase according 
 
 ## Compute
 
-A variety of compute types support premium storage.  Any such node will work well with Couchbase, though some may be more cost effective.  DS v2, FS and GS machines are the most commonly used.  While one core machines will deploy successfully [we recommend machines with 4 or more cores](https://developer.couchbase.com/documentation/server/current/install/pre-install.html) for production applications.
+A variety of compute types support premium storage.  Any such node will work well with Couchbase, though some may be more cost effective.  DS v2, FS and GS machines are the most commonly used.  While one core machines will deploy successfully, [we recommend machines with 4 or more cores](https://developer.couchbase.com/documentation/server/current/install/pre-install.html) for production applications.
 
 We recommend using VMSS as it improves reliability and simplifies the addition and removal of nodes.
 
@@ -24,7 +24,7 @@ We recommend using [Azure Premium Storage](https://docs.microsoft.com/en-us/azur
 
 Premium Storage comes in a variety of sizes.  We recommend a 1TB P30 drive as the upper end.  Large drives can lead to overly dense nodes that suffer from long rebuild times.  It's usually preferable to scale horizontally instead.
 
-We strongly recommend using managed disks for both the OS and data disks.  The older storage account mechanism has a higher potential for bottlenecks and is more complex.
+We strongly recommend using managed disks for both the OS and data disks.  The older Storage Account mechanism has a higher potential for bottlenecks and is more complex.
 
 Microsoft recommends disabling Premium Storage caching for mixed read/write workloads like Couchbase.
 
