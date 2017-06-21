@@ -6,7 +6,7 @@ The ARM templates aim to configure Couchbase according to our recommended best p
 
 A variety of compute types support premium storage.  Any such node will work well with Couchbase, though some may be more cost effective.  DS, FS and GS machines are the most commonly used.  While one core machines will deploy successfully we recommend machines with 4 or more cores for production applications.
 
-In the near future, the templates will be moving to take advantage of VM Scale Sets (VMSS).
+We recommend using VMSS as it improves reliability and simplifies the addition and removal of nodes.
 
 ### Memory Allocation
 
@@ -16,15 +16,13 @@ Couchbase recommends allocating 85% of system memory to the database.  When usin
 
 Couchbase is a strongly consistent database.  Data lives on a primary node with some number of replicas.  For deployments in Azure we typically recommend one replica.  In the event of a failure, that replica will take over.  For most scenarios, the downed node will recover in a matter of minutes, obviating the need for additional replicas.
 
-Azure does not currently have a concept of availability zones.  Instead, Azure provides Availability Sets that are made up of Fault Domains (FD) and Upgrade Domains (UD).  We recommend two FDs and 20 UDs.  FDs should then be mapped to the Couchbase concept of a Server Group.
-
-Note that Azure currently deploys FDs and UDs across each other.  In the future Azure is introducing an option to align FDs to UDs to that each of the two FDs would have ten UDs.
+Azure does not currently have a concept of availability zones.  Instead, Azure provides Availability Sets that are made up of Fault Domains (FD) and Upgrade Domains (UD).  VMSS default to configuring 5 FDs, each with their own UD.  It's likely best practice will change with new Azure features in late 2017.
 
 ## Storage
 
-We recommend using Azure Premium Storage.  Ephemeral drives present a risk of data loss.  Standard Storage is based on spinning magnetic disks (HDD) and does not perform well enough for most database applications.
+We recommend using Azure Premium Storage for data drives.  Ephemeral drives present a risk of data loss.  Standard Storage is based on spinning magnetic disks (HDD) and does not perform well enough for most database applications.  HDD is sufficient for OS disks.
 
-Premium Storage comes in three sizes - P10, P20 and P30.  P30 is the largest with 1TB of storage.  We find that 1TB is a good upper end for node density, so suggest a maximum of one P30 per node.
+Premium Storage comes in a variety of sizes.  We recommend a 1TB P30 drive as the upper end.  Large drives can lead to overly dense nodes that suffer from long rebuild times.  It's usually preferable to scale horizontally instead.
 
 ## Network
 
@@ -36,10 +34,8 @@ The templates configure each Couchbase node with the public DNS.  Because the pu
 
 ### Security
 
-A number of steps are necessary to secure a Couchbase cluster.  These are currently handled in the template:
-* Configure authentication for the administrator tool
-* Create a network security group (NSG) to close off communication to ports that are not actively used
+The template automatically sets up a username and password for the Couchbase Web Administrator.  The template also configures a Network Security Group (NSG) that closes off unused ports.  If you are not using XDCR and do not need to connect drivers remotely, we recommend changing the NSG settings to "VirtualNetwork" for Couchbase ports other than 8091 and 4984.
 
-These are not:
-* Enable SSL for traffic between nodes
-* Enable authentication for connections to the database as well.  Note that the sample buckets are created with very permissive permissions.
+Azure automatically configures disk encryption.  More detail is available [here](https://azure.microsoft.com/en-us/blog/azure-managed-disks-sse).
+
+The template does not currently configure SSL.  We recommend setting it up for production applications.
