@@ -8,9 +8,6 @@
     "vmSize": {
       "type": "string"
     },
-    "diskSize": {
-      "type": "int"
-    },
     "adminUsername": {
       "type": "string"
     },
