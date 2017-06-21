@@ -41,12 +41,12 @@
       }
     },
     {
-      "apiVersion": "2015-06-15",
       "tags": {
         "provider": "couchbase"
       },
-      "type": "Microsoft.Network/virtualNetworks",
       "name": "vnet",
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "2015-06-15",
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "Microsoft.Resources/deployments/networksecuritygroups"
@@ -74,6 +74,9 @@
       "name": "server",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2016-02-01",
+      "dependsOn": [
+        "Microsoft.Resources/virtualNetworks/vnet"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
