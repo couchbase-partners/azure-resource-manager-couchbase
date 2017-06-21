@@ -1,6 +1,6 @@
 # Best Practices
 
-The ARM templates aim to configure Couchbase according to our recommended best practices on Azure.
+The Azure Resource Manager (ARM) templates aim to configure Couchbase according to our recommended best practices on Azure.  Couchbase recommends ARM for all deployments on Azure.  We do not recommend Azure Service Manager (ASM).
 
 ## Compute
 
@@ -23,6 +23,8 @@ Azure does not currently have a concept of availability zones.  Instead, Azure p
 We recommend using [Azure Premium Storage](https://docs.microsoft.com/en-us/azure/storage/storage-premium-storage) for data drives.  Ephemeral drives present a risk of data loss.  Standard Storage is based on spinning magnetic disks (HDD) and does not perform well enough for most database applications.  HDD is sufficient for OS disks.
 
 Premium Storage comes in a variety of sizes.  We recommend a 1TB P30 drive as the upper end.  Large drives can lead to overly dense nodes that suffer from long rebuild times.  It's usually preferable to scale horizontally instead.
+
+We strongly recommend using managed disks for both the OS and data disks.  The older storage account mechanism has a higher potential for bottlenecks and is more complex.
 
 ## Network
 
