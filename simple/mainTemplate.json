@@ -41,9 +41,6 @@
       }
     },
     {
-      "tags": {
-        "provider": "couchbase"
-      },
       "name": "vnet",
       "type": "Microsoft.Network/virtualNetworks",
       "apiVersion": "2015-06-15",
