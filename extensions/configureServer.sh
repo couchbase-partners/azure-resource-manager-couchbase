@@ -19,8 +19,8 @@ nodeIndex=`curl -H Metadata:true "http://169.254.169.254/metadata/instance/compu
   | sed 's/.*_//' \
   | sed 's/"//'`
 
-rallyPublicDNS='vm0.server.'$uniqueString'.'$location'.cloudapp.azure.com'
-nodePublicDNS='vm'$nodeIndex'.server.'$uniqueString'.'$location'.cloudapp.azure.com'
+rallyPublicDNS='vm0.server-'$uniqueString'.'$location'.cloudapp.azure.com'
+nodePublicDNS='vm'$nodeIndex'.server-'$uniqueString'.'$location'.cloudapp.azure.com'
 
 echo "Adding an entry to /etc/hosts to simulate split brain DNS"
 echo "" >> /etc/hosts

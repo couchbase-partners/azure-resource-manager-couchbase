@@ -92,7 +92,7 @@
                           "properties": {
                             "idleTimeoutInMinutes": 15,
                             "dnsSettings": {
-                              "domainNameLabel": "[concat('server.', parameters('uniqueString'))]"
+                              "domainNameLabel": "[concat('server-', parameters('uniqueString'))]"
                             }
                           }
                         }

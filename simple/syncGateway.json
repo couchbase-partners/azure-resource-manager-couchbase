@@ -78,7 +78,7 @@
                           "properties": {
                             "idleTimeoutInMinutes": 15,
                             "dnsSettings": {
-                              "domainNameLabel": "[concat('syncgateway.', parameters('uniqueString'))]"
+                              "domainNameLabel": "[concat('syncgateway-', parameters('uniqueString'))]"
                             }
                           }
                         }
