@@ -85,7 +85,7 @@
                       "name": "ipconfig",
                       "properties": {
                         "subnet": {
-                          "id": ""
+                          "id": "[concat(resourceId('Microsoft.Network/virtualNetworks/', 'vnet'), '/subnets/subnet')]"
                         },
                         "publicipaddressconfiguration": {
                           "name": "public",

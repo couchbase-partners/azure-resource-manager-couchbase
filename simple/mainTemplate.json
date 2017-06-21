@@ -75,7 +75,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2016-02-01",
       "dependsOn": [
-        "Microsoft.Resources/virtualNetworks/vnet"
+        "Microsoft.Network/virtualNetworks/vnet"
       ],
       "properties": {
         "mode": "Incremental",
