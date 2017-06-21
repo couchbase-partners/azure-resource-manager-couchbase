@@ -112,7 +112,7 @@
   "outputs": {
     "serverAdminURL": {
       "type": "string",
-      "value": "[concat('http://server0.', variables('uniqueString'), '.', resourceGroup().location, '.cloudapp.azure.com:8091')]"
+      "value": "[concat('http://vm0.', variables('uniqueString'), '.', resourceGroup().location, '.cloudapp.azure.com:8091')]"
     }
   }
 }

@@ -56,7 +56,7 @@
             }
           },
           "osProfile": {
-            "computerNamePrefix": "syncgateway",
+            "computerNamePrefix": "vm",
             "adminUsername": "[parameters('adminUsername')]",
             "adminPassword": "[parameters('adminPassword')]"
           },
@@ -78,7 +78,7 @@
                           "properties": {
                             "idleTimeoutInMinutes": 15,
                             "dnsSettings": {
-                              "domainNameLabel": "[parameters('uniqueString')]"
+                              "domainNameLabel": "[concat('syncgateway.', parameters('uniqueString'))]"
                             }
                           }
                         }
