@@ -1,6 +1,6 @@
 # Best Practices
 
-The Azure Resource Manager (ARM) templates aim to configure Couchbase according to our recommended best practices on Azure.  Couchbase recommends ARM for all deployments on Azure.  We do not recommend Azure Service Manager (ASM).
+The Azure Resource Manager (ARM) templates aim to configure Couchbase according to our recommended best practices on Azure.  Couchbase recommends ARM for all deployments on Azure.  We do not recommend Azure Service Manager (ASM), also known as Classic.
 
 ## Compute
 
