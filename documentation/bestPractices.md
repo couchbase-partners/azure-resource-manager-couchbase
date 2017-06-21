@@ -4,7 +4,7 @@ The ARM templates aim to configure Couchbase according to our recommended best p
 
 ## Compute
 
-A variety of compute types support premium storage.  Any such node will work well with Couchbase, though some may be more cost effective.  DS, FS and GS machines are the most commonly used.  While one core machines will deploy successfully we recommend machines with 4 or more cores for production applications.
+A variety of compute types support premium storage.  Any such node will work well with Couchbase, though some may be more cost effective.  DS, FS and GS machines are the most commonly used.  While one core machines will deploy successfully [we recommend machines with 4 or more cores](https://developer.couchbase.com/documentation/server/current/install/pre-install.html) for production applications.
 
 We recommend using VMSS as it improves reliability and simplifies the addition and removal of nodes.
 
