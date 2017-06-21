@@ -322,12 +322,12 @@
             }
           },
           {
-            "name": "SyncGatewayAdmin",
+            "name": "SyncGateway",
             "properties": {
-              "description": "Sync Gateway Admin",
+              "description": "Sync Gateway",
               "protocol": "Tcp",
               "sourcePortRange": "*",
-              "destinationPortRange": "4984",
+              "destinationPortRange": "4984-4985",
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",

@@ -15,6 +15,7 @@ echo location \'$location\'
 
 serverDNS='vm0.server-'$uniqueString'.'$location'.cloudapp.azure.com'
 
+echo '
 {
   "log": ["*"],
   "databases": {
@@ -25,3 +26,4 @@ serverDNS='vm0.server-'$uniqueString'.'$location'.cloudapp.azure.com'
     }
   }
 }
+' > /home/sync_gateway/sync_gateway.json
