@@ -327,7 +327,7 @@
               "description": "Sync Gateway",
               "protocol": "Tcp",
               "sourcePortRange": "*",
-              "destinationPortRange": "4984-4985",
+              "destinationPortRange": "4984",
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
