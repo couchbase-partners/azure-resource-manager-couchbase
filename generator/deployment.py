@@ -8,6 +8,7 @@ def main():
     with open(filename, 'r') as stream:
         parameters = yaml.load(stream)
 
-    print(parameters)
+    print('Parameters: ' + str(parameters))
+
 
 main()
