@@ -7,5 +7,5 @@ RESOURCE_GROUP=$2
 python deployment.py parameters.${PARAMETERS_FILE}.yaml
 
 # Azure CLI 1.0 commands
-azure group create $RESOURCE_GROUP westus
-azure group deployment create --template-file generatedTemplate.json $RESOURCE_GROUP couchbase
+#azure group create $RESOURCE_GROUP westus
+#azure group deployment create --template-file generatedTemplate.json $RESOURCE_GROUP couchbase
