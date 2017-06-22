@@ -1,6 +1,6 @@
 # Important Note
 
-This repo uses a VMSS feature that is in preview currently.  Please contact ben.lackey@couchbase.com for assistance.  We're expecting GA shortly.
+This repo uses a VMSS feature that is in preview currently.  Please contact ben.lackey@couchbase.com for assistance.  We're expecting GA shortly at which point this will become a non-issue.
 
 Note, if you haven't deployed within the Azure Portal, you'll need to do that to use these templates.  Otherwise you'll get an error like this:
 
@@ -8,6 +8,8 @@ Note, if you haven't deployed within the Azure Portal, you'll need to do that to
 
 # azure-resource-manager-couchbase
 
-These are Azure Resource Manager (ARM) templates that install Couchbase Enterprise.  [simple](simple) is probably the best starting point.  [marketplace](marketplace) is the template used in the Couchbase Azure Marketplace offer.
+These are Azure Resource Manager (ARM) templates that install Couchbase Enterprise.  [simple](simple) is probably the best starting point.  [marketplace](marketplace) is the template used in the Couchbase Azure Marketplace offer. [generator](generator) is a template generator for advanced configurations.
 
 Some best practices are covered [here](documentation/bestPractices.md).
+
+A list of Microsoft links is [here](https://github.com/couchbase-partners/links/blob/master/microsoft.md).
