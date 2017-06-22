@@ -1,6 +1,13 @@
+import sys
 import yaml
 
 def main():
-    pass
+    filename=sys.argv[1]
+    print('Using parameter file: ' + filename)
+
+    with open(filename, 'r') as stream:
+        parameters = yaml.load(stream)
+
+    print(parameters)
 
 main()

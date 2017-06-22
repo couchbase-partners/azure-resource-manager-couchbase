@@ -1,17 +1,17 @@
-couchbaseUsername: couchbase
-couchbasePassword: foo123!
+username: couchbase
+password: foo123!
 clusters:
   - cluster: cluster1
   region: us-east1
   groups:
     - group: group1
-      diskSize: 100
+      diskSize: 32
       nodeCount: 5
       nodeType: Standard_DS3_v2
       services:
         - data
     - group: group2
-      diskSize: 10
+      diskSize: 32
       nodeCount: 5
       nodeType: Standard_DS3_v2
       services:
