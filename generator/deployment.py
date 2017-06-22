@@ -10,5 +10,8 @@ def main():
 
     print('Parameters: ' + str(parameters))
 
+    template={}
+
+    op
 
 main()

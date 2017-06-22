@@ -1,6 +1,6 @@
 # simple
 
-This ARM template deploys a Couchbase Enterprise cluster to Azure.  The template provisions an availability set, vnet, and a variety of virtual machines each with their own managed disks and public IP addresses.  It also sets up a network security group.
+This ARM template deploys a Couchbase Enterprise cluster to Azure.  This includes both [Couchbase Server](https://www.couchbase.com/products/server) and [Sync Gateway](https://developer.couchbase.com/documentation/mobile/current/guides/sync-gateway/index.html).  The template provisions a virtual network, a VMSS, Managed Disks with Premium Storage and public IPs with a DNS record per node.  It also sets up a network security group.
 
 ## Deployment
 
