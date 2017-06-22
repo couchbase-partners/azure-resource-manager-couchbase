@@ -55,7 +55,7 @@ Express Route also has a setup time measured in weeks to months.  Express Route 
 
 While Express Route is useful for on-prem/Azure hybrid solutions we do not recommend it for Azure to Azure XDCR communication.
 
-### Security
+## Security
 
 The template automatically sets up a username and password for the Couchbase Web Administrator.  The template also configures a [Network Security Group (NSG)](https://docs.microsoft.com/en-us/azure/virtual-network/virtual-networks-nsg) that closes off unused ports.  If you are not using XDCR and do not need to connect drivers remotely, we recommend changing the NSG settings to "VirtualNetwork" for Couchbase ports other than 8091 and 4984.
 
