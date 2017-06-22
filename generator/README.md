@@ -1,8 +1,10 @@
 # Generator
 
+This is an ARM template generator for Couchbase.  It creates templates that leverage XDCR and MDS.
+
 ## Extremely Important Note!
 
-This is an ARM template generator for Couchbase.  It creates templates that leverage XDCR and MDS.  It doesn't work yet.
+This doesn't work yet.
 
 ## Deployment
 
