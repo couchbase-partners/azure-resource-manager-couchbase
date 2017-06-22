@@ -30,11 +30,30 @@ Microsoft recommends disabling Premium Storage caching for mixed read/write work
 
 ## Network
 
-We recommend attaching a public IP to each node.  The public IP can be used to connect application drivers and replicate across geographies with XDCR.
+There are three potential network setups in Azure.  Those are detailed below.
 
-We do not recommend VPN Gateways or Express Route given the complexity of configuration, poor performance and significant expense of those solutions.
+### Public IPs
+The recommend setup is to attach a public IP to each node.  The public IP can be used to connect application drivers and replicate across geographies with XDCR.  
 
 The templates configure each Couchbase node with the public DNS.  Because the public DNS resolves to a NAT based IP, we recommend adding a record to /etc/hosts on each node to resolve its public DNS to 127.0.0.1.  That allows Couchbase to bind to the IP underlying the public DNS.
+
+Traffic between public IPs in Azure is routed over the Azure backbone.  The backbone has a bandwidth in 100s-1000s G.  This means that traffic is limited by the network cap of a VM.  Larger VMs have a 10G network cap.
+
+### VPN Gateways
+
+An alternative is to use [VPN Gateways](https://azure.microsoft.com/en-us/pricing/details/vpn-gateway/).  The highest performance VPN Gateway has a 1.25G cap.  Note that this cap is for the entire cluster, not a single node.  As a result, traffic for most clusters will bottlneck on the gateway.
+
+VPN Gateway setup is complex.  A gateway must be configured in each region and then unidirectional connections created between them.  When connecting multiple regions, the number of connections required will grow exponentially.
+
+We do not recommend VPN Gateways given their complexity of configuration and poor performance.  It is our understanding that Microsoft intends VPN gateways for client to server connections, not high bandwidth clustered applications like Couchbase.
+
+###
+
+An [Express Route](https://azure.microsoft.com/en-us/pricing/details/expressroute/) circuit is a leased line.  Microsoft works with providers like Verizon and Equinix to provide these lines.  The highest bandwidth line is 10G and costs $50,000 per month.  Not this is the bandwidth for the entire cluster, not a single node.
+
+Express Route also has a setup time measured in weeks to months.  Express Route traffic is routed through wherever the circuit exists.  So, if you are running in useast and uswest and you Express Route circuit is in London, all traffic will be routed across the Atlantic and back.
+
+While Express Route is useful for on-prem/Azure hybrid solutions we do not recommend it for Azure to Azure XDCR communication.
 
 ### Security
 
