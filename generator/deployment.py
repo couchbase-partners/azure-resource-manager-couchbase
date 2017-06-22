@@ -27,7 +27,7 @@ def main():
         template['resources']+=generateCluster(cluster)
 
     file = open('generatedTemplate.json', 'w')
-    file.write(json.dumps(template, sort_keys=True, indent=4, separators=(',', ': ')))
+    file.write(json.dumps(template, sort_keys=True, indent=4, separators=(',', ': ')) + '\n')
     file.close()
 
 def generateCluster(cluster):
