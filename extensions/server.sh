@@ -14,6 +14,6 @@ echo uniqueString \'$uniqueString\'
 echo location \'$location\'
 
 ./adjust_tcp_keepalive.sh
-./format.sh
 ./installServer.sh
+./format.sh
 ./configureServer.sh $adminUsername $adminPassword $uniqueString $location
