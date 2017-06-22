@@ -1,5 +1,6 @@
 import sys
 import yaml
+import json
 
 def main():
     filename=sys.argv[1]
@@ -12,6 +13,8 @@ def main():
 
     template={}
 
-    op
+    file = open('generatedTemplate.json', 'w')
+    file.write(json.dumps(template))
+    file.close()
 
 main()
