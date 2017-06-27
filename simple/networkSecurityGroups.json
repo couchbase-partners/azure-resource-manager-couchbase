@@ -212,6 +212,20 @@
           {
             "name": "InternalBucket",
             "properties": {
+              "description": "MemcachedSSL",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "11207",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 114,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "InternalBucket",
+            "properties": {
               "description": "Internal Bucket Port.",
               "protocol": "Tcp",
               "sourcePortRange": "*",
@@ -219,7 +233,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 114,
+              "priority": 115,
               "direction": "Inbound"
             }
           },
@@ -233,7 +247,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 115,
+              "priority": 116,
               "direction": "Inbound"
             }
           },
@@ -247,7 +261,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 116,
+              "priority": 117,
               "direction": "Inbound"
             }
           },
@@ -261,7 +275,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 117,
+              "priority": 118,
               "direction": "Inbound"
             }
           },
@@ -275,7 +289,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 118,
+              "priority": 119,
               "direction": "Inbound"
             }
           },
@@ -289,7 +303,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 119,
+              "priority": 120,
               "direction": "Inbound"
             }
           },
@@ -303,7 +317,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 120,
+              "priority": 121,
               "direction": "Inbound"
             }
           },
@@ -317,7 +331,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 121,
+              "priority": 122,
               "direction": "Inbound"
             }
           },
@@ -331,7 +345,7 @@
               "sourceAddressPrefix": "Internet",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 122,
+              "priority": 123,
               "direction": "Inbound"
             }
           }
