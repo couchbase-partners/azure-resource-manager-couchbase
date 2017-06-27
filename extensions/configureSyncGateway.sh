@@ -15,6 +15,7 @@ echo location \'$location\'
 
 serverDNS='vm0.server-'$uniqueString'.'$location'.cloudapp.azure.com'
 
+file="/home/sync_gateway/sync_gateway.json"
 echo '
 {
   "log": ["*"],
@@ -26,5 +27,7 @@ echo '
     }
   }
 }
-' > /home/sync_gateway/sync_gateway.json
-chmod 755 sync_gateway.json
+' > ${file}
+chmod 755 ${file}
+chown couchbase ${file}
+chgrp couchbase ${file}
