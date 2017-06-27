@@ -210,9 +210,9 @@
             }
           },
           {
-            "name": "InternalBucket",
+            "name": "MemcachedSSL",
             "properties": {
-              "description": "MemcachedSSL",
+              "description": "Used by smart client libraries to access data nodes using SSL. This is a memcached SSL port.",
               "protocol": "Tcp",
               "sourcePortRange": "*",
               "destinationPortRange": "11207",
