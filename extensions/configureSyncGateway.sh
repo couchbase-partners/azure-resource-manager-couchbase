@@ -22,10 +22,12 @@ echo '
   "adminInterface": "0.0.0.0:4985",
   "log": ["*"],
   "databases": {
-    "db": {
+    "database": {
       "server": "http://'${serverDNS}':8091",
       "bucket": "sync_gateway",
-      "users": { "GUEST": { "disabled": false, "admin_channels": ["*"] } }
+      "users": {
+        "GUEST": { "disabled": false, "admin_channels": ["*"] }
+      }
     }
   }
 }
