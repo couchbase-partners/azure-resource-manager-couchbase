@@ -161,7 +161,7 @@
     },
     "syncGatewayAdminURL": {
       "type": "string",
-      "value": "[concat('http://vm0.syncgateway-', variables('uniqueString'), '.', resourceGroup().location, '.cloudapp.azure.com:4984')]"
+      "value": "[concat('http://vm0.syncgateway-', variables('uniqueString'), '.', resourceGroup().location, '.cloudapp.azure.com:4985/_admin/')]"
     }
   }
 }
