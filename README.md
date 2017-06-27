@@ -12,4 +12,4 @@ These are Azure Resource Manager (ARM) templates that install Couchbase Enterpri
 
 Some best practices are covered [here](documentation/bestPractices.md).
 
-A list of Microsoft links is [here](https://github.com/couchbase-partners/links/blob/master/microsoft.md).
+Useful links are [here](https://github.com/couchbase-partners/links/blob/master/microsoft.md).
