@@ -64,3 +64,5 @@ The template automatically sets up a username and password for the Couchbase Web
 Azure automatically configures disk encryption for Managed Disks that use Premium Storage.  More detail is available [here](https://azure.microsoft.com/en-us/blog/azure-managed-disks-sse).
 
 The template does not currently configure SSL.  We recommend setting it up for production applications.
+
+These templates open Sync Gateway access to the internet.  We typically recommend securing the admin interface for access from `127.0.0.1` only.  That can be done by edit the `/home/sync_gateway/sync_gateway.json` file.
