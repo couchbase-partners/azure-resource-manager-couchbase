@@ -18,6 +18,8 @@ serverDNS='vm0.server-'$uniqueString'.'$location'.cloudapp.azure.com'
 file="/home/sync_gateway/sync_gateway.json"
 echo '
 {
+  "interface": "0.0.0.0:4984",
+  "adminInterface": "127.0.0.1:4985",
   "log": ["*"],
   "databases": {
     "db": {
