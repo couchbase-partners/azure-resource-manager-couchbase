@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 
-# This script formats and mounts the drive on lun1 as /mnt/datadisk
+# This script formats and mounts the drive on sdc as /mnt/datadisk
+# sda - OS Disk
+# sdb - Ephemeral
+# sdc - Attached Disk
 
-DEVICE="/dev/disks/azure/datadisks/lun"
+DISK="/dev/sdc"
+DEVICE="/dev/sdc1"
 MOUNTPOINT="/mnt/datadisk"
 
 echo "Partitioning the disk."
@@ -13,7 +17,7 @@ p
 
 t
 83
-w"| fdisk ${DEVICE}
+w"| fdisk ${DISK}
 
 echo "Creating the filesystem."
 mkfs -j -t ext4 ${DEVICE}
