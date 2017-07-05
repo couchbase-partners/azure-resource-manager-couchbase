@@ -51,7 +51,7 @@
             "imageReference": {
               "publisher": "couchbase",
               "offer": "couchbase-sync-gateway-enterprise",
-              "sku": "silver_support",
+              "sku": "byol",
               "version": "latest"
             }
           },
