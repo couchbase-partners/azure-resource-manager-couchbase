@@ -227,7 +227,7 @@
             "name": "serverDiskSize",
             "type": "Microsoft.Common.DropDown",
             "label": "Server Disk Size",
-            "defaultValue": "32 GB",
+            "defaultValue": 32,
             "toolTip": "Size of disk on each Server node in the cluster",
             "constraints": {
               "allowedValues": [
