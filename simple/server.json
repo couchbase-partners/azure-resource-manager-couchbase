@@ -34,7 +34,7 @@
       "plan": {
         "publisher": "couchbase",
         "product": "couchbase-server-enterprise",
-        "name": "silver_support"
+        "name": "byol"
       },
       "sku": {
         "name": "[parameters('vmSize')]",
@@ -54,7 +54,7 @@
             "imageReference": {
               "publisher": "couchbase",
               "offer": "couchbase-server-enterprise",
-              "sku": "silver_support",
+              "sku": "byol",
               "version": "latest"
             },
             "dataDisks": [
