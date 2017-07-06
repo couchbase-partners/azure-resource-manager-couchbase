@@ -30,8 +30,8 @@
       "apiVersion": "2017-03-30",
       "plan": {
         "publisher": "couchbase",
-        "product": "couchbase-server-enterprise",
-        "name": "byol"
+        "product": "couchbase-sync-gateway-enterprise",
+        "name": "silver_support"
       },
       "sku": {
         "name": "[parameters('vmSize')]",
@@ -51,7 +51,7 @@
             "imageReference": {
               "publisher": "couchbase",
               "offer": "couchbase-sync-gateway-enterprise",
-              "sku": "byol",
+              "sku": "silver_support",
               "version": "latest"
             }
           },
