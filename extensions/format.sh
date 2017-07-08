@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# This script formats and mounts the drive on lun0 as /mnt/datadisk
+# This script formats and mounts the drive on lun0 as /datadisk
 
 DISK="/dev/disk/azure/scsi1/lun0"
 PARTITION="/dev/disk/azure/scsi1/lun0-part1"
-MOUNTPOINT="/mnt/datadisk"
+MOUNTPOINT="/datadisk"
 
 #echo "Partitioning the disk."
 #echo "n
@@ -16,16 +16,16 @@ MOUNTPOINT="/mnt/datadisk"
 #83
 #w"| fdisk ${DISK}
 
-echo "Creating the filesystem."
-mkfs -j -t ext4 ${PARTITION}
+#echo "Creating the filesystem."
+#mkfs -j -t ext4 ${PARTITION}
 
-echo "Updating fstab"
-LINE="${PARTITION}\t${MOUNTPOINT}\text4\tnoatime,nodiratime,nodev,noexec,nosuid\t1\t2"
-echo -e ${LINE} >> /etc/fstab
+#echo "Updating fstab"
+#LINE="${PARTITION}\t${MOUNTPOINT}\text4\tnoatime,nodiratime,nodev,noexec,nosuid\t1\t2"
+#echo -e ${LINE} >> /etc/fstab
 
 echo "Mounting the disk"
 mkdir -p $MOUNTPOINT
-mount -a
+#mount -a
 
 echo "Changing permissions"
 chown couchbase $MOUNTPOINT

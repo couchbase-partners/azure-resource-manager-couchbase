@@ -34,8 +34,8 @@ echo "Running couchbase-cli node-init"
 ./couchbase-cli node-init \
   --cluster=$nodePublicDNS \
   --node-init-hostname=$nodePublicDNS \
-  --node-init-data-path=/mnt/datadisk/data \
-  --node-init-index-path=/mnt/datadisk/index \
+  --node-init-data-path=/datadisk/data \
+  --node-init-index-path=/datadisk/index \
   --user=$adminUsername \
   --pass=$adminPassword
 
