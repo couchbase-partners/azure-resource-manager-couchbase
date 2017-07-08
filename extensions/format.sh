@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# This script formats and mounts the drive on sdc as /mnt/datadisk
-# sda - OS Disk
-# sdb - Ephemeral
-# sdc - Attached Disk
+# This script formats and mounts the drive on lun0 as /mnt/datadisk
 
-DISK="/dev/sdc"
-DEVICE="/dev/sdc1"
+DISK="/dev/disk/azure/scsi1/lun0"
+DEVICE="/dev/disk/azure/scsi1/lun0-part1"
 MOUNTPOINT="/mnt/datadisk"
 
 echo "Partitioning the disk."
