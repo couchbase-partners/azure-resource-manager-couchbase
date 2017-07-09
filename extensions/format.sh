@@ -16,6 +16,9 @@ t
 83
 w"| fdisk ${DISK}
 
+echo "Waiting for the symbolic link to be created..."
+sleep 10
+
 echo "Creating the filesystem."
 mkfs -j -t ext4 ${PARTITION}
 
