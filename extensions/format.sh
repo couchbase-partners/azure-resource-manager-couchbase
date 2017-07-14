@@ -17,7 +17,7 @@ t
 w"| fdisk ${DISK}
 
 echo "Waiting for the symbolic link to be created..."
-sleep 10
+udevadm settle --exit-if-exists=$PARTITION
 
 echo "Creating the filesystem."
 mkfs -j -t ext4 ${PARTITION}
