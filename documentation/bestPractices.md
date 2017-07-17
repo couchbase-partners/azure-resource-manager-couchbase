@@ -6,7 +6,7 @@ The Azure Resource Manager (ARM) templates aim to configure Couchbase according 
 
 A variety of compute types support premium storage.  Any such node will work well with Couchbase, though some may be more cost effective.  DS v2, FS and GS machines are the most commonly used.  While one core machines will deploy successfully, [we recommend machines with 4 or more cores](https://developer.couchbase.com/documentation/server/current/install/pre-install.html) for production applications.
 
-We recommend using VMSS as it improves reliability and simplifies the addition and removal of nodes.
+We recommend using VM Scale Sets (VMSS) instead of stand alone VMs as it improves reliability and simplifies the addition and removal of nodes.
 
 ### Memory Allocation
 
@@ -14,9 +14,11 @@ Couchbase recommends allocating 85% of system memory to the database.  When usin
 
 ### Fault Tolerance and High Availability
 
-Couchbase is a strongly consistent database.  Data lives on a primary node with some number of replicas.  For deployments in Azure we typically recommend one replica.  In the event of a failure, that replica will take over.  For most scenarios, the downed node will recover in a matter of minutes, obviating the need for additional replicas.
+Couchbase is a strongly consistent database with peer-to-peer replication for handling node failures.  Replicas are not needed to increase read performance due to a built-in managed caching layer.  For deployments in Azure, we typically recommend one replica.  In the event of a single node failure, replicas elsewhere in the cluster can be automatically promoted if automatic failover is [enabled](https://developer.couchbase.com/documentation/server/current/clustersetup/automatic-failover.html).  For most scenarios, the downed node will recover in a matter of minutes, obviating the need for additional replicas.
 
-Azure does not currently have a concept of availability zones.  Instead, Azure provides Availability Sets that are made up of Fault Domains (FD) and Upgrade Domains (UD).  VM Scale Sets (VMSS) default to configuring 5 FDs, each with their own UD.  It's likely best practice will change with new Azure features in late 2017.
+A minimum of 3 nodes required for the data service to support automatic failover, and a minimum of two nodes for the query, index and FTS service to support high availability.  Depending on your performance and topology needs, these services can be collocated or separated but the minimum node count requirement does not change.
+
+Azure does not currently have a concept of availability zones.  Instead, Azure provides Availability Sets that are made up of Fault Domains (FD) and Upgrade Domains (UD).  VMSS default to configuring 5 FDs, each with their own UD.  It's likely best practice will change with new Azure features in late 2017.
 
 ## Storage
 
@@ -30,14 +32,14 @@ Microsoft recommends disabling Premium Storage caching for mixed read/write work
 
 ## Network
 
-There are three potential network setups in Azure that will support XDCR.  Those are detailed below.
+There are three potential network setups in Azure.  Those are detailed below.
 
 ### Public IPs
-The Couchbase recommended setup is to attach a public IP to each node.  The public IP can be used to connect application drivers and replicate across geographies with XDCR.  
+The Couchbase recommended setup is to attach a public IP to each node.  The public IP can be used to connect application drivers and replicate across geographies with XDCR.
 
 The templates configure each Couchbase node with the public DNS.  Because the public DNS resolves to a NAT based IP, we recommend adding a record to `/etc/hosts` on each node to resolve its public DNS to `127.0.0.1`.  That allows Couchbase to bind to the IP underlying the public DNS.
 
-Traffic between public IPs in Azure is routed over the Azure backbone.  The backbone has a bandwidth in 100s-1000s G.  This means that traffic is limited by the network cap of a VM.  Larger VMs have a 10G network cap.
+Traffic between public IPs in Azure is routed over the Azure backbone, not the public internet.  The backbone has a bandwidth in 100s-1000s G.  This means that traffic is limited by the network cap of a VM.  Larger VMs have a 10G network cap.
 
 ### VPN Gateways
 
