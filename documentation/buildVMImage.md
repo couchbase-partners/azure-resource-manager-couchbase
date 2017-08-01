@@ -49,7 +49,7 @@ We need to create a URL for the image.
 
 The Publish Portal could potentially print an error: "The SAS URL start date (st) for the SAS URL should be one day before the current date in UTC, please ensure that the start date for SAS link is on or before mm/dd/yyyy. Please ensure that the SAS URL is generated following the instructions available in the [help link](https://docs.microsoft.com/en-us/azure/marketplace-publishing/marketplace-publishing-vm-image-creation)."
 
-    azure storage container sas create vhds rl 08/04/2017 -c $connection --start 07/04/2017
+    azure storage container sas create vhds rl 01/01/2018 -c $connection --start 07/31/2017
 
 The Shared Access URL should look like this:
 
@@ -63,4 +63,4 @@ Make sure it works by running:
 
     wget $url
 
-Once you can successfully get the image, proceed to the [Publisher Portal](https://publish.windowsazure.com).
+Once you can successfully get the image, proceed to the [Publisher Portal](https://cloudpartner.azure.com/#publisher).
