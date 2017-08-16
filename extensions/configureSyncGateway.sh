@@ -24,7 +24,7 @@ echo '
   "databases": {
     "database": {
       "server": "http://'${serverDNS}':8091",
-      "bucket": "sync_gateway",
+      "bucket": "travel-sample",
       "users": {
         "GUEST": { "disabled": false, "admin_channels": ["*"] }
       }
