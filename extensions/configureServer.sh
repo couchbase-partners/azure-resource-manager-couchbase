@@ -56,12 +56,12 @@ then
 
   echo "Loading the travel-sample"
   ./cbdocloader \
-  -n $nodePublicDNS:8091 \
-  -u $adminUsername \
-  -p $adminPassword \
-  -b travel-sample \
-  -s 100 \
-  /opt/couchbase/samples/travel-sample.zip
+    -n $nodePublicDNS:8091 \
+    -u $adminUsername \
+    -p $adminPassword \
+    -b "travel-sample" \
+    -s 100 \
+    /opt/couchbase/samples/travel-sample.zip
 else
   echo "Running couchbase-cli server-add"
   output=""
