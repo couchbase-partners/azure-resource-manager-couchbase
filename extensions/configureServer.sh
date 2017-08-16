@@ -54,14 +54,14 @@ then
     --cluster-password=$adminPassword \
     --services=data,index,query,fts
 
-  echo "Loading the travel-sample"
-  ./cbdocloader \
-    -n $nodePublicDNS:8091 \
-    -u $adminUsername \
-    -p $adminPassword \
-    -b "travel-sample" \
-    -s 100 \
-    /opt/couchbase/samples/travel-sample.zip
+  echo "Running couchbase-cli bucket-create"
+  ./couchbase-cli bucket-create \
+    --cluster=$nodePublicDNS \
+    --user=$adminUsername \
+    --pass=$adminPassword \
+    --bucket=default \
+    --bucket-type=couchbase \
+    --bucket-ramsize=100
 else
   echo "Running couchbase-cli server-add"
   output=""

@@ -24,7 +24,7 @@ echo '
   "databases": {
     "database": {
       "server": "http://'${serverDNS}':8091",
-      "bucket": "travel-sample",
+      "bucket": "default",
       "users": {
         "GUEST": { "disabled": false, "admin_channels": ["*"] }
       }
