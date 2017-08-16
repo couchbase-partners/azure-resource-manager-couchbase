@@ -62,6 +62,16 @@ then
     --bucket=default \
     --bucket-type=couchbase \
     --bucket-ramsize=100
+
+  echo "Loading the travel-sample"
+  ./cbdocloader \
+    -n $nodePublicDNS:8091 \
+    -u $adminUsername \
+    -p $adminPassword \
+    -b mybucket \
+    -s 100 \
+    /opt/couchbase/samples/travel-sample.zip
+
 else
   echo "Running couchbase-cli server-add"
   output=""
