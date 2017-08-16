@@ -20,7 +20,7 @@ echo '
   "databases": {
     "database": {
       "server": "http://'${serverDNS}':8091",
-      "bucket": "default",
+      "bucket": "sync_gateway",
       "users": {
         "GUEST": { "disabled": false, "admin_channels": ["*"] }
       }
