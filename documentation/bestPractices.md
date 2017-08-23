@@ -4,7 +4,9 @@ The Azure Resource Manager (ARM) templates aim to configure Couchbase according 
 
 ## Compute
 
-A variety of compute types support premium storage.  Any such node will work well with Couchbase, though some may be more cost effective.  DS v2, FS and GS machines are the most commonly used.  While one core machines will deploy successfully, [we recommend machines with 4 or more cores](https://developer.couchbase.com/documentation/server/current/install/pre-install.html) for production applications.
+A variety of compute types support premium storage.  Any such node will work well with Couchbase, though some may be more cost effective.  DS v2, ES v3, FS and GS machines are the most commonly used.  While one core machines will deploy successfully, [we recommend machines with 4 or more cores](https://developer.couchbase.com/documentation/server/current/install/pre-install.html) for production applications.  
+
+For a majority of applications the ES16 v3 will be a good balance of price and performance.
 
 We recommend using VM Scale Sets (VMSS) instead of stand alone VMs as it improves reliability and simplifies the addition and removal of nodes.
 
