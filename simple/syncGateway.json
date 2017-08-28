@@ -76,7 +76,7 @@
                         "publicipaddressconfiguration": {
                           "name": "public",
                           "properties": {
-                            "idleTimeoutInMinutes": 15,
+                            "idleTimeoutInMinutes": 30,
                             "dnsSettings": {
                               "domainNameLabel": "[concat('syncgateway-', parameters('uniqueString'))]"
                             }
