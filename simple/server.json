@@ -114,11 +114,8 @@
                   "autoUpgradeMinorVersion": true,
                   "settings": {
                     "fileUris": [
-                      "[concat(parameters('extensionUrl'), 'adjust_tcp_keepalive.sh')]",
-                      "[concat(parameters('extensionUrl'), 'installServer.sh')]",
-                      "[concat(parameters('extensionUrl'), 'configureServer.sh')]",
                       "[concat(parameters('extensionUrl'), 'server.sh')]",
-                      "[concat(parameters('extensionUrl'), 'format.sh')]"
+                      "[concat(parameters('extensionUrl'), 'util.sh')]"
                     ],
                     "commandToExecute": "[concat('bash server.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', parameters('uniqueString'), ' ', resourceGroup().location)]"
                   }

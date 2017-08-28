@@ -100,10 +100,8 @@
                   "autoUpgradeMinorVersion": true,
                   "settings": {
                     "fileUris": [
-                      "[concat(parameters('extensionUrl'), 'adjust_tcp_keepalive.sh')]",
-                      "[concat(parameters('extensionUrl'), 'installSyncGateway.sh')]",
-                      "[concat(parameters('extensionUrl'), 'configureSyncGateway.sh')]",
-                      "[concat(parameters('extensionUrl'), 'syncGateway.sh')]"
+                      "[concat(parameters('extensionUrl'), 'syncGateway.sh')]",
+                      "[concat(parameters('extensionUrl'), 'util.sh')]"
                     ],
                     "commandToExecute": "[concat('bash syncGateway.sh ', parameters('uniqueString'), ' ', resourceGroup().location)]"
                   }
