@@ -24,7 +24,7 @@ Then you'll want to clone this repo.  You can do that with the command:
 
 ## Creating a Deployment
 
-[deploy.sh](deploy.sh) is a helper script to deploy a stack.  Take a look at it, the [mainTemplateParameters.json](mainTemplateParameters.json) and modify any parameters.  Then run it as:
+[deploy.sh](deploy.sh) is a helper script to create a deployment.  Take a look at it, the [mainTemplateParameters.json](mainTemplateParameters.json) and modify any parameters.  Then run it as:
 
     cd azure-resource-manager-couchbase
     cd simple
