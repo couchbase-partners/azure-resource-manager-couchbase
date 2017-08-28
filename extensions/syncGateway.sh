@@ -14,6 +14,7 @@ wget https://packages.couchbase.com/releases/couchbase-sync-gateway/1.4.1/couchb
 dpkg -i couchbase-sync-gateway-enterprise_1.4.1-3_x86_64.deb
 
 echo "Calling util.sh..."
+source util.sh
 adjustTCPKeepalive
 
 echo "Configuring Couchbase Sync Gateway..."

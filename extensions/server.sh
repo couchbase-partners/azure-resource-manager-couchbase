@@ -22,6 +22,7 @@ apt-get update
 apt-get -y install couchbase-server
 
 echo "Calling util.sh..."
+source util.sh
 formatDataDisk
 turnOffTransparentHugepages
 setSwappinessToZero
