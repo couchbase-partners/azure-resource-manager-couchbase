@@ -12,11 +12,11 @@ This template uses two Azure Marketplace VMs.  To deploy in your Azure subscript
 
 You will need an Azure account.  If using the hourly-pricing option that account must be configured for pay as you go.  If using BYOL then any account will work.
 
-First we need to install and configure the Azure CLI.  We are using the 1.0 CLI rather than the 2.0 because the logging and error reporting is better.  At some point soon we'll move to the 2.0  You can install the CLI by following the instructions [here](https://docs.microsoft.com/en-us/azure/cli-install-nodejs).
+First we need to install and configure the Azure CLI.  The Azure CLI comes in both 1.0 and 2.0 versions.  For these scripts we are using the 2.0.  You can install the 2.0 CLI by following the instructions [here](https://docs.microsoft.com/en-us/cli/azure/overview).
 
 You can confirm the CLI is working properly by running:
 
-    azure group list
+    az group list
 
 Then you'll want to clone this repo.  You can do that with the command:
 
@@ -36,4 +36,4 @@ When complete the template prints the URLs to access Couchbase Server and Couchb
 
 To delete your deployment you can either run the command below or use the GUI in the [Azure Portal](https://portal.azure.com).
 
-    azure group delete <RESOURCE_GROUP_NAME>
+    az group delete --name <RESOURCE_GROUP_NAME>
