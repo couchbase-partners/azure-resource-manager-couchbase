@@ -1,4 +1,4 @@
-# Marketplace
+# marketplace
 
 This template is used by the Couchbase Azure Marketplace offer.  It is not intended to be used outside the marketplace. [makeArchive.sh](makeArchive.sh) will build a zip file that can be uploaded to the publish portal.  This template depends on the [simple](../simple) template.  That is probably what you want to be using instead of this anyway.
 

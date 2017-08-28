@@ -1,4 +1,4 @@
-# Generator
+# generator
 
 This is an ARM template generator for Couchbase.  It creates templates that leverage XDCR and MDS.
 
