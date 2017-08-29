@@ -21,13 +21,13 @@ You can confirm the CLI is working properly by running:
 Then you'll want to clone this repo.  You can do that with the command:
 
     git clone https://github.com/couchbase-partners/azure-resource-manager-couchbase.git
+    cd azure-resource-manager-couchbase
+    cd simple
 
 ## Creating a Deployment
 
 [deploy.sh](deploy.sh) is a helper script to create a deployment.  Take a look at it, the [mainTemplateParameters.json](mainTemplateParameters.json) and modify any parameters.  Then run it as:
 
-    cd azure-resource-manager-couchbase
-    cd simple
     ./deploy.sh <RESOURCE_GROUP_NAME>
 
 When complete the template prints the URLs to access Couchbase Server and Couchbase Sync Gateway.
