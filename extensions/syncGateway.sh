@@ -18,7 +18,13 @@ source util.sh
 adjustTCPKeepalive
 
 echo "Configuring Couchbase Sync Gateway..."
-rallyDNS='vm0.server-'$uniqueString'.'$location'.cloudapp.azure.com'
+
+# Public DNS
+#rallyDNS='vm0.server-'$uniqueString'.'$location'.cloudapp.azure.com'
+
+# Private DNS
+nodeDNS=`nslookup \`hostname\` | grep Name | sed 's/Name:\t//'`
+rallyDNS=`echo ${nodeDNS} | sed 's/syncgateway[0-9][0-9][0-9][0-9][0-9][0-9]/server000000/'`
 
 file="/home/sync_gateway/sync_gateway.json"
 echo '
