@@ -56,7 +56,7 @@
             }
           },
           "osProfile": {
-            "computerNamePrefix": "vm",
+            "computerNamePrefix": "syncgateway",
             "adminUsername": "[parameters('adminUsername')]",
             "adminPassword": "[parameters('adminPassword')]"
           },

@@ -70,7 +70,7 @@
             ]
           },
           "osProfile": {
-            "computerNamePrefix": "vm",
+            "computerNamePrefix": "server",
             "adminUsername": "[parameters('adminUsername')]",
             "adminPassword": "[parameters('adminPassword')]"
           },
