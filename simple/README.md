@@ -8,6 +8,10 @@ The template provisions a virtual network, VM Scale Sets (VMSS), Managed Disks w
 
 This template uses two Azure Marketplace VMs.  To deploy in your Azure subscription you must first deploy the template once from the Azure Portal [here](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/couchbase.couchbase-enterprise).
 
+If you don't follow this step, you'll likely see an error like this:
+
+    error:   MarketplacePurchaseEligibilityFailed : Marketplace purchase eligibilty check returned errors. See inner errors for details.
+
 ## Environment Setup
 
 You will need an Azure account.  If using the hourly-pricing option that account must be configured for pay as you go.  If using BYOL then any account will work.
