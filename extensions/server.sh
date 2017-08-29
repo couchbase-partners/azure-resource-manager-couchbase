@@ -35,21 +35,21 @@ nodeIndex=`curl -H Metadata:true "http://169.254.169.254/metadata/instance/compu
   | sed 's/.*_//' \
   | sed 's/"//'`
 
-rallyPublicDNS='vm0.server-'$uniqueString'.'$location'.cloudapp.azure.com'
-nodePublicDNS='vm'$nodeIndex'.server-'$uniqueString'.'$location'.cloudapp.azure.com'
+rallyDNS='vm0.server-'$uniqueString'.'$location'.cloudapp.azure.com'
+nodeDNS='vm'$nodeIndex'.server-'$uniqueString'.'$location'.cloudapp.azure.com'
 
 echo "Adding an entry to /etc/hosts to simulate split brain DNS"
 echo "" >> /etc/hosts
 echo "# Simulate split brain DNS for Couchbase" >> /etc/hosts
-echo "127.0.0.1 $nodePublicDNS" >> /etc/hosts
+echo "127.0.0.1 $nodeDNS" >> /etc/hosts
 echo "" >> /etc/hosts
 
 cd /opt/couchbase/bin/
 
 echo "Running couchbase-cli node-init"
 ./couchbase-cli node-init \
-  --cluster=$nodePublicDNS \
-  --node-init-hostname=$nodePublicDNS \
+  --cluster=$nodeDNS \
+  --node-init-hostname=$nodeDNS \
   --node-init-data-path=/datadisk/data \
   --node-init-index-path=/datadisk/index \
   --user=$adminUsername \
@@ -63,7 +63,7 @@ then
 
   echo "Running couchbase-cli cluster-init"
   ./couchbase-cli cluster-init \
-    --cluster=$nodePublicDNS \
+    --cluster=$nodeDNS \
     --cluster-ramsize=$dataRAM \
     --cluster-index-ramsize=$indexRAM \
     --cluster-username=$adminUsername \
@@ -72,7 +72,7 @@ then
 
   echo "Running couchbase-cli bucket-create"
   ./couchbase-cli bucket-create \
-    --cluster=$nodePublicDNS \
+    --cluster=$nodeDNS \
     --user=$adminUsername \
     --pass=$adminPassword \
     --bucket=sync_gateway \
@@ -81,13 +81,13 @@ then
 else
   echo "Running couchbase-cli server-add"
   output=""
-  while [[ $output != "Server $nodePublicDNS:8091 added" && ! $output =~ "Node is already part of cluster." ]]
+  while [[ $output != "Server $nodeDNS:8091 added" && ! $output =~ "Node is already part of cluster." ]]
   do
     output=`./couchbase-cli server-add \
-      --cluster=$rallyPublicDNS \
+      --cluster=$rallyDNS \
       --user=$adminUsername \
       --pass=$adminPassword \
-      --server-add=$nodePublicDNS \
+      --server-add=$nodeDNS \
       --server-add-username=$adminUsername \
       --server-add-password=$adminPassword \
       --services=data,index,query,fts`
@@ -100,7 +100,7 @@ else
   while [[ ! $output =~ "SUCCESS" ]]
   do
     output=`./couchbase-cli rebalance \
-      --cluster=$rallyPublicDNS \
+      --cluster=$rallyDNS \
       --user=$adminUsername \
       --pass=$adminPassword`
     echo rebalance output \'$output\'

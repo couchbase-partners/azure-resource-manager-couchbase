@@ -18,7 +18,7 @@ source util.sh
 adjustTCPKeepalive
 
 echo "Configuring Couchbase Sync Gateway..."
-serverDNS='vm0.server-'$uniqueString'.'$location'.cloudapp.azure.com'
+rallyDNS='vm0.server-'$uniqueString'.'$location'.cloudapp.azure.com'
 
 file="/home/sync_gateway/sync_gateway.json"
 echo '
@@ -28,7 +28,7 @@ echo '
   "log": ["*"],
   "databases": {
     "database": {
-      "server": "http://'${serverDNS}':8091",
+      "server": "http://'${rallyDNS}':8091",
       "bucket": "sync_gateway",
       "users": {
         "GUEST": { "disabled": false, "admin_channels": ["*"] }
