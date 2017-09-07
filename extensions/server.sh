@@ -14,8 +14,8 @@ echo uniqueString \'$uniqueString\'
 echo location \'$location\'
 
 echo "Installing Couchbase Server..."
-wget http://packages.couchbase.com/releases/4.6.2/couchbase-server-enterprise_4.6.2-ubuntu14.04_amd64.deb
-dpkg -i couchbase-server-enterprise_4.6.2-ubuntu14.04_amd64.deb
+wget http://packages.couchbase.com/releases/4.6.3/couchbase-server-enterprise_4.6.3-ubuntu14.04_amd64.deb
+dpkg -i couchbase-server-enterprise_4.6.3-ubuntu14.04_amd64.deb
 apt-get update
 apt-get -y install couchbase-server
 
