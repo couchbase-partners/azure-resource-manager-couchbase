@@ -5,7 +5,7 @@
 function makeArchive()
 {
   license=$1
-  
+
   mkdir tmp
   cd tmp
 
@@ -28,4 +28,4 @@ function makeArchive()
 }
 
 makeArchive byol
-markArchive hourly_pricing
+makeArchive hourly_pricing
