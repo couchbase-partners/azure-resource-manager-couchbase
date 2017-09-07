@@ -9,18 +9,14 @@ function makeArchive()
   mkdir tmp
   cd tmp
 
-  cp ../../extensions/* ./
-  cp ../../simple/* ./
-
-  # Do this after and overwrite mainTemplate.json
   cp ../mainTemplate-${license}.json ./mainTemplate.json
   cp ../createUiDefinition.json ./
 
-  # Drop some files that don't need to be in the archive
-  rm README.md
-  rm deploy.sh
-  rm deploy.ps1
-  rm mainTemplateParameters.json
+  cp ../../simple/networkSecurityGroups.json ./
+  cp ../../simple/server.json ./
+  cp ../../simple/syncGateway.json ./
+
+  cp ../../extensions/* ./
 
   zip ../archive-${license}.zip *
   cd -
