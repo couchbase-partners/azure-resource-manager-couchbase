@@ -22,6 +22,9 @@
     },
     "uniqueString": {
       "type": "string"
+    },
+    "license": {
+      "type": "string"
     }
   },
   "variables": {},
@@ -34,7 +37,7 @@
       "plan": {
         "publisher": "couchbase",
         "product": "couchbase-server-enterprise",
-        "name": "byol"
+        "name": "[parameters('license')]"
       },
       "sku": {
         "name": "[parameters('vmSize')]",
@@ -54,7 +57,7 @@
             "imageReference": {
               "publisher": "couchbase",
               "offer": "couchbase-server-enterprise",
-              "sku": "byol",
+              "sku": "[parameters('license')]",
               "version": "latest"
             },
             "dataDisks": [

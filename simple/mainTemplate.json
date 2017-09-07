@@ -19,6 +19,9 @@
     },
     "adminPassword": {
       "type": "securestring"
+    },
+    "license": {
+      "type": "string"
     }
   },
   "variables": {
@@ -101,6 +104,9 @@
           },
           "uniqueString": {
             "value": "[variables('uniqueString')]"
+          },
+          "license": {
+            "value": "[parameters('license')]"
           }
         }
       }
@@ -136,6 +142,9 @@
           },
           "uniqueString": {
             "value": "[variables('uniqueString')]"
+          },
+          "license": {
+            "value": "[parameters('license')]"
           }
         }
       }

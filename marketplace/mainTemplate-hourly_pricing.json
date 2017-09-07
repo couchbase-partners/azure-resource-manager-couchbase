@@ -114,6 +114,9 @@
           },
           "uniqueString": {
             "value": "[variables('uniqueString')]"
+          },
+          "license": {
+            "value": "hourly_pricing"
           }
         }
       }
@@ -149,6 +152,9 @@
           },
           "uniqueString": {
             "value": "[variables('uniqueString')]"
+          },
+          "license": {
+            "value": "hourly_pricing"
           }
         }
       }

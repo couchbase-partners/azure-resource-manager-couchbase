@@ -19,6 +19,9 @@
     },
     "uniqueString": {
       "type": "string"
+    },
+    "license": {
+      "type": "string"
     }
   },
   "variables": {},
@@ -31,7 +34,7 @@
       "plan": {
         "publisher": "couchbase",
         "product": "couchbase-sync-gateway-enterprise",
-        "name": "byol"
+        "name": "[parameters('license')]"
       },
       "sku": {
         "name": "[parameters('vmSize')]",
@@ -51,7 +54,7 @@
             "imageReference": {
               "publisher": "couchbase",
               "offer": "couchbase-sync-gateway-enterprise",
-              "sku": "byol",
+              "sku": "[parameters('license')]",
               "version": "latest"
             }
           },
