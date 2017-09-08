@@ -33,7 +33,6 @@ nodeIndex=`curl -H Metadata:true "http://169.254.169.254/metadata/instance/compu
   | sed 's/.*_//' \
   | sed 's/"//'`
 
-# Public DNS
 nodeDNS='vm'$nodeIndex'.server-'$uniqueString'.'$location'.cloudapp.azure.com'
 rallyDNS='vm0.server-'$uniqueString'.'$location'.cloudapp.azure.com'
 
@@ -42,10 +41,6 @@ echo "
 # Simulate split brain DNS for Couchbase
 127.0.0.1 ${nodeDNS}
 " >> /etc/hosts
-
-# Private DNS
-#nodeDNS=`nslookup \`hostname\` | grep Name | sed 's/Name:\t//'`
-#rallyDNS=`echo ${nodeDNS} | sed 's/server[0-9][0-9][0-9][0-9][0-9][0-9]/server000000/'`
 
 cd /opt/couchbase/bin/
 
