@@ -29,11 +29,18 @@
     "license": {
       "type": "string",
       "defaultValue": "byol"
+    },
+    "baseUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "Not User Configurable -- The base URL for dependent assets",
+        "artifactsBaseUrl": ""
+      }
     }
   },
   "variables": {
-    "templateUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/simple/",
-    "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/extensions/",
+    "templateUrl": "[concat(parameters('baseUrl'), '/')]",
+    "extensionUrl": "[concat(parameters('baseUrl'), '/')]",
     "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]"
   },
   "resources": [
