@@ -1,0 +1,417 @@
+{
+  "handler": "Microsoft.Compute.MultiVm",
+  "version": "0.0.1-preview",
+  "parameters": {
+    "basics": [
+      {
+        "name": "adminUsername",
+        "type": "Microsoft.Compute.UserNameTextBox",
+        "label": "Admin Username",
+        "toolTip": "Admin username on all VMs",
+        "osPlatform": "Linux"
+      },
+      {
+        "name": "adminPassword",
+        "type": "Microsoft.Common.PasswordBox",
+        "label": {
+          "password": "Admin Password",
+          "confirmPassword": "Confirm password"
+        },
+        "toolTip": "Admin password on all VMs",
+        "constraints": {
+          "required": true,
+          "regex": "^(?:(?=.*[a-z])(?:(?=.*[A-Z])(?=.*[\\d\\W])|(?=.*\\W)(?=.*\\d))|(?=.*\\W)(?=.*[A-Z])(?=.*\\d)).{6,72}$",
+          "validationMessage": "The password must be between 6 and 72 characters long, and contain characters from at least 3 of the following groups: uppercase characters, lowercase characters, numbers, and special characters."
+        },
+        "options": {
+          "hideConfirmation": false
+        }
+      }
+    ],
+    "steps": [
+      {
+        "name": "couchbaseConfig",
+        "label": "Couchbase Config",
+        "subLabel": {
+          "preValidation": "Configure the Cluster",
+          "postValidation": "Done"
+        },
+        "bladeTitle": "Couchbase Settings",
+        "elements": [
+          {
+            "name": "vmSize",
+            "type": "Microsoft.Compute.SizeSelector",
+            "label": "Virtual Machine Size",
+            "toolTip": "Size of VMs in the cluster",
+            "recommendedSizes": [
+              "Standard_DS12_v2",
+              "Standard_DS13_v2",
+              "Standard_DS14_v2"
+            ],
+            "constraints": {
+              "allowedSizes": [
+                "Standard_DS1_v2",
+                "Standard_DS2_v2",
+                "Standard_DS3_v2",
+                "Standard_DS4_v2",
+                "Standard_DS5_v2",
+                "Standard_DS1",
+                "Standard_DS2",
+                "Standard_DS3",
+                "Standard_DS4",
+                "Standard_FS1",
+                "Standard_FS2",
+                "Standard_FS4",
+                "Standard_FS8",
+                "Standard_FS16",
+                "Standard_DS11_v2",
+                "Standard_DS12_v2",
+                "Standard_DS13_v2",
+                "Standard_DS14_v2",
+                "Standard_DS15_v2",
+                "Standard_DS11",
+                "Standard_DS12",
+                "Standard_DS13",
+                "Standard_DS14",
+                "Standard_GS1",
+                "Standard_GS2",
+                "Standard_GS3",
+                "Standard_GS4",
+                "Standard_GS5"
+              ]
+            },
+            "osPlatform": "Linux",
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "14.04.5-LTS",
+              "version": "latest"
+            }
+          },
+          {
+            "name": "serverNodeCount",
+            "type": "Microsoft.Common.DropDown",
+            "label": "Server Node Count",
+            "defaultValue": "5",
+            "toolTip": "Number of virtual machines to provision for Server",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "1",
+                  "value": 1
+                },
+                {
+                  "label": "2",
+                  "value": 2
+                },
+                {
+                  "label": "3",
+                  "value": 3
+                },
+                {
+                  "label": "4",
+                  "value": 4
+                },
+                {
+                  "label": "5",
+                  "value": 5
+                },
+                {
+                  "label": "6",
+                  "value": 6
+                },
+                {
+                  "label": "7",
+                  "value": 7
+                },
+                {
+                  "label": "8",
+                  "value": 8
+                },
+                {
+                  "label": "9",
+                  "value": 9
+                },
+                {
+                  "label": "10",
+                  "value": 10
+                },
+                {
+                  "label": "11",
+                  "value": 11
+                },
+                {
+                  "label": "12",
+                  "value": 12
+                },
+                {
+                  "label": "13",
+                  "value": 13
+                },
+                {
+                  "label": "14",
+                  "value": 14
+                },
+                {
+                  "label": "15",
+                  "value": 15
+                },
+                {
+                  "label": "16",
+                  "value": 16
+                },
+                {
+                  "label": "17",
+                  "value": 17
+                },
+                {
+                  "label": "17",
+                  "value": 17
+                },
+                {
+                  "label": "18",
+                  "value": 18
+                },
+                {
+                  "label": "19",
+                  "value": 19
+                },
+                {
+                  "label": "20",
+                  "value": 20
+                },
+                {
+                  "label": "21",
+                  "value": 21
+                },
+                {
+                  "label": "22",
+                  "value": 22
+                },
+                {
+                  "label": "23",
+                  "value": 23
+                },
+                {
+                  "label": "24",
+                  "value": 24
+                },
+                {
+                  "label": "25",
+                  "value": 25
+                },
+                {
+                  "label": "26",
+                  "value": 26
+                },
+                {
+                  "label": "27",
+                  "value": 27
+                },
+                {
+                  "label": "28",
+                  "value": 28
+                },
+                {
+                  "label": "29",
+                  "value": 29
+                },
+                {
+                  "label": "30",
+                  "value": 30
+                }
+              ]
+            }
+          },
+          {
+            "name": "serverDiskSize",
+            "type": "Microsoft.Common.DropDown",
+            "label": "Server Disk Size",
+            "defaultValue": "32 GB",
+            "toolTip": "Size of disk on each Server node in the cluster",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "32 GB",
+                  "value": 32
+                },
+                {
+                  "label": "64 GB",
+                  "value": 64
+                },
+                {
+                  "label": "128 GB",
+                  "value": 128
+                },
+                {
+                  "label": "512 GB",
+                  "value": 512
+                },
+                {
+                  "label": "1 TB",
+                  "value": 1024
+                },
+                {
+                  "label": "2 TB",
+                  "value": 2048
+                },
+                {
+                  "label": "4 TB",
+                  "value": 4095
+                }
+              ]
+            }
+          },
+          {
+            "name": "syncGatewayNodeCount",
+            "type": "Microsoft.Common.DropDown",
+            "label": "Sync Gateway Node Count",
+            "defaultValue": "2",
+            "toolTip": "Number of virtual machines to provision for Sync Gateway cluster",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "0",
+                  "value": 0
+                },
+                {
+                  "label": "1",
+                  "value": 1
+                },
+                {
+                  "label": "2",
+                  "value": 2
+                },
+                {
+                  "label": "3",
+                  "value": 3
+                },
+                {
+                  "label": "4",
+                  "value": 4
+                },
+                {
+                  "label": "5",
+                  "value": 5
+                },
+                {
+                  "label": "6",
+                  "value": 6
+                },
+                {
+                  "label": "7",
+                  "value": 7
+                },
+                {
+                  "label": "8",
+                  "value": 8
+                },
+                {
+                  "label": "9",
+                  "value": 9
+                },
+                {
+                  "label": "10",
+                  "value": 10
+                },
+                {
+                  "label": "11",
+                  "value": 11
+                },
+                {
+                  "label": "12",
+                  "value": 12
+                },
+                {
+                  "label": "13",
+                  "value": 13
+                },
+                {
+                  "label": "14",
+                  "value": 14
+                },
+                {
+                  "label": "15",
+                  "value": 15
+                },
+                {
+                  "label": "16",
+                  "value": 16
+                },
+                {
+                  "label": "17",
+                  "value": 17
+                },
+                {
+                  "label": "17",
+                  "value": 17
+                },
+                {
+                  "label": "18",
+                  "value": 18
+                },
+                {
+                  "label": "19",
+                  "value": 19
+                },
+                {
+                  "label": "20",
+                  "value": 20
+                },
+                {
+                  "label": "21",
+                  "value": 21
+                },
+                {
+                  "label": "22",
+                  "value": 22
+                },
+                {
+                  "label": "23",
+                  "value": 23
+                },
+                {
+                  "label": "24",
+                  "value": 24
+                },
+                {
+                  "label": "25",
+                  "value": 25
+                },
+                {
+                  "label": "26",
+                  "value": 26
+                },
+                {
+                  "label": "27",
+                  "value": 27
+                },
+                {
+                  "label": "28",
+                  "value": 28
+                },
+                {
+                  "label": "29",
+                  "value": 29
+                },
+                {
+                  "label": "30",
+                  "value": 30
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "outputs": {
+      "adminUsername": "[basics('adminUsername')]",
+      "adminPassword": "[basics('adminPassword')]",
+      "serverNodeCount": "[steps('couchbaseConfig').serverNodeCount]",
+      "serverDiskSize": "[steps('couchbaseConfig').serverDiskSize]",
+      "syncGatewayNodeCount": "[steps('couchbaseConfig').syncGatewayNodeCount]",
+      "vmSize": "[steps('couchbaseConfig').vmSize]",
+      "location": "[location()]"
+    }
+  }
+}
