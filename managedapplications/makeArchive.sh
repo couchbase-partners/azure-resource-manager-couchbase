@@ -6,10 +6,10 @@ rm archive.zip
 mkdir tmp
 cd tmp
 
-cp mainTemplate.json ./
-cp applianceMainTemplate.json ./
-cp createUiDefinition.json ./
-cp applianceCreateUiDefinition.json ./
+cp ../mainTemplate.json ./
+cp ../applianceMainTemplate.json ./
+cp ../createUiDefinition.json ./
+cp ../applianceCreateUiDefinition.json ./
 
 cp ../../extensions/* ./
 
