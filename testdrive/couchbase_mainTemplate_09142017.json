@@ -1,0 +1,170 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "serverNodeCount": {
+      "type": "int",
+      "defaultValue": 3
+    },
+    "serverDiskSize": {
+      "type": "int",
+      "defaultValue": 32
+    },
+    "syncGatewayNodeCount": {
+      "type": "int",
+      "defaultValue": 1
+    },
+    "vmSize": {
+      "type": "string",
+      "defaultValue": "Standard_DS12_v2"
+    },
+    "adminUsername": {
+      "type": "string",
+      "defaultValue": "testdrive-usr"
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "defaultValue": "Password@1234"
+    },
+    "license": {
+      "type": "string",
+      "defaultValue": "byol"
+    }
+  },
+  "variables": {
+    "templateUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/simple/",
+    "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/extensions/",
+    "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]"
+  },
+  "resources": [
+    {
+      "name": "networksecuritygroups",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2016-02-01",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templateUrl'), 'networkSecurityGroups.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {}
+      }
+    },
+    {
+      "name": "vnet",
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "2015-06-15",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "Microsoft.Resources/deployments/networksecuritygroups"
+      ],
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "10.0.0.0/8"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "subnet",
+            "properties": {
+              "addressPrefix": "10.0.0.0/16",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'networksecuritygroups')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "server",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2016-02-01",
+      "dependsOn": [
+        "Microsoft.Network/virtualNetworks/vnet"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templateUrl'), 'server.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "nodeCount": {
+            "value": "[parameters('serverNodeCount')]"
+          },
+          "vmSize": {
+            "value": "[parameters('vmSize')]"
+          },
+          "diskSize": {
+            "value": "[parameters('serverDiskSize')]"
+          },
+          "adminUsername": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "extensionUrl": {
+            "value": "[variables('extensionUrl')]"
+          },
+          "uniqueString": {
+            "value": "[variables('uniqueString')]"
+          },
+          "license": {
+            "value": "[parameters('license')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "syncgateway",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2016-02-01",
+      "dependsOn": [
+        "Microsoft.Network/virtualNetworks/vnet"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templateUrl'), 'syncGateway.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "nodeCount": {
+            "value": "[parameters('syncGatewayNodeCount')]"
+          },
+          "vmSize": {
+            "value": "[parameters('vmSize')]"
+          },
+          "adminUsername": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "extensionUrl": {
+            "value": "[variables('extensionUrl')]"
+          },
+          "uniqueString": {
+            "value": "[variables('uniqueString')]"
+          },
+          "license": {
+            "value": "[parameters('license')]"
+          }
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "serverAdminURL": {
+      "type": "string",
+      "value": "[concat('http://vm0.server-', variables('uniqueString'), '.', resourceGroup().location, '.cloudapp.azure.com:8091')]"
+    },
+    "syncGatewayAdminURL": {
+      "type": "string",
+      "value": "[concat('http://vm0.syncgateway-', variables('uniqueString'), '.', resourceGroup().location, '.cloudapp.azure.com:4985/_admin/')]"
+    }
+  }
+}
