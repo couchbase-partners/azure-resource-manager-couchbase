@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+  },
+  "variables": {
+    "applianceInfraResourceGroupId": "[concat(resourceGroup().id,uniquestring(resourceGroup().id))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Solutions/appliances",
+      "name": "couchbaseappliance",
+      "kind": "ServiceCatalog",
+      "apiVersion": "2016-09-01-preview",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "ManagedResourceGroupId": "[variables('applianceinfraresourcegroupId')]",
+        "applianceDefinitionId": "Please put the path to your definition in here",
+        "parameters": {
+        }
+      }
+    }
+  ]
+}
