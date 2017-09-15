@@ -20,13 +20,6 @@
     "adminPassword": {
       "type": "securestring"
     },
-    "baseUrl": {
-      "type": "string",
-      "metadata": {
-        "description": "Not User Configurable -- The base URL for dependent assets",
-        "artifactsBaseUrl": ""
-      }
-    },
     "location": {
       "type": "string",
       "metadata": {
@@ -35,8 +28,8 @@
     }
   },
   "variables": {
-    "templateUrl": "[concat(parameters('baseUrl'), '/')]",
-    "extensionUrl": "[concat(parameters('baseUrl'), '/')]",
+    "templateUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/simple/",
+    "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/extensions/",
     "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]"
   },
   "resources": [
