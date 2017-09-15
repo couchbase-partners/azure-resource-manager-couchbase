@@ -14,4 +14,5 @@ This doesn't work yet!
 6. copy the url
 7. paste the url into [deployDefinition.sh](deployDefinition.sh)
 8. run deployDefinition.sh
-9. paste resource ID for couchbasedefinition into mainTemplate.json
+9. copy the id
+10. paste resource ID for couchbasedefinition into mainTemplate.json

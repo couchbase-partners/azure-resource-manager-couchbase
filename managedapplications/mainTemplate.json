@@ -39,7 +39,7 @@
       "location": "[resourceGroup().location]",
       "properties": {
         "ManagedResourceGroupId": "[variables('applianceinfraresourcegroupId')]",
-        "applianceDefinitionId": "/subscriptions/715a879b-b95d-4dda-8edf-01ca868c196b/resourceGroups/app1/providers/Microsoft.Solutions/applianceDefinitions/couchbasedefinition",
+        "applianceDefinitionId": "/subscriptions/715a879b-b95d-4dda-8edf-01ca868c196b/resourceGroups/couchbaseManagedAppDefinition/providers/Microsoft.Solutions/applianceDefinitions/couchbasedefinition",
         "parameters": {
           "serverNodeCount": {
             "value": "[parameters('serverNodeCount')]"
