@@ -28,19 +28,18 @@
     }
   },
   "variables": {
-    "applianceInfraResourceGroupId": "[concat(resourceGroup().id,uniquestring(resourceGroup().id))]",
     "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]"
   },
   "resources": [
     {
       "type": "Microsoft.Solutions/appliances",
-      "name": "couchbaseappliance",
+      "name": "couchbase",
       "kind": "marketplace",
       "apiVersion": "2016-09-01-preview",
       "location": "[resourceGroup().location]",
       "properties": {
-        "ManagedResourceGroupId": "[variables('applianceinfraresourcegroupId')]",
-        "PublisherPackageId": "couchbase.couchbase-managed-application-previewcouchbase-managed-application-hourly-pricing.1.0.0",
+        "ManagedResourceGroupId": "[concat(resourceGroup().id,uniquestring(resourceGroup().id))]",
+        "PublisherPackageId": "couchbase.couchbase-managed-application-previewcouchbase-managed-application.1.0.0",
         "parameters": {
           "serverNodeCount": {
             "value": "[parameters('serverNodeCount')]"

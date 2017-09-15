@@ -111,7 +111,7 @@
             "value": "[parameters('uniqueString')]"
           },
           "license": {
-            "value": "byol"
+            "value": "hourly_pricing"
           }
         }
       }
@@ -149,7 +149,7 @@
             "value": "[parameters('uniqueString')]"
           },
           "license": {
-            "value": "byol"
+            "value": "hourly_pricing"
           }
         }
       }
