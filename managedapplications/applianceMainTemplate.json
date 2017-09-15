@@ -25,12 +25,14 @@
       "metadata": {
         "description": "Not User Configurable -- Dummy parameter required by portal"
       }
+    },
+    "uniqueString": {
+      "type": "string"
     }
   },
   "variables": {
     "templateUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/simple/",
     "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/extensions/",
-    "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]"
   },
   "resources": [
     {
@@ -106,7 +108,7 @@
             "value": "[variables('extensionUrl')]"
           },
           "uniqueString": {
-            "value": "[variables('uniqueString')]"
+            "value": "[parameters('uniqueString')]"
           },
           "license": {
             "value": "byol"
@@ -144,7 +146,7 @@
             "value": "[variables('extensionUrl')]"
           },
           "uniqueString": {
-            "value": "[variables('uniqueString')]"
+            "value": "[parameters('uniqueString')]"
           },
           "license": {
             "value": "byol"
@@ -156,11 +158,11 @@
   "outputs": {
     "serverAdminURL": {
       "type": "string",
-      "value": "[concat('http://vm0.server-', variables('uniqueString'), '.', resourceGroup().location, '.cloudapp.azure.com:8091')]"
+      "value": "[concat('http://vm0.server-', parameters('uniqueString'), '.', resourceGroup().location, '.cloudapp.azure.com:8091')]"
     },
     "syncGatewayAdminURL": {
       "type": "string",
-      "value": "[concat('http://vm0.syncgateway-', variables('uniqueString'), '.', resourceGroup().location, '.cloudapp.azure.com:4985/_admin/')]"
+      "value": "[concat('http://vm0.syncgateway-', parameters('uniqueString'), '.', resourceGroup().location, '.cloudapp.azure.com:4985/_admin/')]"
     }
   }
 }

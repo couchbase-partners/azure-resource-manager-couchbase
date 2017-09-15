@@ -28,7 +28,8 @@
     }
   },
   "variables": {
-    "applianceInfraResourceGroupId": "[concat(resourceGroup().id,uniquestring(resourceGroup().id))]"
+    "applianceInfraResourceGroupId": "[concat(resourceGroup().id,uniquestring(resourceGroup().id))]",
+    "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]"
   },
   "resources": [
     {
@@ -61,9 +62,22 @@
           },
           "location": {
             "value": "[resourceGroup().location]"
+          },
+          "uniqueString": {
+            "value": "[variables('uniqueString')]"
           }
         }
       }
     }
-  ]
+  ],
+  "outputs": {
+    "serverAdminURL": {
+      "type": "string",
+      "value": "[concat('http://vm0.server-', variables('uniqueString'), '.', resourceGroup().location, '.cloudapp.azure.com:8091')]"
+    },
+    "syncGatewayAdminURL": {
+      "type": "string",
+      "value": "[concat('http://vm0.syncgateway-', variables('uniqueString'), '.', resourceGroup().location, '.cloudapp.azure.com:4985/_admin/')]"
+    }
+  }
 }
