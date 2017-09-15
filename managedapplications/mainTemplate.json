@@ -35,12 +35,12 @@
     {
       "type": "Microsoft.Solutions/appliances",
       "name": "couchbaseappliance",
-      "kind": "ServiceCatalog",
+      "kind": "marketplace",
       "apiVersion": "2016-09-01-preview",
       "location": "[resourceGroup().location]",
       "properties": {
         "ManagedResourceGroupId": "[variables('applianceinfraresourcegroupId')]",
-        "applianceDefinitionId": "/subscriptions/715a879b-b95d-4dda-8edf-01ca868c196b/resourceGroups/couchbaseManagedAppDefinition/providers/Microsoft.Solutions/applianceDefinitions/couchbasedefinition",
+        "PublisherPackageId": "couchbase.couchbase-managed-application-previewcouchbase-managed-application-hourly-pricing.1.0.0",
         "parameters": {
           "serverNodeCount": {
             "value": "[parameters('serverNodeCount')]"
