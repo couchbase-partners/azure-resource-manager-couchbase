@@ -60,7 +60,7 @@
             "value": "[parameters('adminPassword')]"
           },
           "location": {
-            "value": "[parameters('location')]"
+            "value": "[resourceGroup().location]"
           }
         }
       }
