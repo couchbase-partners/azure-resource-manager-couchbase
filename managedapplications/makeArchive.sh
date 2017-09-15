@@ -11,8 +11,6 @@ cp ../applianceMainTemplate.json ./
 cp ../createUiDefinition.json ./
 cp ../applianceCreateUiDefinition.json ./
 
-cp ../../extensions/* ./
-
 zip ../archive.zip *
 cd -
 rm -rf tmp

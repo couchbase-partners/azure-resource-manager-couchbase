@@ -8,5 +8,5 @@ This doesn't work yet!
 
 1. run makeArchive.sh
 2. create a storage account and upload to a blob
-3. run deploy.sh
+3. run deployDefintion.sh
 4. paste resource ID for couchbasedefinition into mainTemplate.json

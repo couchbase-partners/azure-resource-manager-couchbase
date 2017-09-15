@@ -1,6 +1,6 @@
 #!/bin/sh
 
-RESOURCE_GROUP=managedAppDefinition
+RESOURCE_GROUP=couchbaseManagedAppDefinition
 
 az group create --name $RESOURCE_GROUP --location westcentralus
 az managedapp definition create \
