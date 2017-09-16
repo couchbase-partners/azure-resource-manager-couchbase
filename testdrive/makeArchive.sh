@@ -6,7 +6,7 @@ rm archive.zip
 mkdir tmp
 cd tmp
 
-cp ../mainTemplate.json ./mainTemplate.json
+cp ../main-template.json ./main-template.json
 
 cp ../../simple/networkSecurityGroups.json ./
 cp ../../simple/server.json ./
