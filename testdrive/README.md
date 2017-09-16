@@ -6,4 +6,4 @@ This template is used by the Couchbase Azure Test Drive.  It is not intended to 
 
 [makeArchive.sh](makeArchive.sh) will build a zip file that can be uploaded to the publish portal.  This template depends on the [simple](../simple) template.
 
-Once you can successfully get build the archive, proceed to the [Publisher Portal](https://cloudpartner.azure.com/#publisher).
+Once you can successfully get build the archive, proceed to the [Cloud Partner Portal](https://cloudpartner.azure.com/#publisher).
