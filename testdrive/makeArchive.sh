@@ -1,19 +1,15 @@
 #!/usr/bin/env bash
 
-# This script creates a zip of our template to publish in the marketplace
-
 rm archive.zip
 mkdir tmp
-cd tmp
 
-cp ../main-template.json ./main-template.json
+cp main-template.json tmp
 
-cp ../../simple/networkSecurityGroups.json ./
-cp ../../simple/server.json ./
-cp ../../simple/syncGateway.json ./
+cp ../simple/networkSecurityGroups.json tmp
+cp ../simple/server.json tmp
+cp ../simple/syncGateway.json tmp
 
-cp ../../extensions/* ./
+cp ../extensions/* tmp
 
-zip ../archive.zip *
-cd -
+zip -r -X archive.zip tmp
 rm -rf tmp

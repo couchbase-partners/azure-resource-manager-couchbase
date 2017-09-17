@@ -1,16 +1,12 @@
 #!/usr/bin/env bash
 
-# This script creates a zip of our template to publish in the marketplace
-
 rm archive.zip
 mkdir tmp
-cd tmp
 
-cp ../mainTemplate.json ./
-cp ../applianceMainTemplate.json ./
-cp ../createUiDefinition.json ./
-cp ../applianceCreateUiDefinition.json ./
+cp mainTemplate.json tmp
+cp applianceMainTemplate.json tmp
+cp createUiDefinition.json tmp
+cp applianceCreateUiDefinition.json tmp
 
-zip ../archive.zip *
-cd -
+zip -r -X archive.zip tmp
 rm -rf tmp

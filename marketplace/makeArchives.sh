@@ -1,25 +1,21 @@
 #!/usr/bin/env bash
 
-# This script creates zips of our template to publish in the marketplace
-
 function makeArchive()
 {
   license=$1
-
+  rm archive-${license}.zip
   mkdir tmp
-  cd tmp
 
-  cp ../mainTemplate-${license}.json ./mainTemplate.json
-  cp ../createUiDefinition.json ./
+  cp mainTemplate-${license}.json tmp/mainTemplate.json
+  cp createUiDefinition.json tmp
 
-  cp ../../simple/networkSecurityGroups.json ./
-  cp ../../simple/server.json ./
-  cp ../../simple/syncGateway.json ./
+  cp ../simple/networkSecurityGroups.json tmp
+  cp ../simple/server.json tmp
+  cp ../simple/syncGateway.json tmp
 
-  cp ../../extensions/* ./
+  cp ../extensions/* tmp
 
-  zip ../archive-${license}.zip *
-  cd -
+  zip -r -X archive-${license}.zip tmp
   rm -rf tmp
 }
 
