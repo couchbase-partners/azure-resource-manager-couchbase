@@ -122,6 +122,7 @@
           "license": {
             "value": "[parameters('license')]"
           }
+
         }
       }
     },
@@ -172,6 +173,14 @@
     "syncGatewayAdminURL": {
       "type": "string",
       "value": "[concat('http://vm0.syncgateway-', variables('uniqueString'), '.', resourceGroup().location, '.cloudapp.azure.com:4985/_admin/')]"
-    }
+    },
+    "Username": {
+	  "type": "string",
+	  "value": "[parameters('adminUsername')]"
+	  },
+	  "Password": {
+	  "type": "string",
+	  "value": "[parameters('adminPassword')]"
+	  }
   }
 }
