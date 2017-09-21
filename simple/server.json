@@ -17,13 +17,16 @@
     "adminPassword": {
       "type": "securestring"
     },
+    "location": {
+      "type": "string"
+    },
+    "license": {
+      "type": "string"
+    },
     "extensionUrl": {
       "type": "string"
     },
     "uniqueString": {
-      "type": "string"
-    },
-    "license": {
       "type": "string"
     }
   },
@@ -32,7 +35,7 @@
     {
       "type": "Microsoft.Compute/virtualMachineScaleSets",
       "name": "server",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters('location')]",
       "apiVersion": "2017-03-30",
       "plan": {
         "publisher": "couchbase",
@@ -120,7 +123,7 @@
                       "[concat(parameters('extensionUrl'), 'server.sh')]",
                       "[concat(parameters('extensionUrl'), 'util.sh')]"
                     ],
-                    "commandToExecute": "[concat('bash server.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', parameters('uniqueString'), ' ', resourceGroup().location)]"
+                    "commandToExecute": "[concat('bash server.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', parameters('uniqueString'), ' ', parameters('location')]"
                   }
                 }
               }
