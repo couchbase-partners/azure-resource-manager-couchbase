@@ -23,6 +23,10 @@
     "location": {
       "type": "string",
     },
+    "license": {
+      "type": "string",
+      "defaultValue": "hourly_pricing"
+    },
     "baseUrl": {
       "type": "string",
       "metadata": {
@@ -32,7 +36,6 @@
     }
   },
   "variables": {
-    "license": "hourly_pricing",
     "templateUrl": "[concat(parameters('baseUrl'), '/')]",
     "extensionUrl": "[concat(parameters('baseUrl'), '/')]",
     "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]"
@@ -110,14 +113,14 @@
           "location": {
             "value": "[parameters('location')]"
           },
+          "license": {
+            "value": "[parameters('license')]"
+          },
           "extensionUrl": {
             "value": "[variables('extensionUrl')]"
           },
           "uniqueString": {
             "value": "[variables('uniqueString')]"
-          },
-          "license": {
-            "value": "[parameters('license')]"
           }
         }
       }
@@ -151,14 +154,14 @@
           "location": {
             "value": "[parameters('location')]"
           },
+          "license": {
+            "value": "[parameters('license')]"
+          },
           "extensionUrl": {
             "value": "[variables('extensionUrl')]"
           },
           "uniqueString": {
             "value": "[variables('uniqueString')]"
-          },
-          "license": {
-            "value": "[parameters('license')]"
           }
         }
       }

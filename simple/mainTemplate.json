@@ -20,6 +20,10 @@
     "adminPassword": {
       "type": "securestring"
     },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
+    },
     "license": {
       "type": "string"
     }
