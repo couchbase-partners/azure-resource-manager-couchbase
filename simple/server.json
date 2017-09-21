@@ -123,7 +123,7 @@
                       "[concat(parameters('extensionUrl'), 'server.sh')]",
                       "[concat(parameters('extensionUrl'), 'util.sh')]"
                     ],
-                    "commandToExecute": "[concat('bash server.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', parameters('uniqueString'), ' ', parameters('location')]"
+                    "commandToExecute": "[concat('bash server.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', parameters('uniqueString'), ' ', parameters('location'))]"
                   }
                 }
               }

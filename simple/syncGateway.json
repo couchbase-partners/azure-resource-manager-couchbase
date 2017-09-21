@@ -109,7 +109,7 @@
                       "[concat(parameters('extensionUrl'), 'syncGateway.sh')]",
                       "[concat(parameters('extensionUrl'), 'util.sh')]"
                     ],
-                    "commandToExecute": "[concat('bash syncGateway.sh ', parameters('uniqueString'), ' ', parameters('location')]"
+                    "commandToExecute": "[concat('bash syncGateway.sh ', parameters('uniqueString'), ' ', parameters('location'))]"
                   }
                 }
               }
