@@ -32,7 +32,7 @@
     {
       "type": "Microsoft.Compute/virtualMachineScaleSets",
       "name": "syncgateway",
-      "location": "parameters('location')",
+      "location": "[parameters('location')]",
       "apiVersion": "2017-03-30",
       "plan": {
         "publisher": "couchbase",
