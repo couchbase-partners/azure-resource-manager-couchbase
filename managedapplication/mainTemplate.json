@@ -22,9 +22,6 @@
     },
     "location": {
       "type": "string",
-      "metadata": {
-        "description": "Not User Configurable -- Dummy parameter required by portal"
-      }
     }
   },
   "variables": {
@@ -36,7 +33,7 @@
       "name": "couchbase",
       "kind": "marketplace",
       "apiVersion": "2016-09-01-preview",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters('location')]",
       "properties": {
         "ManagedResourceGroupId": "[concat(resourceGroup().id,uniquestring(resourceGroup().id))]",
         "PublisherPackageId": "couchbase.couchbase-managed-application-previewcouchbase-managed-application.1.0.0",
@@ -60,7 +57,7 @@
             "value": "[parameters('adminPassword')]"
           },
           "location": {
-            "value": "[resourceGroup().location]"
+            "value": "[parameters('location')]"
           },
           "uniqueString": {
             "value": "[variables('uniqueString')]"
@@ -72,11 +69,11 @@
   "outputs": {
     "serverAdminURL": {
       "type": "string",
-      "value": "[concat('http://vm0.server-', variables('uniqueString'), '.', resourceGroup().location, '.cloudapp.azure.com:8091')]"
+      "value": "[concat('http://vm0.server-', variables('uniqueString'), '.', parameters('location'), '.cloudapp.azure.com:8091')]"
     },
     "syncGatewayAdminURL": {
       "type": "string",
-      "value": "[concat('http://vm0.syncgateway-', variables('uniqueString'), '.', resourceGroup().location, '.cloudapp.azure.com:4985/_admin/')]"
+      "value": "[concat('http://vm0.syncgateway-', variables('uniqueString'), '.', parameters('location'), '.cloudapp.azure.com:4985/_admin/')]"
     }
   }
 }
