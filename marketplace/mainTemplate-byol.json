@@ -20,21 +20,19 @@
     "adminPassword": {
       "type": "securestring"
     },
+    "location": {
+      "type": "string",
+    },
     "baseUrl": {
       "type": "string",
       "metadata": {
         "description": "Not User Configurable -- The base URL for dependent assets",
         "artifactsBaseUrl": ""
       }
-    },
-    "location": {
-      "type": "string",
-      "metadata": {
-        "description": "Not User Configurable -- Dummy parameter required by portal"
-      }
     }
   },
   "variables": {
+    "license": "byol",
     "templateUrl": "[concat(parameters('baseUrl'), '/')]",
     "extensionUrl": "[concat(parameters('baseUrl'), '/')]",
     "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]"
@@ -57,7 +55,7 @@
       "name": "vnet",
       "type": "Microsoft.Network/virtualNetworks",
       "apiVersion": "2015-06-15",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "Microsoft.Resources/deployments/networksecuritygroups"
       ],
@@ -109,6 +107,9 @@
           "adminPassword": {
             "value": "[parameters('adminPassword')]"
           },
+          "location": {
+            "value": "[parameters('location')]"
+          },
           "extensionUrl": {
             "value": "[variables('extensionUrl')]"
           },
@@ -116,7 +117,7 @@
             "value": "[variables('uniqueString')]"
           },
           "license": {
-            "value": "byol"
+            "value": "[parameters('license')]"
           }
         }
       }
@@ -147,6 +148,9 @@
           "adminPassword": {
             "value": "[parameters('adminPassword')]"
           },
+          "location": {
+            "value": "[parameters('location')]"
+          },
           "extensionUrl": {
             "value": "[variables('extensionUrl')]"
           },
@@ -154,7 +158,7 @@
             "value": "[variables('uniqueString')]"
           },
           "license": {
-            "value": "byol"
+            "value": "[parameters('license')]"
           }
         }
       }
@@ -163,11 +167,11 @@
   "outputs": {
     "serverAdminURL": {
       "type": "string",
-      "value": "[concat('http://vm0.server-', variables('uniqueString'), '.', resourceGroup().location, '.cloudapp.azure.com:8091')]"
+      "value": "[concat('http://vm0.server-', variables('uniqueString'), '.', parameters('location'), '.cloudapp.azure.com:8091')]"
     },
     "syncGatewayAdminURL": {
       "type": "string",
-      "value": "[concat('http://vm0.syncgateway-', variables('uniqueString'), '.', resourceGroup().location, '.cloudapp.azure.com:4985/_admin/')]"
+      "value": "[concat('http://vm0.syncgateway-', variables('uniqueString'), '.', parameters('location'), '.cloudapp.azure.com:4985/_admin/')]"
     }
   }
 }
