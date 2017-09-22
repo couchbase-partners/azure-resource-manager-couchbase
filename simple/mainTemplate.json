@@ -287,8 +287,8 @@
                   "autoUpgradeMinorVersion": true,
                   "settings": {
                     "fileUris": [
-                      "[concat(parameters('extensionUrl'), 'server.sh')]",
-                      "[concat(parameters('extensionUrl'), 'util.sh')]"
+                      "[concat(variables('extensionUrl'), 'server.sh')]",
+                      "[concat(variables('extensionUrl'), 'util.sh')]"
                     ],
                     "commandToExecute": "[concat('bash server.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', parameters('location'))]"
                   }
@@ -379,8 +379,8 @@
                   "autoUpgradeMinorVersion": true,
                   "settings": {
                     "fileUris": [
-                      "[concat(parameters('extensionUrl'), 'syncGateway.sh')]",
-                      "[concat(parameters('extensionUrl'), 'util.sh')]"
+                      "[concat(variables('extensionUrl'), 'syncGateway.sh')]",
+                      "[concat(variables('extensionUrl'), 'util.sh')]"
                     ],
                     "commandToExecute": "[concat('bash syncGateway.sh ', variables('uniqueString'), ' ', parameters('location'))]"
                   }
@@ -395,11 +395,11 @@
   "outputs": {
     "serverAdminURL": {
       "type": "string",
-      "value": "[concat('http://vm0.server-', variables('uniqueString'), '.', parameters('location'), '.cloudapp.azure.com:8091')]"
+      "value": "[concat(reference(concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/server'), '/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public'), '2017-03-30').dnsSettings.fqdn),':8091')]"
     },
     "syncGatewayAdminURL": {
       "type": "string",
-      "value": "[concat('http://vm0.syncgateway-', variables('uniqueString'), '.', parameters('location'), '.cloudapp.azure.com:4985/_admin/')]"
+      "value": "[concat(reference(concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/syncgateway'), '/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public'), '2017-03-30').dnsSettings.fqdn),':4985/_admin/')]"
     }
   }
 }
