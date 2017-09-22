@@ -395,11 +395,11 @@
   "outputs": {
     "serverAdminURL": {
       "type": "string",
-      "value": "[concat(reference(concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/server'), '/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public'), '2017-03-30').dnsSettings.fqdn),':8091')]"
+      "value": "[concat(reference(concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/server/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public'), '2017-03-30').dnsSettings.fqdn, ':8091')]"
     },
     "syncGatewayAdminURL": {
       "type": "string",
-      "value": "[concat(reference(concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/syncgateway'), '/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public'), '2017-03-30').dnsSettings.fqdn),':4985/_admin/')]"
+      "value": "[concat(reference(concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/server/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public'), '2017-03-30').dnsSettings.fqdn, ':8091')]"
     }
   }
 }
