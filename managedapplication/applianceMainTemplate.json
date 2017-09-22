@@ -22,9 +22,10 @@
     },
     "location": {
       "type": "string",
-      "metadata": {
-        "description": "Not User Configurable -- Dummy parameter required by portal"
-      }
+    },
+    "license": {
+      "type": "string",
+      "defaultValue": "hourly_pricing"
     },
     "uniqueString": {
       "type": "string"
@@ -104,15 +105,18 @@
           "adminPassword": {
             "value": "[parameters('adminPassword')]"
           },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "license": {
+            "value": "[parameters('license')]"
+          },
           "extensionUrl": {
             "value": "[variables('extensionUrl')]"
           },
           "uniqueString": {
             "value": "[parameters('uniqueString')]"
           },
-          "license": {
-            "value": "hourly_pricing"
-          }
         }
       }
     },
@@ -142,14 +146,17 @@
           "adminPassword": {
             "value": "[parameters('adminPassword')]"
           },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "license": {
+            "value": "[parameters('license')]"
+          },
           "extensionUrl": {
             "value": "[variables('extensionUrl')]"
           },
           "uniqueString": {
             "value": "[parameters('uniqueString')]"
-          },
-          "license": {
-            "value": "hourly_pricing"
           }
         }
       }
@@ -158,11 +165,11 @@
   "outputs": {
     "serverAdminURL": {
       "type": "string",
-      "value": "[concat('http://vm0.server-', parameters('uniqueString'), '.', resourceGroup().location, '.cloudapp.azure.com:8091')]"
+      "value": "[concat('http://vm0.server-', parameters('uniqueString'), '.', parameters('location'), '.cloudapp.azure.com:8091')]"
     },
     "syncGatewayAdminURL": {
       "type": "string",
-      "value": "[concat('http://vm0.syncgateway-', parameters('uniqueString'), '.', resourceGroup().location, '.cloudapp.azure.com:4985/_admin/')]"
+      "value": "[concat('http://vm0.syncgateway-', parameters('uniqueString'), '.', parameters('location'), '.cloudapp.azure.com:4985/_admin/')]"
     }
   }
 }

@@ -16,8 +16,5 @@
   },
   "adminPassword": {
     "value": "foo123!"
-  },
-  "license": {
-    "value": "byol"
   }
 }
