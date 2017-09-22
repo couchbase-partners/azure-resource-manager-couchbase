@@ -6,5 +6,7 @@ mkdir tmp
 cp main-template.json tmp
 cp ../extensions/* tmp
 
-zip -r -X archive.zip tmp
+cd tmp
+zip -r -X ../archive.zip *
+cd -
 rm -rf tmp

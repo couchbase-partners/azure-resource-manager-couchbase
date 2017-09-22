@@ -10,7 +10,9 @@ function makeArchive()
   cp createUiDefinition.json tmp
   cp ../extensions/* tmp
 
-  zip -r -X archive-${license}.zip tmp
+  cd tmp
+  zip -r -X ../archive-${license}.zip *
+  cd -
   rm -rf tmp
 }
 

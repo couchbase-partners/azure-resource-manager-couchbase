@@ -8,5 +8,7 @@ cp applianceMainTemplate.json tmp
 cp createUiDefinition.json tmp
 cp applianceCreateUiDefinition.json tmp
 
-zip -r -X archive.zip tmp
+cd tmp
+zip -r -X archive.zip *
+cd -
 rm -rf tmp
