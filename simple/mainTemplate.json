@@ -265,7 +265,7 @@
                           "properties": {
                             "idleTimeoutInMinutes": 30,
                             "dnsSettings": {
-                              "domainNameLabel": "[concat('server-', parameters('uniqueString'))]"
+                              "domainNameLabel": "[concat('server-', variables('uniqueString'))]"
                             }
                           }
                         }
@@ -290,7 +290,7 @@
                       "[concat(parameters('extensionUrl'), 'server.sh')]",
                       "[concat(parameters('extensionUrl'), 'util.sh')]"
                     ],
-                    "commandToExecute": "[concat('bash server.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', parameters('uniqueString'), ' ', parameters('location'))]"
+                    "commandToExecute": "[concat('bash server.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', parameters('location'))]"
                   }
                 }
               }
@@ -357,7 +357,7 @@
                           "properties": {
                             "idleTimeoutInMinutes": 30,
                             "dnsSettings": {
-                              "domainNameLabel": "[concat('syncgateway-', parameters('uniqueString'))]"
+                              "domainNameLabel": "[concat('syncgateway-', variables('uniqueString'))]"
                             }
                           }
                         }
@@ -382,7 +382,7 @@
                       "[concat(parameters('extensionUrl'), 'syncGateway.sh')]",
                       "[concat(parameters('extensionUrl'), 'util.sh')]"
                     ],
-                    "commandToExecute": "[concat('bash syncGateway.sh ', parameters('uniqueString'), ' ', parameters('location'))]"
+                    "commandToExecute": "[concat('bash syncGateway.sh ', variables('uniqueString'), ' ', parameters('location'))]"
                   }
                 }
               }
