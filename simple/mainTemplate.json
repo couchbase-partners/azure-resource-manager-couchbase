@@ -25,7 +25,8 @@
       "defaultValue": "[resourceGroup().location]"
     },
     "license": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "hourly_pricing"
     }
   },
   "variables": {
