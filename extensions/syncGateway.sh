@@ -24,16 +24,7 @@ echo '
 {
   "interface": "0.0.0.0:4984",
   "adminInterface": "0.0.0.0:4985",
-  "log": ["*"],
-  "databases": {
-    "database": {
-      "server": "http://'${rallyDNS}':8091",
-      "bucket": "sync_gateway",
-      "users": {
-        "GUEST": { "disabled": false, "admin_channels": ["*"] }
-      }
-    }
-  }
+  "log": ["*"]
 }
 ' > ${file}
 chmod 755 ${file}
