@@ -2,10 +2,12 @@
 
 echo "Running syncGateway.sh"
 
-uniqueString=$1
-location=$2
+adminPassword=$1
+uniqueString=$2
+location=$3
 
 echo "Using the settings:"
+echo adminPassword \'$adminPassword\'
 echo uniqueString \'$uniqueString\'
 echo location \'$location\'
 

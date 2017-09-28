@@ -81,6 +81,7 @@ then
     --pass=$adminPassword \
     --bucket=sync_gateway \
     --bucket-type=couchbase \
+    --bucket-password=$adminPassword \
     --bucket-ramsize=100
 else
   echo "Running couchbase-cli server-add"
