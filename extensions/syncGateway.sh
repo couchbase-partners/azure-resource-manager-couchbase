@@ -20,7 +20,7 @@ source util.sh
 adjustTCPKeepalive
 
 echo "Configuring Couchbase Sync Gateway..."
-rallyDNS='vm0.server-'$uniqueString'.'$location'.cloudapp.azure.com'
+rallyDNS='vm0.server-'${uniqueString}'.'${location}'.cloudapp.azure.com'
 file="/home/sync_gateway/sync_gateway.json"
 echo '
 {
