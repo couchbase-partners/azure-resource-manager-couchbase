@@ -5,6 +5,9 @@
   "serverDiskSize": {
      "value": 32
   },
+  "serverVersion": {
+    "value": "4.6.3"
+  },
   "syncGatewayNodeCount": {
     "value": 2
   },

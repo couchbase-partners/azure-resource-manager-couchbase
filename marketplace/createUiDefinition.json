@@ -263,6 +263,29 @@
             }
           },
           {
+            "name": "serverVersion",
+            "type": "Microsoft.Common.DropDown",
+            "label": "Server Version",
+            "defaultValue": "4.6.3",
+            "toolTip": "Server Version",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "5.0.0",
+                  "value": "5.0.0"
+                },
+                {
+                  "label": "4.6.3",
+                  "value": "4.6.3"
+                },
+                {
+                  "label": "4.6.2",
+                  "value": "4.6.2"
+                }
+              ]
+            }
+          },
+          {
             "name": "syncGatewayNodeCount",
             "type": "Microsoft.Common.DropDown",
             "label": "Sync Gateway Node Count",
@@ -409,6 +432,7 @@
       "adminPassword": "[basics('adminPassword')]",
       "serverNodeCount": "[steps('couchbaseConfig').serverNodeCount]",
       "serverDiskSize": "[steps('couchbaseConfig').serverDiskSize]",
+      "serverVersion": "[steps('couchbaseConfig').serverVersion]",
       "syncGatewayNodeCount": "[steps('couchbaseConfig').syncGatewayNodeCount]",
       "vmSize": "[steps('couchbaseConfig').vmSize]",
       "location": "[location()]"

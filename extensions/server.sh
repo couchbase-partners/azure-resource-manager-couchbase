@@ -2,20 +2,22 @@
 
 echo "Running server.sh"
 
-adminUsername=$1
-adminPassword=$2
-uniqueString=$3
-location=$4
+version=$1
+adminUsername=$2
+adminPassword=$3
+uniqueString=$4
+location=$5
 
 echo "Using the settings:"
+echo version \'$version\'
 echo adminUsername \'$adminUsername\'
 echo adminPassword \'$adminPassword\'
 echo uniqueString \'$uniqueString\'
 echo location \'$location\'
 
 echo "Installing Couchbase Server..."
-wget http://packages.couchbase.com/releases/4.6.3/couchbase-server-enterprise_4.6.3-ubuntu14.04_amd64.deb
-dpkg -i couchbase-server-enterprise_4.6.3-ubuntu14.04_amd64.deb
+wget http://packages.couchbase.com/releases/${version}/couchbase-server-enterprise_${version}-ubuntu14.04_amd64.deb
+dpkg -i couchbase-server-enterprise_${version}-ubuntu14.04_amd64.deb
 apt-get update
 apt-get -y install couchbase-server
 

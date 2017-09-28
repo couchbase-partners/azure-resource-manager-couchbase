@@ -10,6 +10,10 @@
       "type": "int",
       "defaultValue": 32
     },
+    "serverVersion": {
+      "type": "string",
+      "defaultValue": "4.6.3"
+    },
     "syncGatewayNodeCount": {
       "type": "int",
       "defaultValue": 1
@@ -304,7 +308,7 @@
                       "[concat(variables('extensionUrl'), 'server.sh')]",
                       "[concat(variables('extensionUrl'), 'util.sh')]"
                     ],
-                    "commandToExecute": "[concat('bash server.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', parameters('location'))]"
+                    "commandToExecute": "[concat('bash server.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', parameters('location'))]"
                   }
                 }
               }
