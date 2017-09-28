@@ -15,11 +15,14 @@ echo adminPassword \'$adminPassword\'
 echo uniqueString \'$uniqueString\'
 echo location \'$location\'
 
+echo "Installing prerequisites..."
+apt-get update
+apt-get -y install python-httplib2
+
 echo "Installing Couchbase Server..."
 wget http://packages.couchbase.com/releases/${version}/couchbase-server-enterprise_${version}-ubuntu14.04_amd64.deb
 dpkg -i couchbase-server-enterprise_${version}-ubuntu14.04_amd64.deb
 apt-get update
-apt-get -y install python-httplib2
 apt-get -y install couchbase-server
 
 echo "Calling util.sh..."
