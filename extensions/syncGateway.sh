@@ -2,13 +2,6 @@
 
 echo "Running syncGateway.sh"
 
-uniqueString=$1
-location=$2
-
-echo "Using the settings:"
-echo uniqueString \'$uniqueString\'
-echo location \'$location\'
-
 echo "Installing Couchbase Sync Gateway..."
 wget https://packages.couchbase.com/releases/couchbase-sync-gateway/1.4.1/couchbase-sync-gateway-enterprise_1.4.1-3_x86_64.deb
 dpkg -i couchbase-sync-gateway-enterprise_1.4.1-3_x86_64.deb
@@ -18,7 +11,6 @@ source util.sh
 adjustTCPKeepalive
 
 echo "Configuring Couchbase Sync Gateway..."
-rallyDNS='vm0.server-'${uniqueString}'.'${location}'.cloudapp.azure.com'
 file="/home/sync_gateway/sync_gateway.json"
 echo '
 {
