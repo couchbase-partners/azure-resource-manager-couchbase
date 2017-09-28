@@ -20,13 +20,12 @@
     "adminPassword": {
       "type": "securestring"
     },
+    "license": {
+      "type": "string"
+    },
     "location": {
       "type": "string",
       "defaultValue": "[resourceGroup().location]"
-    },
-    "license": {
-      "type": "string",
-      "defaultValue": "hourly_pricing"
     }
   },
   "variables": {

@@ -20,6 +20,7 @@ def main():
       "outputs": {}
     }
 
+    license = parameters['license']
     username = parameters['username']
     password = parameters['password']
 
