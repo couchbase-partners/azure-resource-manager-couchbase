@@ -31,6 +31,7 @@ echo '
     "database": {
       "server": "http://'${rallyDNS}':8091",
       "bucket": "sync_gateway",
+      "password": "'${adminPassword}'",
       "users": {
         "GUEST": { "disabled": false, "admin_channels": ["*"] }
       }
