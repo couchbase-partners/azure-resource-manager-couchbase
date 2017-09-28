@@ -2,12 +2,10 @@
 
 echo "Running syncGateway.sh"
 
-adminPassword=$1
-uniqueString=$2
-location=$3
+uniqueString=$1
+location=$2
 
 echo "Using the settings:"
-echo adminPassword \'$adminPassword\'
 echo uniqueString \'$uniqueString\'
 echo location \'$location\'
 
@@ -31,7 +29,6 @@ echo '
     "database": {
       "server": "http://'${rallyDNS}':8091",
       "bucket": "sync_gateway",
-      "password": "'${adminPassword}'",
       "users": {
         "GUEST": { "disabled": false, "admin_channels": ["*"] }
       }
