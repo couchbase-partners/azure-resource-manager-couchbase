@@ -9,8 +9,8 @@ echo "Setting TCP keepalive..."
 sysctl -w net.ipv4.tcp_keepalive_time=120
 
 echo "Setting TCP keepalive permanently..."
-echo "net.ipv4.tcp_keepalive_time = 120" >> /etc/sysctl.conf
-echo "" >> /etc/sysctl.conf
+echo "net.ipv4.tcp_keepalive_time = 120
+" >> /etc/sysctl.conf
 }
 
 formatDataDisk ()
@@ -52,8 +52,6 @@ chgrp couchbase $MOUNTPOINT
 
 turnOffTransparentHugepages ()
 {
-# Please look at http://bit.ly/1ZAcLjD as for how to PERMANENTLY alter this setting.
-
 echo "#!/bin/bash
 ### BEGIN INIT INFO
 # Provides:          disable-thp
@@ -76,10 +74,9 @@ update-rc.d disable-thp defaults
 
 setSwappinessToZero ()
 {
-# Please look at http://bit.ly/1k2CtNn as for how to PERMANENTLY alter this setting.
-
 sysctl vm.swappiness=0
 echo "
 # Required for Couchbase
-vm.swappiness = 0" >> /etc/sysctl.conf
+vm.swappiness = 0
+" >> /etc/sysctl.conf
 }

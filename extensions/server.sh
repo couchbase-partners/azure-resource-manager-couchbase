@@ -18,6 +18,7 @@ echo location \'$location\'
 echo "Installing prerequisites..."
 apt-get update
 apt-get -y install python-httplib2
+apt-get -y install jq
 
 echo "Installing Couchbase Server..."
 wget http://packages.couchbase.com/releases/${version}/couchbase-server-enterprise_${version}-ubuntu14.04_amd64.deb
@@ -33,7 +34,6 @@ setSwappinessToZero
 adjustTCPKeepalive
 
 echo "Configuring Couchbase Server..."
-apt-get -y install jq
 
 nodeIndex="null"
 while [[ $nodeIndex == "null" ]]
