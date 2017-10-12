@@ -1,6 +1,8 @@
 license: hourly_pricing
 username: couchbase
 password: foo123!
+serverVersion: 5.0.0
+syncGatewayVersion: 1.5.0
 clusters:
   - cluster: cluster1
     region: us-east1

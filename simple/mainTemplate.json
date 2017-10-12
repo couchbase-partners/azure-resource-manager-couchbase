@@ -14,6 +14,9 @@
     "syncGatewayNodeCount": {
       "type": "int"
     },
+    "syncGatewayVersion": {
+      "type": "string"
+    },
     "vmSize": {
       "type": "string"
     },
@@ -385,7 +388,7 @@
                       "[concat(variables('extensionUrl'), 'syncGateway.sh')]",
                       "[concat(variables('extensionUrl'), 'util.sh')]"
                     ],
-                    "commandToExecute": "bash syncGateway.sh"
+                    "commandToExecute": "[concat('bash syncGateway.sh ', parameters('syncGatewayVersion'))]"
                   }
                 }
               }

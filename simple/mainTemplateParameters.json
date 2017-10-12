@@ -11,6 +11,9 @@
   "syncGatewayNodeCount": {
     "value": 2
   },
+  "syncGatewayVersion": {
+    "value": "1.5.0"
+  },
   "vmSize": {
     "value": "Standard_DS3_v2"
   },

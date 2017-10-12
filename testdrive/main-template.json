@@ -12,11 +12,15 @@
     },
     "serverVersion": {
       "type": "string",
-      "defaultValue": "4.6.3"
+      "defaultValue": "5.0.0"
     },
     "syncGatewayNodeCount": {
       "type": "int",
       "defaultValue": 1
+    },
+    "syncGatewayVersion": {
+      "type": "string",
+      "defaultValue": "1.5.0"
     },
     "vmSize": {
       "type": "string",
@@ -401,7 +405,7 @@
                       "[concat(variables('extensionUrl'), 'syncGateway.sh')]",
                       "[concat(variables('extensionUrl'), 'util.sh')]"
                     ],
-                    "commandToExecute": "bash syncGateway.sh"
+                    "commandToExecute": "[concat('bash syncGateway.sh ', parameters('syncGatewayVersion'))]"
                   }
                 }
               }

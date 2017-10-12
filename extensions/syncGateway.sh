@@ -2,9 +2,14 @@
 
 echo "Running syncGateway.sh"
 
+version=$1
+
+echo "Using the settings:"
+echo version \'$version\'
+
 echo "Installing Couchbase Sync Gateway..."
-wget https://packages.couchbase.com/releases/couchbase-sync-gateway/1.4.1/couchbase-sync-gateway-enterprise_1.4.1-3_x86_64.deb
-dpkg -i couchbase-sync-gateway-enterprise_1.4.1-3_x86_64.deb
+wget https://packages.couchbase.com/releases/couchbase-sync-gateway/${version}/couchbase-sync-gateway-enterprise_${version}_x86_64.deb
+dpkg -i couchbase-sync-gateway-enterprise_${version}_x86_64.deb
 
 echo "Calling util.sh..."
 source util.sh
