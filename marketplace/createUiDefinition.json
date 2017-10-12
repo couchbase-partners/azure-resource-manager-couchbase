@@ -435,9 +435,9 @@
           {
             "name": "syncGatewayVersion",
             "type": "Microsoft.Common.DropDown",
-            "label": "Server Version",
+            "label": "Sync Gateway Version",
             "defaultValue": "1.5.0",
-            "toolTip": "Server Version",
+            "toolTip": "Sync Gateway Version",
             "constraints": {
               "allowedValues": [
                 {
