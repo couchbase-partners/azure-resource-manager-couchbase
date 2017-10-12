@@ -266,7 +266,7 @@
             "name": "serverVersion",
             "type": "Microsoft.Common.DropDown",
             "label": "Server Version",
-            "defaultValue": "4.6.3",
+            "defaultValue": "5.0.0",
             "toolTip": "Server Version",
             "constraints": {
               "allowedValues": [
@@ -281,6 +281,14 @@
                 {
                   "label": "4.6.2",
                   "value": "4.6.2"
+                },
+                {
+                  "label": "4.6.1",
+                  "value": "4.6.1"
+                },
+                {
+                  "label": "4.6.0",
+                  "value": "4.6.0"
                 }
               ]
             }
@@ -423,6 +431,21 @@
                 }
               ]
             }
+          },
+          {
+            "name": "syncGatewayVersion",
+            "type": "Microsoft.Common.DropDown",
+            "label": "Server Version",
+            "defaultValue": "1.5.0",
+            "toolTip": "Server Version",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "1.5.0",
+                  "value": "1.5.0"
+                }
+              ]
+            }
           }
         ]
       }
@@ -434,6 +457,7 @@
       "serverDiskSize": "[steps('couchbaseConfig').serverDiskSize]",
       "serverVersion": "[steps('couchbaseConfig').serverVersion]",
       "syncGatewayNodeCount": "[steps('couchbaseConfig').syncGatewayNodeCount]",
+      "syncGatewayVersion": "[steps('couchbaseConfig').syncGatewayVersion]",
       "vmSize": "[steps('couchbaseConfig').vmSize]",
       "location": "[location()]"
     }
