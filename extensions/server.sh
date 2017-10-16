@@ -35,6 +35,9 @@ adjustTCPKeepalive
 
 echo "Configuring Couchbase Server..."
 
+# We can get the index directly with this, but unsure how to test for sucess.  Come back to later...
+#nodeIndex = `curl -H Metadata:true "http://169.254.169.254/metadata/instance/compute/name?api-version=2017-04-02&format=text"`
+
 nodeIndex="null"
 while [[ $nodeIndex == "null" ]]
 do
