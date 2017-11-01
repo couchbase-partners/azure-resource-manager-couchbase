@@ -4,7 +4,7 @@ This is an ARM template generator for Couchbase.  It creates templates that leve
 
 ## Extremely Important Note!
 
-This doesn't work yet.
+This doesn't work yet.  Debating doing this with Terraform instead...
 
 ## Deployment
 
