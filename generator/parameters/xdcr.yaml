@@ -5,7 +5,7 @@ serverVersion: 5.0.0
 syncGatewayVersion: 1.5.0
 clusters:
   - cluster: cluster1
-    region: us-east1
+    region: eastus
     groups:
       - group: group1
         diskSize: 32
@@ -22,7 +22,7 @@ clusters:
           - index
           - fts
   - cluster: cluster2
-    region: us-central1
+    region: westus
     groups:
       - group: group1
         diskSize: 32

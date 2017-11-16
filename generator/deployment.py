@@ -39,18 +39,18 @@ def generateCluster(cluster):
     clusterName = cluster['cluster']
     region = cluster['region']
 
-    resources+=generateNetworkSecurityGroups()
-    resources+=generateVirtualNetwork()
+    resources.append(generateNetworkSecurityGroups(clusterName, region))
+    resources.append(generateVirtualNetwork(clusterName, region))
     for group in cluster['groups']:
         resources+=generateGroup(group)
     return resources
 
-def generateNetworkSecurityGroups():
+def generateNetworkSecurityGroups(clusterName, region):
     networkSecurityGroups={
         "apiVersion": "2016-06-01",
         "type": "Microsoft.Network/networkSecurityGroups",
-        "name": "networksecuritygroups",
-        "location": "[parameters('location')]",
+        "name": "networksecuritygroups-" + clusterName,
+        "location": region,
         "properties": {
             "securityRules": [
                 {
@@ -184,14 +184,14 @@ def generateNetworkSecurityGroups():
     }
     return networkSecurityGroups
 
-def generateVirtualNetwork():
+def generateVirtualNetwork(clusterName, region):
     virtualNetwork={
-        "name": "vnet",
+        "name": "vnet-" + clusterName,
         "type": "Microsoft.Network/virtualNetworks",
         "apiVersion": "2015-06-15",
-        "location": "[parameters('location')]",
+        "location": region,
         "dependsOn": [
-            "Microsoft.Network/networkSecurityGroups/networksecuritygroups"
+            "Microsoft.Network/networkSecurityGroups/networksecuritygroups-" + clusterName
         ],
         "properties": {
             "addressSpace": {
