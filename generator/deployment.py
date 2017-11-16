@@ -43,6 +43,7 @@ def generateCluster(license, username, password, cluster):
     resources.append(generateVirtualNetwork(clusterName, region))
     for group in cluster['groups']:
         resources+=generateGroup(license, username, password, clusterName, region, group)
+
     return resources
 
 def generateNetworkSecurityGroups(clusterName, region):
@@ -221,6 +222,206 @@ def generateGroup(license, username, password, clusterName, region, group):
 
     resources={}
     return resources
+
+def generateServer():
+    server={
+        "type": "Microsoft.Compute/virtualMachineScaleSets",
+        "name": "server",
+        "location": "[parameters('location')]",
+        "apiVersion": "2017-03-30",
+        "dependsOn": [
+            "Microsoft.Network/virtualNetworks/vnet"
+        ],
+        "plan": {
+            "publisher": "couchbase",
+            "product": "couchbase-server-enterprise",
+            "name": "[parameters('license')]"
+        },
+        "sku": {
+            "name": "[parameters('vmSize')]",
+            "tier": "Standard",
+            "capacity": "[parameters('serverNodeCount')]"
+        },
+        "properties": {
+            "overprovision": false,
+            "upgradePolicy": {
+                "mode": "Manual"
+            },
+            "virtualMachineProfile": {
+                "storageProfile": {
+                "osDisk": {
+                    "createOption": "FromImage"
+                },
+                "imageReference": {
+                    "publisher": "couchbase",
+                    "offer": "couchbase-server-enterprise",
+                    "sku": "[parameters('license')]",
+                    "version": "latest"
+                },
+                "dataDisks": [
+                    {
+                        "lun": "0",
+                        "createOption": "empty",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS"
+                        },
+                        "caching": "None",
+                        "diskSizeGB": "[parameters('serverDiskSize')]"
+                    }
+                ]
+        },
+        "osProfile": {
+        "computerNamePrefix": "server",
+        "adminUsername": "[parameters('adminUsername')]",
+        "adminPassword": "[parameters('adminPassword')]"
+        },
+        "networkProfile": {
+        "networkInterfaceConfigurations": [
+        {
+        "name": "nic",
+        "properties": {
+        "primary": "true",
+        "ipConfigurations": [
+        {
+        "name": "ipconfig",
+        "properties": {
+        "subnet": {
+        "id": "[concat(resourceId('Microsoft.Network/virtualNetworks/', 'vnet'), '/subnets/subnet')]"
+        },
+        "publicipaddressconfiguration": {
+        "name": "public",
+        "properties": {
+        "idleTimeoutInMinutes": 30,
+        "dnsSettings": {
+        "domainNameLabel": "[concat('server-', variables('uniqueString'))]"
+        }
+        }
+        }
+        }
+        }
+        ]
+        }
+        }
+        ]
+        },
+        "extensionProfile": {
+        "extensions": [
+        {
+        "name": "extension",
+        "properties": {
+        "publisher": "Microsoft.Azure.Extensions",
+        "type": "CustomScript",
+        "typeHandlerVersion": "2.0",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+        "fileUris": [
+        "[concat(variables('extensionUrl'), 'server.sh')]",
+        "[concat(variables('extensionUrl'), 'util.sh')]"
+        ],
+        "commandToExecute": "[concat('bash server.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', parameters('location'))]"
+        }
+        }
+        }
+        ]
+        }
+        }
+        }
+    }
+    return server
+
+def generateSyncGateway:
+    {
+    "type": "Microsoft.Compute/virtualMachineScaleSets",
+    "name": "syncgateway",
+    "location": "[parameters('location')]",
+    "apiVersion": "2017-03-30",
+    "dependsOn": [
+    "Microsoft.Network/virtualNetworks/vnet"
+    ],
+    "plan": {
+    "publisher": "couchbase",
+    "product": "couchbase-sync-gateway-enterprise",
+    "name": "[parameters('license')]"
+    },
+    "sku": {
+    "name": "[parameters('vmSize')]",
+    "tier": "Standard",
+    "capacity": "[parameters('syncGatewayNodeCount')]"
+    },
+    "properties": {
+    "overprovision": false,
+    "upgradePolicy": {
+    "mode": "Manual"
+    },
+    "virtualMachineProfile": {
+    "storageProfile": {
+    "osDisk": {
+    "createOption": "FromImage"
+    },
+    "imageReference": {
+    "publisher": "couchbase",
+    "offer": "couchbase-sync-gateway-enterprise",
+    "sku": "[parameters('license')]",
+    "version": "latest"
+    }
+    },
+    "osProfile": {
+    "computerNamePrefix": "syncgateway",
+    "adminUsername": "[parameters('adminUsername')]",
+    "adminPassword": "[parameters('adminPassword')]"
+    },
+    "networkProfile": {
+    "networkInterfaceConfigurations": [
+    {
+    "name": "nic",
+    "properties": {
+    "primary": "true",
+    "ipConfigurations": [
+    {
+    "name": "ipconfig",
+    "properties": {
+    "subnet": {
+    "id": "[concat(resourceId('Microsoft.Network/virtualNetworks/', 'vnet'), '/subnets/subnet')]"
+    },
+    "publicipaddressconfiguration": {
+    "name": "public",
+    "properties": {
+    "idleTimeoutInMinutes": 30,
+    "dnsSettings": {
+    "domainNameLabel": "[concat('syncgateway-', variables('uniqueString'))]"
+    }
+    }
+    }
+    }
+    }
+    ]
+    }
+    }
+    ]
+    },
+    "extensionProfile": {
+    "extensions": [
+    {
+    "name": "extension",
+    "properties": {
+    "publisher": "Microsoft.Azure.Extensions",
+    "type": "CustomScript",
+    "typeHandlerVersion": "2.0",
+    "autoUpgradeMinorVersion": true,
+    "settings": {
+    "fileUris": [
+    "[concat(variables('extensionUrl'), 'syncGateway.sh')]",
+    "[concat(variables('extensionUrl'), 'util.sh')]"
+    ],
+    "commandToExecute": "[concat('bash syncGateway.sh ', parameters('syncGatewayVersion'))]"
+    }
+    }
+    }
+    ]
+    }
+    }
+    }
+    }
 
 def generateOutputs(clusters):
     outputs={}
