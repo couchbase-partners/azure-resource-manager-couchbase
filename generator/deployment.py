@@ -11,6 +11,10 @@ def main():
 
     print('Parameters: ' + str(parameters))
 
+    license = parameters['license']
+    username = parameters['username']
+    password = parameters['password']
+
     template={
         "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
         "contentVersion": "1.0.0.0",
@@ -20,12 +24,8 @@ def main():
             "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]"
         },
         "resources": [],
-        "outputs": generateOutputs()
+        "outputs": generateOutputs(parameters['clusters'])
     }
-
-    license = parameters['license']
-    username = parameters['username']
-    password = parameters['password']
 
     for cluster in parameters['clusters']:
         template['resources']+=generateCluster(cluster)
@@ -49,7 +49,7 @@ def generateNetworkSecurityGroups(clusterName, region):
     networkSecurityGroups={
         "apiVersion": "2016-06-01",
         "type": "Microsoft.Network/networkSecurityGroups",
-        "name": "networksecuritygroups-" + clusterName,
+        "name": clusterName,
         "location": region,
         "properties": {
             "securityRules": [
@@ -186,12 +186,12 @@ def generateNetworkSecurityGroups(clusterName, region):
 
 def generateVirtualNetwork(clusterName, region):
     virtualNetwork={
-        "name": "vnet-" + clusterName,
+        "name": clusterName,
         "type": "Microsoft.Network/virtualNetworks",
         "apiVersion": "2015-06-15",
         "location": region,
         "dependsOn": [
-            "Microsoft.Network/networkSecurityGroups/networksecuritygroups-" + clusterName
+            "Microsoft.Network/networkSecurityGroups/" + clusterName
         ],
         "properties": {
             "addressSpace": {
@@ -203,7 +203,7 @@ def generateVirtualNetwork(clusterName, region):
                     "properties": {
                         "addressPrefix": "10.0.0.0/16",
                         "networkSecurityGroup": {
-                            "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'networksecuritygroups')]"
+                            "id": "[resourceId('Microsoft.Network/networkSecurityGroups', '" + clusterName + "')]"
                         }
                     }
                 }
@@ -222,17 +222,23 @@ def generateGroup(group):
     resources={}
     return resources
 
-def generateOutputs():
-    outputs={
-        "serverAdminURL": {
+def generateOutputs(clusters):
+    outputs={}
+
+    for cluster in clusters:
+        clusterName = cluster['cluster']
+        region = cluster['region']
+
+        outputs[clusterName + '-serverAdminURL']={
             "type": "string",
-            "value": "[concat('http://vm0.server-', variables('uniqueString'), '.', parameters('location'), '.cloudapp.azure.com:8091')]"
-        },
-        "syncGatewayAdminURL": {
-            "type": "string",
-            "value": "[concat('http://vm0.syncgateway-', variables('uniqueString'), '.', parameters('location'), '.cloudapp.azure.com:4985/_admin/')]"
+            "value": "[concat('http://vm0.server-', variables('uniqueString'), '." + region + ".cloudapp.azure.com:8091')]"
         }
-    }
+
+        outputs[clusterName + '-syncGatewayAdminURL']={
+            "type": "string",
+            "value": "[concat('http://vm0.syncgateway-', variables('uniqueString'), '." + region + ".cloudapp.azure.com:4985/_admin/')]"
+        }
+
     return outputs
 
 main()
