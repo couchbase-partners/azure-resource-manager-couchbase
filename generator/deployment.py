@@ -28,13 +28,13 @@ def main():
     }
 
     for cluster in parameters['clusters']:
-        template['resources']+=generateCluster(cluster)
+        template['resources']+=generateCluster(license, username, password, cluster)
 
     file = open('generatedTemplate.json', 'w')
     file.write(json.dumps(template, sort_keys=True, indent=4, separators=(',', ': ')) + '\n')
     file.close()
 
-def generateCluster(cluster):
+def generateCluster(license, username, password, cluster):
     resources = []
     clusterName = cluster['cluster']
     region = cluster['region']
@@ -42,7 +42,7 @@ def generateCluster(cluster):
     resources.append(generateNetworkSecurityGroups(clusterName, region))
     resources.append(generateVirtualNetwork(clusterName, region))
     for group in cluster['groups']:
-        resources+=generateGroup(group)
+        resources+=generateGroup(license, username, password, clusterName, region, group)
     return resources
 
 def generateNetworkSecurityGroups(clusterName, region):
@@ -212,7 +212,7 @@ def generateVirtualNetwork(clusterName, region):
     }
     return virtualNetwork
 
-def generateGroup(group):
+def generateGroup(license, username, password, clusterName, region, group):
     groupName = group['group']
     nodeCount = group['nodeCount']
     nodeType = group['nodeType']
