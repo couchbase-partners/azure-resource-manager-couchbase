@@ -220,17 +220,16 @@ def generateGroup(license, username, password, clusterName, region, group):
     diskSize = group['diskSize']
     services = group['services']
 
-    generateServer()
-    generateSyncGateway()
-
-    resources={}
+    resources=[]
+    resources.append(generateServer(region))
+    resources.append(generateSyncGateway(region))
     return resources
 
 def generateServer():
     server={
         "type": "Microsoft.Compute/virtualMachineScaleSets",
         "name": "server",
-        "location": "[parameters('location')]",
+        "location": region,
         "apiVersion": "2017-03-30",
         "dependsOn": [
             "Microsoft.Network/virtualNetworks/vnet"
