@@ -274,7 +274,7 @@
               {
                 "name": "nic",
                 "properties": {
-                  "primary": "true",
+                  "primary": true,
                   "ipConfigurations": [
                     {
                       "name": "ipconfig",
