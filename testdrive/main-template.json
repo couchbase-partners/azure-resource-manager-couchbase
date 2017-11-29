@@ -44,14 +44,14 @@
     },
     "baseUrl": {
       "type": "string",
+      "defaultValue": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/extensions",
       "metadata": {
-        "description": "The base URL for dependent assets",
-        "artifactsBaseUrl": ""
+        "description": "The base URL for dependent assets"
       }
     }
   },
   "variables": {
-    "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/extensions/",
+    "extensionUrl": "[concat(parameters('baseUrl'), '/')]",
     "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]"
   },
   "resources": [
@@ -274,7 +274,7 @@
               {
                 "name": "nic",
                 "properties": {
-                  "primary": true,
+                  "primary": "true",
                   "ipConfigurations": [
                     {
                       "name": "ipconfig",
