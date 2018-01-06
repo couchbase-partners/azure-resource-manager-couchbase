@@ -6,13 +6,13 @@
      "value": 32
   },
   "serverVersion": {
-    "value": "5.0.0"
+    "value": "5.0.1"
   },
   "syncGatewayNodeCount": {
     "value": 2
   },
   "syncGatewayVersion": {
-    "value": "1.5.0"
+    "value": "1.5.1"
   },
   "vmSize": {
     "value": "Standard_DS3_v2"
