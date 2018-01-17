@@ -57,15 +57,15 @@ We need to create a URL for the image.
 
 The Publish Portal could potentially print an error: "The SAS URL start date (st) for the SAS URL should be one day before the current date in UTC, please ensure that the start date for SAS link is on or before mm/dd/yyyy. Please ensure that the SAS URL is generated following the instructions available in the [help link](https://docs.microsoft.com/en-us/azure/marketplace-publishing/marketplace-publishing-vm-image-creation)."
 
-    azure storage container sas create vhds rl 01/01/2018 -c $connection --start 07/31/2017
+    azure storage container sas create vhds rl 12/01/2018 -c $connection --start 01/16/2018
 
 The Shared Access URL should look like this:
 
-    https://sa34859435734.blob.core.windows.net/vhds?st=2017-03-22T07%3A00%3A00Z&se=2017-04-22T07%3A00%3A00Z&sp=rl&sv=2015-04-05&sr=c&sig=6lL4F5GHcsEJ6o3UV0kwFqmjskTv0IHX6kE%2FiY4MLz4%3D
+    https://sa34859435734.blob.core.windows.net/vhds?st=2018-01-16T08%3A00%3A00Z&se=2018-12-01T08%3A00%3A00Z&sp=rl&sv=2015-04-05&sr=c&sig=JVb2wVbD06veXnPNW58gBsbILNF1iFxFCtpjqyjXDyY%3D
 
 To get the SAS URL, add the name of the os disk as follows.  You can find it early in your terminal session or in the [Portal](http://portal.azure.com).  Stick that value in a variable so we can use it later.
 
-    url="https://sa34859435734.blob.core.windows.net/vhds/osdisk_PgSDWOnoai.vhd?st=2017-03-22T07%3A00%3A00Z&se=2017-04-22T07%3A00%3A00Z&sp=rl&sv=2015-04-05&sr=c&sig=6lL4F5GHcsEJ6o3UV0kwFqmjskTv0IHX6kE%2FiY4MLz4%3D"
+    url="https://sa34859435734.blob.core.windows.net/vhds/osdisk_587b3b1ebf.vhd?st=2018-01-16T08%3A00%3A00Z&se=2018-12-01T08%3A00%3A00Z&sp=rl&sv=2015-04-05&sr=c&sig=JVb2wVbD06veXnPNW58gBsbILNF1iFxFCtpjqyjXDyY%3D"
 
 Make sure it works by running:
 
