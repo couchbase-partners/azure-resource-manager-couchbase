@@ -32,7 +32,7 @@
     },
     "license": {
       "type": "string",
-      "defaultValue": "hourly_pricing"
+      "defaultValue": "hourly"
     },
     "baseUrl": {
       "type": "string",
