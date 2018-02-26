@@ -208,7 +208,7 @@
       "type": "Microsoft.Compute/virtualMachineScaleSets",
       "name": "server",
       "location": "[parameters('location')]",
-      "apiVersion": "2017-03-30",
+      "apiVersion": "2016-03-30",
       "dependsOn": [
         "Microsoft.Network/virtualNetworks/vnet",
         "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
