@@ -27,7 +27,8 @@
   },
   "variables": {
     "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/extensions/",
-    "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]"
+    "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]",
+    "saname": "[concat('sa', variables('uniqueString'))]"
   },
   "resources": [
     {
@@ -199,7 +200,8 @@
       "location": "[parameters('location')]",
       "apiVersion": "2017-03-30",
       "dependsOn": [
-        "Microsoft.Network/virtualNetworks/vnet"
+        "Microsoft.Network/virtualNetworks/vnet",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('saname'))]",
       ],
       "sku": {
         "name": "[parameters('vmSize')]",
