@@ -201,11 +201,6 @@
       "dependsOn": [
         "Microsoft.Network/virtualNetworks/vnet"
       ],
-      "plan": {
-        "publisher": "couchbase",
-        "product": "couchbase-server-enterprise",
-        "name": "[parameters('license')]"
-      },
       "sku": {
         "name": "[parameters('vmSize')]",
         "tier": "Standard",
@@ -222,9 +217,9 @@
               "createOption": "FromImage"
             },
             "imageReference": {
-              "publisher": "couchbase",
-              "offer": "couchbase-server-enterprise",
-              "sku": "[parameters('license')]",
+              "publisher": "canonical",
+              "offer": "UbuntuServer",
+              "sku": "14.04.5-LTS",
               "version": "latest"
             },
             "dataDisks": [
