@@ -1,0 +1,20 @@
+{
+  "serverNodeCount": {
+    "value": 3
+  },
+  "serverDiskSize": {
+     "value": 32
+  },
+  "serverVersion": {
+    "value": "5.0.1"
+  },
+  "vmSize": {
+    "value": "Standard_DS3_v2"
+  },
+  "adminUsername": {
+    "value": "couchbase"
+  },
+  "adminPassword": {
+    "value": "foo123!"
+  }
+}
