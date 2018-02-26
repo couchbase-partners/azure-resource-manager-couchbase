@@ -197,7 +197,7 @@
     },
     {
       "type": "Microsoft.Storage/storageAccounts",
-      "name": "[variables('saname')]",
+      "name": "[variables('storageAccountName')]",
       "location": "[parameters('location')]",
       "apiVersion": "2015-06-15",
       "properties": {
@@ -211,7 +211,7 @@
       "apiVersion": "2017-03-30",
       "dependsOn": [
         "Microsoft.Network/virtualNetworks/vnet",
-        "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
       ],
       "sku": {
         "name": "[parameters('vmSize')]",
