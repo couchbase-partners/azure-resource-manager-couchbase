@@ -229,7 +229,7 @@
               "vhdContainers": [
                 "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob, variables('storageAccountContainerName'))]"
               ],
-              "name": "[variables('OSDiskName')]",
+              "name": "osdisk",
               "caching": "None",
               "createOption": "FromImage"
             },
