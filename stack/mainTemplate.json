@@ -236,7 +236,7 @@
             "imageReference": {
               "publisher": "canonical",
               "offer": "UbuntuServer",
-              "sku": "14.04.5-LTS",
+              "sku": "14.04.3-LTS",
               "version": "latest"
             }
           },
