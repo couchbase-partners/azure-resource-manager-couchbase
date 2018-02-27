@@ -35,21 +35,9 @@ adjustTCPKeepalive
 
 echo "Configuring Couchbase Server..."
 
-# We can get the index directly with this, but unsure how to test for sucess.  Come back to later...
-#nodeIndex = `curl -H Metadata:true "http://169.254.169.254/metadata/instance/compute/name?api-version=2017-04-02&format=text"`
-# good example here https://github.com/bonggeek/Samples/blob/master/imds/imds.sh
-
-nodeIndex="null"
-while [[ $nodeIndex == "null" ]]
-do
-  nodeIndex=`curl -H Metadata:true "http://169.254.169.254/metadata/instance/compute?api-version=2017-04-02" \
-    | jq ".name" \
-    | sed 's/.*_//' \
-    | sed 's/"//'`
-done
-
-nodeDNS='vm'$nodeIndex'-server-'$uniqueString'.'$location'.cloudapp.azure.com'
-rallyDNS='vm0-server-'$uniqueString'.'$location'.cloudapp.azure.com'
+nodeIndex=`hostname | sed 's/server//'`
+nodeDNS='server'$nodeIndex'-'$uniqueString'.'$location'.cloudapp.azure.com'
+rallyDNS='server0-'$uniqueString'.'$location'.cloudapp.azure.com'
 
 echo "Adding an entry to /etc/hosts to simulate split brain DNS..."
 echo "
