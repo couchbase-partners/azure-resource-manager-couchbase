@@ -234,7 +234,7 @@
               "createOption": "FromImage"
             },
             "imageReference": {
-              "publisher": "Canonical",
+              "publisher": "canonical",
               "offer": "UbuntuServer",
               "sku": "14.04.5-LTS",
               "version": "latest"
