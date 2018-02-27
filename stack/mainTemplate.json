@@ -218,7 +218,7 @@
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
-          "domainNameLabel": "['server', copyindex() '-', variables('uniqueString'))]"
+          "domainNameLabel": "[concat('server', copyindex(), '-', variables('uniqueString'))]"
         }
       }
     },
