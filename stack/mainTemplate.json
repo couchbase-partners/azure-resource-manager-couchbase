@@ -196,6 +196,63 @@
       }
     },
     {
+      "type": "Microsoft.Compute/availabilitySets",
+      "name": "availabilityset",
+      "apiVersion": "2016-04-30-preview",
+      "location": "[parameters('location')]",
+      "properties": {
+        "platformFaultDomainCount": "3",
+        "platformUpdateDomainCount": "20",
+        "managed": "true"
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[concat('pip', copyindex())]",
+      "location": "[parameters('location')]",
+      "copy": {
+        "name": "publicIPLoop",
+        "count": "[parameters('serverNodeCount')]"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[concat('server', copyindex(), '-', variables('uniqueString'))]"
+        }
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat('nic', copyindex())]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "nicLoop",
+        "count": "[parameters('serverNodeCount')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/pip', copyindex())]",
+        "Microsoft.Network/virtualNetworks/vnet"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', copyindex()))]"
+              },
+              "subnet": {
+                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks','vnet'),'/subnets/subnet')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
       "type": "Microsoft.Storage/storageAccounts",
       "name": "[variables('storageAccountName')]",
       "location": "[parameters('location')]",
@@ -205,96 +262,77 @@
       }
     },
     {
-      "type": "Microsoft.Compute/virtualMachineScaleSets",
-      "name": "server",
-      "location": "[parameters('location')]",
-      "apiVersion": "2016-03-30",
-      "dependsOn": [
-        "Microsoft.Network/virtualNetworks/vnet",
-        "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
-      ],
-      "sku": {
-        "name": "[parameters('vmSize')]",
-        "tier": "Standard",
-        "capacity": "[parameters('serverNodeCount')]"
+      "apiVersion": "2016-04-30-preview",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[concat('server', copyindex())]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "vmLoop",
+        "count": "[parameters('serverNodeCount')]"
       },
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', 'nic', copyindex())]"
+      ],
       "properties": {
-        "overprovision": false,
-        "upgradePolicy": {
-          "mode": "Manual"
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', 'availabilityset')]"
         },
-        "virtualMachineProfile": {
-          "storageProfile": {
-            "osDisk": {
-              "vhdContainers": [
-                "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob, variables('storageAccountContainerName'))]"
-              ],
-              "name": "osdisk",
-              "caching": "None",
-              "createOption": "FromImage"
-            },
-            "imageReference": {
-              "publisher": "canonical",
-              "offer": "UbuntuServer",
-              "sku": "14.04.5-LTS",
-              "version": "latest"
+        "hardwareProfile": {
+          "vmSize": "[parameters('vmSize')]"
+        },
+        "osProfile": {
+          "computerName": "[concat('server', copyindex())]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "canonical",
+            "offer": "UbuntuServer",
+            "sku": "14.04.5-LTS",
+            "version": "latest"
+          },
+          "dataDisks": [
+            {
+              "diskSizeGB": "128",
+              "lun": 0,
+              "createOption": "Empty"
             }
-          },
-          "osProfile": {
-            "computerNamePrefix": "server",
-            "adminUsername": "[parameters('adminUsername')]",
-            "adminPassword": "[parameters('adminPassword')]"
-          },
-          "networkProfile": {
-            "networkInterfaceConfigurations": [
-              {
-                "name": "nic",
-                "properties": {
-                  "primary": true,
-                  "ipConfigurations": [
-                    {
-                      "name": "ipconfig",
-                      "properties": {
-                        "subnet": {
-                          "id": "[concat(resourceId('Microsoft.Network/virtualNetworks/', 'vnet'), '/subnets/subnet')]"
-                        },
-                        "publicipaddressconfiguration": {
-                          "name": "public",
-                          "properties": {
-                            "idleTimeoutInMinutes": 30,
-                            "dnsSettings": {
-                              "domainNameLabel": "[concat('server-', variables('uniqueString'))]"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          },
-          "extensionProfile": {
-            "extensions": [
-              {
-                "name": "extension",
-                "properties": {
-                  "publisher": "Microsoft.Azure.Extensions",
-                  "type": "CustomScript",
-                  "typeHandlerVersion": "2.0",
-                  "autoUpgradeMinorVersion": true,
-                  "settings": {
-                    "fileUris": [
-                      "[concat(variables('extensionUrl'), 'server.sh')]",
-                      "[concat(variables('extensionUrl'), 'util.sh')]"
-                    ],
-                    "commandToExecute": "[concat('bash server.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', parameters('location'))]"
-                  }
-                }
-              }
-            ]
-          }
+          ]
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat('nic', copyindex()))]"
+            }
+          ]
         }
+      }
+    },
+    {
+      "apiVersion": "2016-04-30-preview",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat('server', copyindex(), '/install')]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "vmLoop",
+        "count": "[parameters('nodeCount')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/server', copyindex())]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Azure.Extensions",
+        "type": "CustomScript",
+        "typeHandlerVersion": "2.0",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "fileUris": [
+            "[concat(variables('extensionUrl'), 'server.sh')]",
+            "[concat(variables('extensionUrl'), 'util.sh')]"
+          ]
+        },
+        "commandToExecute": "[concat('bash server.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', parameters('location'))]"
       }
     }
   ],
