@@ -316,7 +316,7 @@
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "vmLoop",
-        "count": "[parameters('nodeCount')]"
+        "count": "[parameters('serverNodeCount')]"
       },
       "dependsOn": [
         "[concat('Microsoft.Compute/virtualMachines/server', copyindex())]"
