@@ -218,7 +218,7 @@
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
-          "domainNameLabel": "[concat('server', copyindex(), '-', variables('uniqueString'))]"
+          "domainNameLabel": "[concat('vm', copyindex(), '.server-', variables('uniqueString'))]"
         }
       }
     },
@@ -330,9 +330,9 @@
           "fileUris": [
             "[concat(variables('extensionUrl'), 'server.sh')]",
             "[concat(variables('extensionUrl'), 'util.sh')]"
-          ]
-        },
-        "commandToExecute": "[concat('bash server.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', parameters('location'))]"
+          ],
+          "commandToExecute": "[concat('bash server.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', parameters('location'))]"
+        }
       }
     }
   ],
