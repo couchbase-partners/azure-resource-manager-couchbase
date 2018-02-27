@@ -26,7 +26,7 @@
     }
   },
   "variables": {
-    "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/extensions/",
+    "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/stack/",
     "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]",
     "storageAccountName": "[concat('sa', variables('uniqueString'))]",
     "storageAccountContainerName": "[concat('sac', variables('uniqueString'))]"
@@ -218,7 +218,7 @@
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
-          "domainNameLabel": "[concat('vm', copyindex(), '.server-', variables('uniqueString'))]"
+          "domainNameLabel": "[concat('vm', copyindex(), '-server-', variables('uniqueString'))]"
         }
       }
     },
@@ -339,7 +339,7 @@
   "outputs": {
     "serverAdminURL": {
       "type": "string",
-     "value": "[concat('http://vm0.server-', variables('uniqueString'), '.', parameters('location'), '.cloudapp.azure.com:8091')]"
+     "value": "[concat('http://vm0-server-', variables('uniqueString'), '.', parameters('location'), '.cloudapp.azure.com:8091')]"
     }
   }
 }
