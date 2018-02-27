@@ -1,3 +1,3 @@
 # stack
 
-This are ARM templates for Azure Stack.
+These are ARM templates for Azure Stack.
