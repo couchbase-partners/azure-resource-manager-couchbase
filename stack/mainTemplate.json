@@ -23,8 +23,7 @@
       "defaultValue": "couchbase"
     },
     "adminPassword": {
-      "type": "securestring",
-      "defaultValue": "foo123!"
+      "type": "securestring"
     },
     "location": {
       "type": "string",
