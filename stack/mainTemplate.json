@@ -302,8 +302,12 @@
           },
           "dataDisks": [
             {
-              "diskSizeGB": "128",
+              "name": "datadisk",
+              "diskSizeGB": "[variables('serverDiskSize')]",
               "lun": 0,
+              "vhd": {
+                "uri": "[concat('http://', variables('storageAccountName'),'.blob.core.windows.net/vhds/', 'server', copyindex(), '-datadisk.vhd')]"
+              },
               "createOption": "Empty"
             }
           ]
