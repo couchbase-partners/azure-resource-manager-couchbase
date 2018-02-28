@@ -198,7 +198,7 @@
     {
       "type": "Microsoft.Compute/availabilitySets",
       "name": "availabilityset",
-      "apiVersion": "2016-04-30-preview",
+      "apiVersion": "2015-06-15",
       "location": "[parameters('location')]",
       "properties": {
         "platformFaultDomainCount": "3",
@@ -261,7 +261,7 @@
       }
     },
     {
-      "apiVersion": "2016-04-30-preview",
+      "apiVersion": "2015-06-15",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[concat('server', copyindex())]",
       "location": "[resourceGroup().location]",
@@ -322,7 +322,7 @@
       }
     },
     {
-      "apiVersion": "2016-04-30-preview",
+      "apiVersion": "2015-06-15",
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat('server', copyindex(), '/install')]",
       "location": "[resourceGroup().location]",
