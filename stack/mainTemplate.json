@@ -3,22 +3,28 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "serverNodeCount": {
-      "type": "int"
+      "type": "int",
+      "defaultValue": 3
     },
     "serverDiskSize": {
-      "type": "int"
+      "type": "int",
+      "defaultValue": 32
     },
     "serverVersion": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "5.0.1"
     },
     "vmSize": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "Standard_DS3_v2"
     },
     "adminUsername": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "couchbase"
     },
     "adminPassword": {
-      "type": "securestring"
+      "type": "securestring",
+      "defaultValue": "foo123!"
     },
     "location": {
       "type": "string",
