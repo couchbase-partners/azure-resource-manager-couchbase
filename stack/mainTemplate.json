@@ -12,7 +12,7 @@
     },
     "serverVersion": {
       "type": "string",
-      "defaultValue": "5.0.1"
+      "defaultValue": "5.1.0"
     },
     "vmSize": {
       "type": "string",
