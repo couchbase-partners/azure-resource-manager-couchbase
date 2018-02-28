@@ -36,8 +36,8 @@ adjustTCPKeepalive
 echo "Configuring Couchbase Server..."
 
 nodeIndex=`hostname | sed 's/server//'`
-nodeDNS='server'$nodeIndex'-'$uniqueString'.'$location'.cloudapp.azure.com'
-rallyDNS='server0-'$uniqueString'.'$location'.cloudapp.azure.com'
+nodeDNS='server'$nodeIndex'-'$uniqueString'.'$location'.cloudapp.stackpoc.com'
+rallyDNS='server0-'$uniqueString'.'$location'.cloudapp.stackpoc.com'
 
 echo "Adding an entry to /etc/hosts to simulate split brain DNS..."
 echo "

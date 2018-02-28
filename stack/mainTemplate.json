@@ -351,7 +351,7 @@
   "outputs": {
     "serverAdminURL": {
       "type": "string",
-      "value": "[concat('http://server0-', variables('uniqueString'), '.', parameters('location'), '.cloudapp.azure.com:8091')]"
+      "value": "[concat('http://server0-', variables('uniqueString'), '.', parameters('location'), '.cloudapp.stackpoc.com:8091')]"
     }
   }
 }
