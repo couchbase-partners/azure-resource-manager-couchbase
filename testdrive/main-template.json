@@ -20,7 +20,7 @@
     },
     "syncGatewayVersion": {
       "type": "string",
-      "defaultValue": "1.5.1"
+      "defaultValue": "2.0.0"
     },
     "vmSize": {
       "type": "string",
