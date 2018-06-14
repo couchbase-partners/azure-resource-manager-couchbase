@@ -51,7 +51,7 @@ def generatedGUID():
     guid={
         "apiVersion": "2017-05-10",
         "type": "Microsoft.Resources/deployments",
-        "name": "bac94ebc-cc78-4dbd-bc39-4b5433e1014c",
+        "name": "pid-bac94ebc-cc78-4dbd-bc39-4b5433e1014c",
         "properties": {
             "mode": "Incremental",
             "template": {
