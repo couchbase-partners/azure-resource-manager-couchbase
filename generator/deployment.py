@@ -39,12 +39,29 @@ def generateCluster(license, username, password, cluster):
     clusterName = cluster['cluster']
     region = cluster['region']
 
+    resources.append(generatedGUID())
     resources.append(generateNetworkSecurityGroups(clusterName, region))
     resources.append(generateVirtualNetwork(clusterName, region))
     for group in cluster['groups']:
         resources+=generateGroup(license, username, password, clusterName, region, group)
 
     return resources
+
+def generatedGUID():
+    guid={
+        "apiVersion": "2017-05-10",
+        "type": "Microsoft.Resources/deployments",
+        "name": "bac94ebc-cc78-4dbd-bc39-4b5433e1014c",
+        "properties": {
+            "mode": "Incremental",
+            "template": {
+                "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                "contentVersion": "1.0.0.0",
+                "resources": []
+            }
+        }
+    }
+    return guid
 
 def generateNetworkSecurityGroups(clusterName, region):
     networkSecurityGroups={

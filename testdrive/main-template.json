@@ -56,6 +56,19 @@
   },
   "resources": [
     {
+      "apiVersion": "2017-05-10",
+      "type": "Microsoft.Resources/deployments",
+      "name": "bac94ebc-cc78-4dbd-bc39-4b5433e1014c",
+      "properties": {
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "resources": []
+        }
+      }
+    },
+    {
       "apiVersion": "2016-06-01",
       "type": "Microsoft.Network/networkSecurityGroups",
       "name": "networksecuritygroups",
