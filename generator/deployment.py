@@ -71,7 +71,7 @@ def generateNetworkSecurityGroups(clusterName, region):
                 {
                     "name": "ErlangPortMapper",
                     "properties": {
-                        "description": "Erlang Port Mapper ( epmd )",
+                        "description": "Erlang Port Mapper (epmd)",
                         "protocol": "Tcp",
                         "sourcePortRange": "*",
                         "destinationPortRange": "4369",
@@ -102,7 +102,7 @@ def generateNetworkSecurityGroups(clusterName, region):
                         "description": "Server",
                         "protocol": "Tcp",
                         "sourcePortRange": "*",
-                        "destinationPortRange": "8091-8094",
+                        "destinationPortRange": "8091-8096",
                         "sourceAddressPrefix": "Internet",
                         "destinationAddressPrefix": "*",
                         "access": "Allow",
@@ -125,6 +125,20 @@ def generateNetworkSecurityGroups(clusterName, region):
                     }
                 },
                 {
+                    "name": "Analytics",
+                    "properties": {
+                        "description": "Analytics",
+                        "protocol": "Tcp",
+                        "sourcePortRange": "*",
+                        "destinationPortRange": "9110-9122",
+                        "sourceAddressPrefix": "Internet",
+                        "destinationAddressPrefix": "*",
+                        "access": "Allow",
+                        "priority": 105,
+                        "direction": "Inbound"
+                    }
+                },
+                {
                     "name": "Internal",
                     "properties": {
                         "description": "Internal",
@@ -134,7 +148,7 @@ def generateNetworkSecurityGroups(clusterName, region):
                         "sourceAddressPrefix": "Internet",
                         "destinationAddressPrefix": "*",
                         "access": "Allow",
-                        "priority": 105,
+                        "priority": 106,
                         "direction": "Inbound"
                     }
                 },
@@ -148,7 +162,7 @@ def generateNetworkSecurityGroups(clusterName, region):
                         "sourceAddressPrefix": "Internet",
                         "destinationAddressPrefix": "*",
                         "access": "Allow",
-                        "priority": 106,
+                        "priority": 107,
                         "direction": "Inbound"
                     }
                 },
@@ -158,11 +172,11 @@ def generateNetworkSecurityGroups(clusterName, region):
                         "description": "SSL",
                         "protocol": "Tcp",
                         "sourcePortRange": "*",
-                        "destinationPortRange": "18091-18093",
+                        "destinationPortRange": "18091-18096",
                         "sourceAddressPrefix": "Internet",
                         "destinationAddressPrefix": "*",
                         "access": "Allow",
-                        "priority": 107,
+                        "priority": 108,
                         "direction": "Inbound"
                     }
                 },
@@ -176,7 +190,7 @@ def generateNetworkSecurityGroups(clusterName, region):
                         "sourceAddressPrefix": "Internet",
                         "destinationAddressPrefix": "*",
                         "access": "Allow",
-                        "priority": 108,
+                        "priority": 109,
                         "direction": "Inbound"
                     }
                 }
