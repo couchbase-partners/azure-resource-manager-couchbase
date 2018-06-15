@@ -266,10 +266,22 @@
             "name": "serverVersion",
             "type": "Microsoft.Common.DropDown",
             "label": "Server Version",
-            "defaultValue": "5.1.0",
+            "defaultValue": "5.1.1",
             "toolTip": "Server Version",
             "constraints": {
               "allowedValues": [
+                {
+                  "label": "5.5.0-beta",
+                  "value": "5.5.0-beta"
+                },
+                {
+                  "label": "5.1.1",
+                  "value": "5.1.1"
+                },
+                {
+                  "label": "5.0.1",
+                  "value": "5.0.1"
+                },
                 {
                   "label": "5.1.0",
                   "value": "5.1.0"
@@ -279,24 +291,8 @@
                   "value": "5.0.1"
                 },
                 {
-                  "label": "4.6.4",
-                  "value": "4.6.4"
-                },
-                {
-                  "label": "4.6.3",
-                  "value": "4.6.3"
-                },
-                {
-                  "label": "4.6.2",
-                  "value": "4.6.2"
-                },
-                {
-                  "label": "4.6.1",
-                  "value": "4.6.1"
-                },
-                {
-                  "label": "4.6.0",
-                  "value": "4.6.0"
+                  "label": "4.6.5",
+                  "value": "4.6.5"
                 }
               ]
             }
@@ -451,10 +447,6 @@
                 {
                   "label": "2.0.0",
                   "value": "2.0.0"
-                },
-                {
-                  "label": "1.5.1",
-                  "value": "1.5.1"
                 }
               ]
             }
