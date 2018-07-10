@@ -12,7 +12,7 @@
     },
     "serverVersion": {
       "type": "string",
-      "defaultValue": "5.1.0"
+      "defaultValue": "5.1.1"
     },
     "vmSize": {
       "type": "string",
@@ -368,14 +368,14 @@
       "properties": {
         "publisher": "Microsoft.Azure.Extensions",
         "type": "CustomScript",
-        "typeHandlerVersion": "1.3",
+        "typeHandlerVersion": "2.0",
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
             "[concat(variables('extensionUrl'), 'server.sh')]",
             "[concat(variables('extensionUrl'), 'util.sh')]"
           ],
-          "commandToExecute": "[concat('bash server.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', parameters('location'))]"
+          "commandToExecute": "[concat('bash server.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables(resourceId('Microsoft.Network/publicIPAddresses', 'pip0')).dnsSettings.fqdn)]"
         }
       }
     }
@@ -383,7 +383,7 @@
   "outputs": {
     "serverAdminURL": {
       "type": "string",
-      "value": "[concat('http://server0-', variables('uniqueString'), '.', parameters('location'), '.cloudapp.stackpoc.com:8091')]"
+      "value": "[concat('http://', variables(resourceId('Microsoft.Network/publicIPAddresses', 'pip0')).dnsSettings.fqdn, ':8091')]"
     }
   }
 }

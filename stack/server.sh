@@ -5,15 +5,13 @@ echo "Running server.sh"
 version=$1
 adminUsername=$2
 adminPassword=$3
-uniqueString=$4
-location=$5
+rallyFQDN=$4
 
 echo "Using the settings:"
 echo version \'$version\'
 echo adminUsername \'$adminUsername\'
 echo adminPassword \'$adminPassword\'
-echo uniqueString \'$uniqueString\'
-echo location \'$location\'
+echo rallyFQDN \'$rallyFQDN\'
 
 echo "Installing prerequisites..."
 apt-get update
@@ -36,8 +34,8 @@ adjustTCPKeepalive
 echo "Configuring Couchbase Server..."
 
 nodeIndex=`hostname | sed 's/server//'`
-nodeDNS='server'$nodeIndex'-'$uniqueString'.'$location'.cloudapp.stackpoc.com'
-rallyDNS='server0-'$uniqueString'.'$location'.cloudapp.stackpoc.com'
+nodeDNS=`echo $rallyFQDN | sed 's/server0-/server${nodeIndex}-'`
+rallyDNS=${rallyFQDN}
 
 echo "Adding an entry to /etc/hosts to simulate split brain DNS..."
 echo "
