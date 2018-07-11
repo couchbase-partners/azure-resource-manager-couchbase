@@ -33,8 +33,8 @@ adjustTCPKeepalive
 
 echo "Configuring Couchbase Server..."
 
-nodeIndex=`hostname | sed 's/server//'`
-nodeDNS=`echo $rallyFQDN | sed 's/server0-/server${nodeIndex}-'`
+nodeIndex=`hostname | sed s/server//`
+nodeDNS=`echo $rallyFQDN | sed s/server0-/server${nodeIndex}-/`
 rallyDNS=${rallyFQDN}
 
 echo "Adding an entry to /etc/hosts to simulate split brain DNS..."
