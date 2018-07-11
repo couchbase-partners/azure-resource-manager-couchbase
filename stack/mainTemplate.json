@@ -375,7 +375,7 @@
             "[concat(variables('extensionUrl'), 'server.sh')]",
             "[concat(variables('extensionUrl'), 'util.sh')]"
           ],
-          "commandToExecute": "[concat('bash server.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables(resourceId('Microsoft.Network/publicIPAddresses', 'pip0')).dnsSettings.fqdn)]"
+          "commandToExecute": "[concat('bash server.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', reference(concat('Microsoft.Network/publicIPAddresses/', 'pip0')).dnsSettings.fqdn)]"
         }
       }
     }
@@ -383,7 +383,7 @@
   "outputs": {
     "serverAdminURL": {
       "type": "string",
-      "value": "[concat('http://', variables(resourceId('Microsoft.Network/publicIPAddresses', 'pip0')).dnsSettings.fqdn, ':8091')]"
+      "value": "[concat('http://', reference(concat('Microsoft.Network/publicIPAddresses/', 'pip0')).dnsSettings.fqdn, ':8091')]"
     }
   }
 }
