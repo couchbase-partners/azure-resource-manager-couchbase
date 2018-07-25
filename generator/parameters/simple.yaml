@@ -1,7 +1,7 @@
 license: hourly_pricing
 username: couchbase
 password: foo123!
-serverVersion: 5.1.1
+serverVersion: 5.5.0
 syncGatewayVersion: 2.0.0
 clusters:
   - cluster: cluster1
@@ -16,3 +16,5 @@ clusters:
           - query
           - index
           - fts
+          - analytics
+          - eventing
