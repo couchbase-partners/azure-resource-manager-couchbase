@@ -1,15 +1,18 @@
 {
   "serverNodeCount": {
-    "value": 3
+    "value": 2
+  },
+  "analyticsNodeCount": {
+    "value": 2
   },
   "serverDiskSize": {
      "value": 32
   },
   "serverVersion": {
-    "value": "5.5.0"
+    "value": "6.0.0-beta"
   },
   "syncGatewayNodeCount": {
-    "value": 2
+    "value": 0
   },
   "syncGatewayVersion": {
     "value": "2.1.0"
@@ -24,6 +27,6 @@
     "value": "foo123!"
   },
   "license": {
-    "value": "hourly_pricing"
+    "value": "byol"
   }
 }
