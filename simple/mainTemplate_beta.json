@@ -326,7 +326,7 @@
                       "[concat(variables('extensionUrl'), 'server_beta.sh')]",
                       "[concat(variables('extensionUrl'), 'util.sh')]"
                     ],
-                    "commandToExecute": "[concat('bash server.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', parameters('location'), ' ', parameters('analyticsNodeCount'))]"
+                    "commandToExecute": "[concat('bash server_beta.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', parameters('location'), ' ', parameters('analyticsNodeCount'))]"
                   }
                 }
               }
