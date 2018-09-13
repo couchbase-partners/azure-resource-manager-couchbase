@@ -88,7 +88,8 @@ else
   output=""
   while [[ $output != "Server $nodeDNS:8091 added" && ! $output =~ "Node is already part of cluster." ]]
   do
-    if [[ (analyticsNodesMod % ($nodeIndex + 1)) -ne 0 ]]
+    $analyNodeFlag = $(nodeIndex + 1) % $analyticsNodesMod
+    if [[ $analyNodeFlag != "0" ]]
     then
       output=`./couchbase-cli server-add \
       --cluster=$rallyDNS \
