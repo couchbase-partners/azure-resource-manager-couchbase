@@ -1,0 +1,32 @@
+{
+  "serverNodeCount": {
+    "value": 2
+  },
+  "analyticsNodeCount": {
+    "value": 2
+  },
+  "serverDiskSize": {
+     "value": 32
+  },
+  "serverVersion": {
+    "value": "6.0.0-beta"
+  },
+  "syncGatewayNodeCount": {
+    "value": 0
+  },
+  "syncGatewayVersion": {
+    "value": "2.1.0"
+  },
+  "vmSize": {
+    "value": "Standard_DS3_v2"
+  },
+  "adminUsername": {
+    "value": "couchbase"
+  },
+  "adminPassword": {
+    "value": "foo123!"
+  },
+  "license": {
+    "value": "byol"
+  }
+}
