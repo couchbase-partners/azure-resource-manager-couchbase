@@ -21,7 +21,9 @@ def main():
         "parameters": {},
         "variables": {
             "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/extensions/",
-            "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]"
+            "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]",
+            "serverPubIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/server/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public')]",
+            "syncPubIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/syncgateway/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public')]"
         },
         "resources": [],
         "outputs": generateOutputs(parameters['clusters'])
@@ -260,7 +262,7 @@ def generateServer():
     server={
         "type": "Microsoft.Compute/virtualMachineScaleSets",
         "name": "server",
-        "location": region,
+        "location": "region",
         "apiVersion": "2017-03-30",
         "dependsOn": [
             "Microsoft.Network/virtualNetworks/vnet"
@@ -350,7 +352,9 @@ def generateServer():
                                     "fileUris": [
                                         "[concat(variables('extensionUrl'), 'server.sh')]",
                                         "[concat(variables('extensionUrl'), 'util.sh')]"
-                                    ],
+                                    ]
+                                },
+                                "protectedSettings": {
                                     "commandToExecute": "[concat('bash server.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', parameters('location'))]"
                                 }
                             }
@@ -445,8 +449,10 @@ def generateSyncGateway():
                                     "fileUris": [
                                         "[concat(variables('extensionUrl'), 'syncGateway.sh')]",
                                         "[concat(variables('extensionUrl'), 'util.sh')]"
-                                    ],
-                                    "commandToExecute": "[concat('bash syncGateway.sh ', parameters('syncGatewayVersion'))]"
+                                    ]
+                                },
+                                "protectedSettings": {
+                                    "commandToExecute": "[concat('bash syncGateway.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', parameters('location'))]"
                                 }
                             }
                         }
@@ -466,12 +472,12 @@ def generateOutputs(clusters):
 
         outputs[clusterName + '-serverAdminURL']={
             "type": "string",
-            "value": "[concat('http://vm0.server-', variables('uniqueString'), '." + region + ".cloudapp.azure.com:8091')]"
+            "value": "[concat('http://', reference(variables('serverPubIP'), '2017-03-30').dnsSettings.fqdn, ':8091')]"
         }
 
         outputs[clusterName + '-syncGatewayAdminURL']={
             "type": "string",
-            "value": "[concat('http://vm0.syncgateway-', variables('uniqueString'), '." + region + ".cloudapp.azure.com:4985/_admin/')]"
+            "value": "[concat('http://', reference(variables('syncPubIP'), '2017-03-30').dnsSettings.fqdn, ':8091')]"
         }
 
     return outputs

@@ -36,7 +36,9 @@
   },
   "variables": {
     "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/extensions/",
-    "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]"
+    "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]",
+    "serverPubIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/server/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public')]",
+    "syncPubIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/syncgateway/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public')]"
   },
   "resources": [
     {
@@ -322,9 +324,11 @@
                     "fileUris": [
                       "[concat(variables('extensionUrl'), 'server.sh')]",
                       "[concat(variables('extensionUrl'), 'util.sh')]"
-                    ],
+                    ]
+                  },
+		  "protectedSettings": {
                     "commandToExecute": "[concat('bash server.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', parameters('location'))]"
-                  }
+		  }
                 }
               }
             ]
@@ -414,9 +418,11 @@
                     "fileUris": [
                       "[concat(variables('extensionUrl'), 'syncGateway.sh')]",
                       "[concat(variables('extensionUrl'), 'util.sh')]"
-                    ],
+                    ]
+                  },
+		  "protectedSettings": {
                     "commandToExecute": "[concat('bash syncGateway.sh ', parameters('syncGatewayVersion'))]"
-                  }
+		  }
                 }
               }
             ]
@@ -428,11 +434,11 @@
   "outputs": {
     "serverAdminURL": {
       "type": "string",
-     "value": "[concat('http://vm0.server-', variables('uniqueString'), '.', parameters('location'), '.cloudapp.azure.com:8091')]"
+     "value": "[concat('http://', reference(variables('serverPubIP'), '2017-03-30').dnsSettings.fqdn, ':8091')]"
     },
     "syncGatewayAdminURL": {
       "type": "string",
-      "value": "[concat('http://vm0.syncgateway-', variables('uniqueString'), '.', parameters('location'), '.cloudapp.azure.com:4985/_admin/')]"
+      "value": "[concat('http://', reference(variables('syncPubIP'), '2017-03-30').dnsSettings.fqdn, ':8091')]"
     }
   }
 }
