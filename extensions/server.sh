@@ -19,7 +19,7 @@ else
   groupEnd="--group-name $7"
 fi
 
-if [[-n $8]] && [[$8 != ""]]
+if [[-n $8]]
 then
   echo "Got Rally $8 ..." 
   rally = $8
