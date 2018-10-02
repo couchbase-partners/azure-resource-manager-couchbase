@@ -1,12 +1,9 @@
   serverVersion: 5.5.0
   syncGatewayVersion: 2.1.0
-  username: couchbase
-  password: foo-twelve12!
-  license: byol
   clusters:
     - clusterName: cluster1
-      clusterRegion: West US
-      vnetName: vnet
+      clusterRegion: westus 
+      vnetName: testvnet
       vnetAddrPrefix: 10.0.0.0/8
       clusterMeta:
       - group: data
@@ -31,7 +28,7 @@
         services:
           - index
       - group: fts
-        nodeCount: 0
+        nodeCount: 1
         nodeType: Standard_DS13_v2
         diskSize: 32
         subnetAddrPrefix: 10.96.0.0/11
