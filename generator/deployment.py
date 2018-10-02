@@ -2,23 +2,30 @@ import sys
 import yaml
 import json
 
+debugStr = "\n--- DEBUG: \n-- "
 def main():
-    filename=sys.argv[1]
-    print('Using parameter file: ' + filename)
+    filename= sys.argv[1]
+    print('Using user file: ' + filename)
 
     with open(filename, 'r') as stream:
         parameters = yaml.load(stream)
 
-    print('Parameters: ' + str(parameters))
-
+    print('User file parameters: ' + str(parameters))
+    serverVersion = parameters['serverVersion']
+    syncGatewayVersion = parameters['syncGatewayVersion']
     license = parameters['license']
     username = parameters['username']
     password = parameters['password']
+    clusters = parameters['clusters']
+    # testString = clusters[0]
+    # print(debugStr + '\n*** clusters: ' + str(testString))
+    # print(debugStr + '\n*** cluster services: ' + str(testString['clusterMeta'][0]['services']))
+    # print(debugStr + 'license: ' + parameters['license'] )
 
     template={
         "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
         "contentVersion": "1.0.0.0",
-        "parameters": {},
+        "parameters": generateParameters(clusters),
         "variables": {
             "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/extensions/",
             "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]",
@@ -28,25 +35,93 @@ def main():
         "resources": [],
         "outputs": generateOutputs(parameters['clusters'])
     }
-
+    templateResources = template['resources']
+    resources = []
     for cluster in parameters['clusters']:
-        template['resources']+=generateCluster(license, username, password, cluster)
+        print("DEBUG:  Updating ... \n\n")
+        resources.append(generateCluster(serverVersion, syncGatewayVersion, license, username, password, cluster))
 
+    print(debugStr + " final resources " + str(resources))
+    template['resources'] = resources
     file = open('generatedTemplate.json', 'w')
-    file.write(json.dumps(template, sort_keys=True, indent=4, separators=(',', ': ')) + '\n')
+    file.write(json.dumps(template, sort_keys=False, indent=4, separators=(',', ': ')) + '\n')
     file.close()
 
-def generateCluster(license, username, password, cluster):
-    resources = []
-    clusterName = cluster['cluster']
-    region = cluster['region']
+def generateParameters(clusters):
+    parameters={
+        "SVRNodeCount": {
+            "type": "int"
+        },
+        "serverDiskSize": {
+            "type": "int"
+        },
+        "serverVersion": {
+            "type": "string"
+        },
+        "SGWNodeCount": {
+            "type": "int"
+        },
+        "syncGatewayVersion": {
+            "type": "string"
+        },
+        "vmSize": {
+            "type": "string"
+        },
+        "adminUsername": {
+            "type": "securestring"
+        },
+        "adminPassword": {
+            "type": "securestring"
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]"
+        }
+    }
+    return parameters
 
-    resources.append(generatedGUID())
-    resources.append(generateNetworkSecurityGroups(clusterName, region))
-    resources.append(generateVirtualNetwork(clusterName, region))
-    for group in cluster['groups']:
-        resources+=generateGroup(license, username, password, clusterName, region, group)
+def generateCluster(serverVersion, syncGatewayVersion, license, username, password, cluster):
+    resources = [] 
+    if cluster['clusterName'] is not None:
+        clusterName = cluster['clusterName'] + "-"
+    else:
+        clusterName = ""
 
+    vnetName = cluster['vnetName']
+    if vnetName is None:
+        createVnet = True
+        vnetName = clusterName + 'vnet'
+    else:
+        createVnet = False
+        
+    vnetAddrPrefix = cluster['vnetAddrPrefix']
+    print(debugStr + ' vnetAddrPrefix ' + vnetAddrPrefix)
+    region = cluster['clusterRegion']
+
+    resources.append(dict(generatedGUID()))
+    resources.append(dict(generateNetworkSecurityGroups(clusterName, region)))
+    clusterMeta = cluster['clusterMeta']
+    print(debugStr + ' clusterMeta ' + str(clusterMeta))
+    subnetPrefixes = {}
+    if createVnet:
+        subnetPostfix = '-subnet'
+
+        for group in cluster['clusterMeta'] or {}:
+            groupName = group['group'] + subnetPostfix 
+            subnetPrefixes[groupName] = group['subnetAddrPrefix']
+            
+        resources.append(dict(generateVirtualNetwork(region, vnetName, vnetAddrPrefix, subnetPrefixes)))
+        
+    # print(debugStr + 'clusterRegion ' + str(cluster['clusterRegion']))
+   # i=3
+    print(debugStr + ' clusterMeta ' + str(clusterMeta))
+    for group in cluster['clusterMeta'] or {}:
+        # print(debugStr + " COUNT .... " + str(i))
+       #  i+=1
+        resources.append(dict(generateGroup(serverVersion, syncGatewayVersion, license, username, password, clusterName, region, group, vnetName, createVnet)))
+       #  print(debugStr + "this round of resources ... " + json.dumps(resources, sort_keys=True, indent=4, separators=(',', ': '))) 
+
+   #  print(debugStr + "return of generateCluster " + json.dumps(resources, sort_keys=True, indent=4, separators=(',', ': ')))
     return resources
 
 def generatedGUID():
@@ -66,10 +141,11 @@ def generatedGUID():
     return guid
 
 def generateNetworkSecurityGroups(clusterName, region):
+    itemName = clusterName + "nsg"
     networkSecurityGroups={
         "apiVersion": "2016-06-01",
         "type": "Microsoft.Network/networkSecurityGroups",
-        "name": clusterName,
+        "name": itemName,
         "location": region,
         "properties": {
             "securityRules": [
@@ -218,64 +294,75 @@ def generateNetworkSecurityGroups(clusterName, region):
     }
     return networkSecurityGroups
 
-def generateVirtualNetwork(clusterName, region):
+def generateVirtualNetwork(region, vnetName, vnetAddrPrefix, subnetPrefixes):
     virtualNetwork={
-        "name": clusterName,
+        "name": vnetName,
         "type": "Microsoft.Network/virtualNetworks",
         "apiVersion": "2015-06-15",
         "location": region,
         "dependsOn": [
-            "Microsoft.Network/networkSecurityGroups/" + clusterName
+            "Microsoft.Network/networkSecurityGroups/networksecuritygroups"  
         ],
         "properties": {
             "addressSpace": {
-                "addressPrefixes": ["10.0.0.0/8"]
+                "addressPrefixes": [vnetAddrPrefix]
             },
-            "subnets": [
-                {
-                    "name": "subnet",
-                    "properties": {
-                        "addressPrefix": "10.0.0.0/16",
-                        "networkSecurityGroup": {
-                            "id": "[resourceId('Microsoft.Network/networkSecurityGroups', '" + clusterName + "')]"
-                        }
-                    }
-                }
-            ]
+            "subnets": []
         }
     }
+    for key, value in subnetPrefixes.iteritems():
+        virtualNetwork['subnets'].append({
+            "name": key,
+            "properties": {
+                "addressPrefix": value,
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'networksecuritygroups')]"
+                }
+            }
+        })
+    print(debugStr + "generateVirtualNetwork "  + json.dumps(virtualNetwork, sort_keys=False, indent=2, separators=(',', ': ')))
     return virtualNetwork
 
-def generateGroup(license, username, password, clusterName, region, group):
-    groupName = group['group']
-    nodeCount = group['nodeCount']
-    nodeType = group['nodeType']
-    diskSize = group['diskSize']
+def generateGroup(serverVersion, syncGatewayVersion, license, username, password, clusterName, region, group, vnetName, createVnet):
+    #print('DEBUG: generateGroup ***\n ***\n ' + str(group))
+    
     services = group['services']
+    resources={}
+    if ('syncGateway'.lower() in (service.lower() for service in services) or 'sgw'.lower() in (service.lower() for service in services)):
+        resources = generateSyncGateway(license, username, password, syncGatewayVersion, region, group, vnetName, createVnet)
+    else:
+        resources = generateServer(license, username, password, serverVersion, region, group, vnetName, createVnet)
 
-    resources=[]
-    resources.append(generateServer(region))
-    resources.append(generateSyncGateway(region))
+    print(debugStr + "resources from generateGroup \n\n ----- " + json.dumps(resources, sort_keys=True, indent=4, separators=(',', ': ')))
     return resources
 
-def generateServer():
+def generateServer(license, username, password, serverVersion, region, group, vnetName, createVnet):
+    nodeCount = group['nodeCount']
+    if nodeCount < 1:
+        print(debugStr + "BREAKOUT generateServer \n \n ")
+        return {} 
+        
+    print(debugStr + ' Relevant ' + str(group))
+    diskSize = group['diskSize']
+    nodeType = group['nodeType']
+    groupName = group['group']
     server={
         "type": "Microsoft.Compute/virtualMachineScaleSets",
-        "name": "server",
-        "location": "region",
+        "name": groupName + "-SVRScaleSet",
+        "location": region,
         "apiVersion": "2017-03-30",
         "dependsOn": [
-            "Microsoft.Network/virtualNetworks/vnet"
+            "Microsoft.Network/virtualNetworks/" + vnetName
         ],
         "plan": {
             "publisher": "couchbase",
             "product": "couchbase-server-enterprise",
-            "name": "[parameters('license')]"
+            "name": license
         },
         "sku": {
-            "name": "[parameters('vmSize')]",
+            "name": nodeType,
             "tier": "Standard",
-            "capacity": "[parameters('serverNodeCount')]"
+            "capacity": nodeCount
         },
         "properties": {
             "overprovision": False,
@@ -290,7 +377,7 @@ def generateServer():
                     "imageReference": {
                         "publisher": "couchbase",
                         "offer": "couchbase-server-enterprise",
-                        "sku": "[parameters('license')]",
+                        "sku": license,
                         "version": "latest"
                     },
                     "dataDisks": [
@@ -301,27 +388,27 @@ def generateServer():
                                 "storageAccountType": "Premium_LRS"
                             },
                             "caching": "None",
-                            "diskSizeGB": "[parameters('serverDiskSize')]"
+                            "diskSizeGB": diskSize
                         }
                     ]
                 },
                 "osProfile": {
                     "computerNamePrefix": "server",
-                    "adminUsername": "[parameters('adminUsername')]",
-                    "adminPassword": "[parameters('adminPassword')]"
+                    "adminUsername": "parameters['adminUsername']",
+                    "adminPassword": "parameters['adminPassword']"
                 },
                 "networkProfile": {
                     "networkInterfaceConfigurations": [
                         {
                             "name": "nic",
                             "properties": {
-                                "primary": True,
+                                "primary": "true",
                                 "ipConfigurations": [
                                     {
                                         "name": "ipconfig",
                                         "properties": {
                                             "subnet": {
-                                                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks/', 'vnet'), '/subnets/subnet')]"
+                                                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks/', '" + vnetName + "'), '/subnets/subnet')]"
                                             },
                                             "publicipaddressconfiguration": {
                                                 "name": "public",
@@ -347,7 +434,7 @@ def generateServer():
                                 "publisher": "Microsoft.Azure.Extensions",
                                 "type": "CustomScript",
                                 "typeHandlerVersion": "2.0",
-                                "autoUpgradeMinorVersion": True,
+                                "autoUpgradeMinorVersion": "true",
                                 "settings": {
                                     "fileUris": [
                                         "[concat(variables('extensionUrl'), 'server.sh')]",
@@ -355,7 +442,7 @@ def generateServer():
                                     ]
                                 },
                                 "protectedSettings": {
-                                    "commandToExecute": "[concat('bash server.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', parameters('location'))]"
+                                    "commandToExecute": "[concat('bash server.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', '" + region + "')]" 
                                 }
                             }
                         }
@@ -364,26 +451,37 @@ def generateServer():
             }
         }
     }
+    if not createVnet:
+        del server['dependsOn']
+
+    print (debugStr + 'generateServer \n *- \n *--- ' + json.dumps(server, sort_keys=True, indent=4, separators=(',', ': ')))
     return server
 
-def generateSyncGateway():
+def generateSyncGateway(license, username, password, syncGatewaysVersion, region, group, vnetName, createVnet):
+
+    nodeCount = group['nodeCount']
+    if nodeCount < 1:
+        return {}
+
+    nodeType = group['nodeType']
+    groupName = group['group']
     syncGateway={
         "type": "Microsoft.Compute/virtualMachineScaleSets",
-        "name": "syncgateway",
-        "location": "[parameters('location')]",
+        "name": groupName + "-SGWScaleSet",
+        "location": region,
         "apiVersion": "2017-03-30",
         "dependsOn": [
-            "Microsoft.Network/virtualNetworks/vnet"
+            "Microsoft.Network/virtualNetworks/" + vnetName
         ],
         "plan": {
             "publisher": "couchbase",
             "product": "couchbase-sync-gateway-enterprise",
-            "name": "[parameters('license')]"
+            "name": license
         },
         "sku": {
-            "name": "[parameters('vmSize')]",
+            "name": nodeType,
             "tier": "Standard",
-            "capacity": "[parameters('syncGatewayNodeCount')]"
+            "capacity": nodeCount
         },
         "properties": {
             "overprovision": False,
@@ -398,27 +496,27 @@ def generateSyncGateway():
                     "imageReference": {
                     "publisher": "couchbase",
                     "offer": "couchbase-sync-gateway-enterprise",
-                    "sku": "[parameters('license')]",
+                    "sku": license,
                     "version": "latest"
                     }
                 },
                 "osProfile": {
                     "computerNamePrefix": "syncgateway",
-                    "adminUsername": "[parameters('adminUsername')]",
-                    "adminPassword": "[parameters('adminPassword')]"
+                    "adminUsername": "parameters['adminUsername']",
+                    "adminPassword": "parameters['adminPassword']"
                 },
                 "networkProfile": {
                     "networkInterfaceConfigurations": [
                         {
                             "name": "nic",
                             "properties": {
-                                "primary": "True",
+                                "primary": "true",
                                 "ipConfigurations": [
                                     {
                                         "name": "ipconfig",
                                         "properties": {
                                             "subnet": {
-                                                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks/', 'vnet'), '/subnets/subnet')]"
+                                                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks/', '" + vnetName + "'), '/subnets/subnet')]"
                                             },
                                             "publicipaddressconfiguration": {
                                                 "name": "public",
@@ -444,7 +542,7 @@ def generateSyncGateway():
                                 "publisher": "Microsoft.Azure.Extensions",
                                 "type": "CustomScript",
                                 "typeHandlerVersion": "2.0",
-                                "autoUpgradeMinorVersion": True,
+                                "autoUpgradeMinorVersion": "true",
                                 "settings": {
                                     "fileUris": [
                                         "[concat(variables('extensionUrl'), 'syncGateway.sh')]",
@@ -461,25 +559,34 @@ def generateSyncGateway():
             }
         }
     }
+    if not createVnet:
+        del syncGateway['dependsOn']
+
     return syncGateway
 
 def generateOutputs(clusters):
     outputs={}
 
     for cluster in clusters:
-        clusterName = cluster['cluster']
-        region = cluster['region']
+        clusterName = cluster['clusterName']
+        if cluster['clusterName'] is not None:
+            clusterName = "-" + cluster['clusterName']
+        else:
+            clusterName = ""
 
-        outputs[clusterName + '-serverAdminURL']={
+        print(debugStr + 'ClusterName ' + clusterName)
+        #region = cluster['clusterMeta']['region']
+
+        outputs[clusterName + 'serverAdminURL']={
             "type": "string",
             "value": "[concat('http://', reference(variables('serverPubIP'), '2017-03-30').dnsSettings.fqdn, ':8091')]"
         }
 
-        outputs[clusterName + '-syncGatewayAdminURL']={
+        outputs[clusterName + 'syncGatewayAdminURL']={
             "type": "string",
             "value": "[concat('http://', reference(variables('syncPubIP'), '2017-03-30').dnsSettings.fqdn, ':8091')]"
         }
-
+    print('\n------\n generateOutputs ' + str(outputs))
     return outputs
 
 main()

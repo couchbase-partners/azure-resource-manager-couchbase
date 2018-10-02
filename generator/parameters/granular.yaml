@@ -1,0 +1,59 @@
+  serverVersion: 5.5.0
+  syncGatewayVersion: 2.1.0
+  username: couchbase
+  password: foo-twelve12!
+  license: byol
+  clusters:
+    - clusterName: cluster1
+      clusterRegion: West US
+      vnetName: vnet
+      vnetAddrPrefix: 10.0.0.0/8
+      clusterMeta:
+      - group: data
+        nodeCount: 2
+        nodeType: Standard_DS13_v2
+        diskSize: 32
+        subnetAddrPrefix: 10.0.0.0/11
+        services:
+          - data
+      - group: query
+        nodeCount: 1
+        nodeType: Standard_DS13_v2
+        diskSize: 32
+        subnetAddrPrefix: 10.32.0.0/11
+        services:
+          - query
+      - group: index
+        nodeCount: 0
+        nodeType: Standard_DS13_v2
+        diskSize: 32
+        subnetAddrPrefix: 10.64.0.0/11
+        services:
+          - index
+      - group: fts
+        nodeCount: 0
+        nodeType: Standard_DS13_v2
+        diskSize: 32
+        subnetAddrPrefix: 10.96.0.0/11
+        services:
+          - fts
+      - group: analytics
+        nodeCount: 0
+        nodeType: Standard_DS13_v2
+        diskSize: 32
+        subnetAddrPrefix: 10.128.0.0/11
+        services:
+          - analytics
+      - group: eventing
+        nodeCount: 0
+        nodeType: Standard_DS13_v2
+        diskSize: 32
+        subnetAddrPrefix: 10.160.0.0/11
+        services:
+          - eventing
+      - group: syncgateway
+        nodeCount: 0
+        nodeType: Standard_DS13_v2
+        subnetAddrPrefix: 10.192.0.0/11
+        services:
+          - syncGateway
