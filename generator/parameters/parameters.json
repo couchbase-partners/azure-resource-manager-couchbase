@@ -1,0 +1,17 @@
+{
+    "serverVersion": {
+      "value": "5.5.1"
+    },
+    "syncGatewayVersion": {
+      "value": "2.1.0"
+    },
+    "adminUsername": {
+      "value": "couchbase"
+    },
+    "adminPassword": {
+      "value": "longpass12-!!"
+    },
+    "license": {
+      "value": "byol"
+    }
+  }

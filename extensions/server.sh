@@ -7,6 +7,26 @@ adminUsername=$2
 adminPassword=$3
 uniqueString=$4
 location=$5
+defaultSvcs = 'data,index,query,fts'
+services=${6-$defaultSvcs}
+
+if [[-z $7]]
+then
+  group=""
+else
+  rawGroup = $7
+  group="--group-name $7 \\"
+  groupEnd="--group-name $7"
+fi
+
+if [[-n $8]] && [[$8 != ""]]
+then
+  echo "Got Rally $8 ..." 
+  rally = $8
+else
+  echo "No Rally name provided. A Rally Name is required"
+  exit 1
+fi
 
 echo "Using the settings:"
 echo version \'$version\'
@@ -14,6 +34,9 @@ echo adminUsername \'$adminUsername\'
 echo adminPassword \'$adminPassword\'
 echo uniqueString \'$uniqueString\'
 echo location \'$location\'
+echo services \'$services\'
+echo group \'$group\'
+echo groupEnd \'$groupEnd\'
 
 echo "Installing prerequisites..."
 apt-get update
@@ -48,8 +71,8 @@ do
     | sed 's/"//'`
 done
 
-nodeDNS='vm'$nodeIndex'.server-'$uniqueString'.'$location'.cloudapp.azure.com'
-rallyDNS='vm0.server-'$uniqueString'.'$location'.cloudapp.azure.com'
+nodeDNS='vm'$nodeIndex'.server-'${rawGroup}${uniqueString}'.'$location'.cloudapp.azure.com'
+rallyDNS='vm0.server-'${rally}${uniqueString}'.'$location'.cloudapp.azure.com'
 
 echo "Adding an entry to /etc/hosts to simulate split brain DNS..."
 echo "
@@ -68,7 +91,8 @@ echo "Running couchbase-cli node-init"
   --user=$adminUsername \
   --pass=$adminPassword
 
-if [[ $nodeIndex == "0" ]]
+#if [[ $nodeIndex == "0" ]]
+if [[$nodeDNS == $rallyDNS]]
 then
   totalRAM=$(grep MemTotal /proc/meminfo | awk '{print $2}')
   dataRAM=$((50 * $totalRAM / 100000))
@@ -81,7 +105,15 @@ then
     --cluster-index-ramsize=$indexRAM \
     --cluster-username=$adminUsername \
     --cluster-password=$adminPassword \
-    --services=data,index,query,fts
+    --services=$services
+
+  if [[-n $group]]
+  then
+    echo "Creating new group"
+    ./couchbase-cli group-manage \
+    --create \
+    $groupEnd
+  fi
 else
   echo "Running couchbase-cli server-add"
   output=""
@@ -94,7 +126,9 @@ else
       --server-add=$nodeDNS \
       --server-add-username=$adminUsername \
       --server-add-password=$adminPassword \
-      --services=data,index,query,fts`
+      ${group}
+      --services=$services`
+
     echo server-add output \'$output\'
     sleep 10
   done
