@@ -74,7 +74,7 @@ do
 done
 
 nodeDNS='vm'$nodeIndex'.server-'$rawGroup$uniqueString'.'$location'.cloudapp.azure.com'
-rallyDNS='vm0.server-'$rally$uniqueString'.'$location'.cloudapp.azure.com'
+rallyDNS='vm0.server-'$rally'.'$location'.cloudapp.azure.com'
 
 echo "nodeIndex: $nodeIndex"
 echo "nodeDNS: $nodeDNS"
