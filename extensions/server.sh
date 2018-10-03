@@ -112,12 +112,13 @@ then
     --cluster-password=$adminPassword \
     --services=$services
 
-  if [[-n $group]]
+  if [[ -n $rawGroup && $nodeIndex = "0" ]]
   then
     echo "Creating new group"
     ./couchbase-cli group-manage \
     --create \
     $groupEnd
+
   fi
 else
   echo "Running couchbase-cli server-add"
