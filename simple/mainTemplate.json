@@ -438,7 +438,7 @@
     },
     "syncGatewayAdminURL": {
       "type": "string",
-      "value": "[concat('http://', reference(variables('syncPubIP'), '2017-03-30').dnsSettings.fqdn, ':8091')]"
+      "value": "[concat('http://', reference(variables('syncPubIP'), '2017-03-30').dnsSettings.fqdn, ':4985/_admin/')]"
     }
   }
 }

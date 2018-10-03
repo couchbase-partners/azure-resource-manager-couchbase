@@ -429,7 +429,7 @@
                     ]
                   },
                   "protectedSettings": {
-                    "commandToExecute": "[concat('bash syncGateway.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', parameters('location'))]"
+                    "commandToExecute": "[concat('bash syncGateway.sh ', parameters('syncGatewayVersion'))]"
                   }
                 }
               }
@@ -446,7 +446,7 @@
     },
     "syncGatewayAdminURL": {
       "type": "string",
-      "value": "[concat('http://', reference(variables('syncPubIP'), '2017-03-30').dnsSettings.fqdn, ':8091')]"
+      "value": "[concat('http://', reference(variables('syncPubIP'), '2017-03-30').dnsSettings.fqdn, ':4985/_admin/')]"
     }
   }
 }

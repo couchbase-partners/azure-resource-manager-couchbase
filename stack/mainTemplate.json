@@ -12,7 +12,7 @@
     },
     "serverVersion": {
       "type": "string",
-      "defaultValue": "5.1.1"
+      "defaultValue": "5.5.0"
     },
     "vmSize": {
       "type": "string",
@@ -34,7 +34,8 @@
     "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/stack/",
     "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]",
     "storageAccountName": "[concat('sa', variables('uniqueString'))]",
-    "storageAccountContainerName": "[concat('sac', variables('uniqueString'))]"
+    "storageAccountContainerName": "[concat('sac', variables('uniqueString'))]",
+    "serverPubIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/server/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public')]"
   },
   "resources": [
     {
@@ -374,7 +375,9 @@
           "fileUris": [
             "[concat(variables('extensionUrl'), 'server.sh')]",
             "[concat(variables('extensionUrl'), 'util.sh')]"
-          ],
+          ]
+        },
+        "protectedSettings":{
           "commandToExecute": "[concat('bash server.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', reference(concat('Microsoft.Network/publicIPAddresses/', 'pip0')).dnsSettings.fqdn)]"
         }
       }
