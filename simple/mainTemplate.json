@@ -267,8 +267,8 @@
             },
             "dataDisks": [
               {
-                "lun": "0",
-                "createOption": "empty",
+                "lun": 0,
+                "createOption": "Empty",
                 "managedDisk": {
                   "storageAccountType": "Premium_LRS"
                 },
