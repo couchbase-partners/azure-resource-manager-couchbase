@@ -72,7 +72,7 @@ do
 done
 
 nodeDNS='vm'$nodeIndex'.server-'$rawGroup$uniqueString'.'$location'.cloudapp.azure.com'
-rallyDNS='vm0.server-'${rally}$uniqueString'.'$location'.cloudapp.azure.com'
+rallyDNS='vm0.server-'$rally$uniqueString'.'$location'.cloudapp.azure.com'
 
 echo "Adding an entry to /etc/hosts to simulate split brain DNS..."
 echo "
