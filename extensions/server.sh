@@ -1,32 +1,32 @@
 #!/usr/bin/env bash
 
 echo "Running server.sh"
-
+echo "Parameters provided $@"
 version=$1
 adminUsername=$2
 adminPassword=$3
 uniqueString=$4
 location=$5
-defaultSvcs = 'data,index,query,fts'
+defaultSvcs='data,index,query,fts'
 services=${6-$defaultSvcs}
 
 if [-z $7]
 then
   group=""
 else
-  rawGroup = $7
+  rawGroup=$7
   group="--group-name $7 \\"
   groupEnd="--group-name $7"
 fi
 
 echo "Rally provided from commandline $8" 
-if [-n $8]
+if [-z $8]
 then
-  echo "Got Rally $8 ..." 
-  rally = $8
-else
-  echo "No Rally name provided. A Rally Name is required"
+  echo "No Rally name provided. A Rally name is required"
   #exit 1
+else
+  echo "Got Rally $8 ..." 
+  rally=$8
 fi
 
 echo "Using the settings:"
