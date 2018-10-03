@@ -10,7 +10,7 @@ location=$5
 defaultSvcs = 'data,index,query,fts'
 services=${6-$defaultSvcs}
 
-if [[-z $7]]
+if [-z $7]
 then
   group=""
 else
@@ -19,13 +19,13 @@ else
   groupEnd="--group-name $7"
 fi
 
-if [[-n $8]]
+if [-n $8]
 then
   echo "Got Rally $8 ..." 
   rally = $8
 else
   echo "No Rally name provided. A Rally Name is required"
-  exit 1
+  #exit 1
 fi
 
 echo "Using the settings:"
@@ -71,8 +71,8 @@ do
     | sed 's/"//'`
 done
 
-nodeDNS='vm'$nodeIndex'.server-'${rawGroup}${uniqueString}'.'$location'.cloudapp.azure.com'
-rallyDNS='vm0.server-'${rally}${uniqueString}'.'$location'.cloudapp.azure.com'
+nodeDNS='vm'$nodeIndex'.server-'$rawGroup$uniqueString'.'$location'.cloudapp.azure.com'
+rallyDNS='vm0.server-'${rally}$uniqueString'.'$location'.cloudapp.azure.com'
 
 echo "Adding an entry to /etc/hosts to simulate split brain DNS..."
 echo "
