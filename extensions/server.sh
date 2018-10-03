@@ -94,7 +94,7 @@ echo "Running couchbase-cli node-init"
   --pass=$adminPassword
 
 #if [[ $nodeIndex == "0" ]]
-if [[$nodeDNS == $rallyDNS]]
+if [[$nodeIndex == "0" && $nodeDNS == $rallyDNS]]
 then
   totalRAM=$(grep MemTotal /proc/meminfo | awk '{print $2}')
   dataRAM=$((50 * $totalRAM / 100000))
