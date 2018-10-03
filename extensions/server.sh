@@ -19,6 +19,7 @@ else
   groupEnd="--group-name $7"
 fi
 
+echo "Rally provided from commandline $8" 
 if [-n $8]
 then
   echo "Got Rally $8 ..." 
@@ -37,6 +38,7 @@ echo location \'$location\'
 echo services \'$services\'
 echo group \'$group\'
 echo groupEnd \'$groupEnd\'
+echo rally \'$rally\'
 
 echo "Installing prerequisites..."
 apt-get update
