@@ -115,7 +115,7 @@ then
     --cluster-password=$adminPassword \
     --services=$services
 
-  if [[ -n $rawGroup && $nodeIndex = "0" ]]
+  if [[ -n $cbServerGroup && $nodeIndex = "0" ]]
   then
     echo "Creating new group"
     ./couchbase-cli group-manage -c $rallyDNS --create --group-name $cbServerGroup
@@ -133,7 +133,7 @@ else
       --server-add=$nodeDNS \
       --server-add-username=$adminUsername \
       --server-add-password=$adminPassword \
-      --group-name $rawGroup \
+      --group-name $cbServerGroup \
       --index-storage-setting memopt \
       --services=$services`
 
