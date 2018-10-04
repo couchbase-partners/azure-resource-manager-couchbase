@@ -119,7 +119,7 @@ then
   then
     echo "Creating new group: $cbServerGroup"
     output=""
-    while [[ $output != "SUCCESS: Server group created" ]]
+    while [[ ! $output =~ "SUCCESS: Server group created" ]]
     do
       output=`./couchbase-cli group-manage -c $rallyDNS --create --group-name $cbServerGroup`
         echo group-manage --create output \'$output\'
