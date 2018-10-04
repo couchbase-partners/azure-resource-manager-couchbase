@@ -116,6 +116,9 @@ then
   then
     echo "Creating new group"
     ./couchbase-cli group-manage \
+    -c $rallyDNS \
+    -u '$adminUsername' \
+    -p '$adminPassword' \
     --create \
     $groupEnd
 
