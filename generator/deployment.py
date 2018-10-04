@@ -347,7 +347,7 @@ def generateServer(region, group, vnetName, createVnet, subnetName, groupName):
     diskSize = group['diskSize']
     nodeType = group['nodeType']
     services = group['services']
-    servicesList = ' '.join(services)
+    servicesList = ','.join(services)
     cbServerGroupName = group['CBServerGroup']
     server={
         "type": "Microsoft.Compute/virtualMachineScaleSets",
