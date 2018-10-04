@@ -2,52 +2,59 @@
   syncGatewayVersion: 2.1.0
   clusters:
     - clusterName: cluster1
-      clusterRegion: westus 
+      clusterRegion: eastus 
       vnetAddrPrefix: 10.0.0.0/8
       clusterMeta:
-      - group: data
+      - VMSSgroup: data
+        CBServerGroup: one
         nodeCount: 2
         nodeType: Standard_DS13_v2
         diskSize: 32
         subnetAddrPrefix: 10.0.0.0/11
         services:
           - data
-      - group: query
+      - VMSSgroup: query
+        CBServerGroup: two
         nodeCount: 1
         nodeType: Standard_DS13_v2
         diskSize: 32
         subnetAddrPrefix: 10.32.0.0/11
         services:
+          - index
           - query
-      - group: index
+      - VMSSgroup: index
+        CBServerGroup: one
         nodeCount: 0
         nodeType: Standard_DS13_v2
         diskSize: 32
         subnetAddrPrefix: 10.64.0.0/11
         services:
           - index
-      - group: fts
+      - VMSSgroup: fts
+        CBServerGroup: two
         nodeCount: 0
         nodeType: Standard_DS13_v2
         diskSize: 32
         subnetAddrPrefix: 10.96.0.0/11
         services:
           - fts
-      - group: analytics
+      - VMSSgroup: analytics
+        CBServerGroup: one
         nodeCount: 0
         nodeType: Standard_DS13_v2
         diskSize: 32
         subnetAddrPrefix: 10.128.0.0/11
         services:
           - analytics
-      - group: eventing
+      - VMSSgroup: eventing
+        CBServerGroup: one
         nodeCount: 0
         nodeType: Standard_DS13_v2
         diskSize: 32
         subnetAddrPrefix: 10.160.0.0/11
         services:
           - eventing
-      - group: syncgateway
+      - VMSSgroup: syncgateway
         nodeCount: 0
         nodeType: Standard_DS13_v2
         subnetAddrPrefix: 10.192.0.0/11

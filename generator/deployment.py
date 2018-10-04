@@ -95,7 +95,7 @@ def generateCluster(cluster):
 
     for group in cluster['clusterMeta'] or {}:
 
-        groupName = group['group']
+        groupName = group['VMSSgroup']
 
         if 'data' in group['services'] and rallyGroup ==  "":
             rallyGroup = rallyConstant
@@ -348,6 +348,7 @@ def generateServer(region, group, vnetName, createVnet, subnetName, groupName):
     nodeType = group['nodeType']
     services = group['services']
     servicesList = ' '.join(services)
+    cbServerGroupName = group['CBServerGroup']
     server={
         "type": "Microsoft.Compute/virtualMachineScaleSets",
         "name": groupName + VMSSPostfix,
@@ -445,7 +446,7 @@ def generateServer(region, group, vnetName, createVnet, subnetName, groupName):
                                     ]
                                 },
                                 "protectedSettings": {
-                                    "commandToExecute": "[concat('bash server.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', '" + region + "', ' ', '" + servicesList + "', ' ', '" + groupName + "', ' ', '" + rallyConstant + "', variables('uniqueString'))]" 
+                                    "commandToExecute": "[concat('bash server.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', '" + region + "', ' ', '" + servicesList + "', ' ', '" + groupName + "', ' ', '" + rallyConstant + "', variables('uniqueString'), ' ', '" + cbServerGroupName + "')]" 
                                 }
                             }
                         }
@@ -467,7 +468,7 @@ def generateSyncGateway(region, group, vnetName, createVnet, subnetName):
         return {}
 
     nodeType = group['nodeType']
-    groupName = group['group']
+    groupName = group['VMSSgroup']
     syncGateway={
         "type": "Microsoft.Compute/virtualMachineScaleSets",
         "name": groupName + "-SGWScaleSet",

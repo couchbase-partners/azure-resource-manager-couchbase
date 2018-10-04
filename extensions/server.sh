@@ -4,35 +4,41 @@ echo "Running server.sh"
 echo "Parameters provided $@"
 version=$1
 adminUsername=$2
+export CB_REST_USERNAME=$adminUsername
 adminPassword=$3
+export CB_REST_PASSWORD=$adminPassword
 uniqueString=$4
 location=$5
 defaultSvcs='data,index,query,fts'
 services=${6-$defaultSvcs}
 
-if [-z $7]
+if [[ -z $7 ]]
 then
-  group=""
+  group="Group 1"
 else
   rawGroup=$7
-  #group="--group-name $7 \\"
-  #groupEnd="--group-name $7"
 fi
 
-echo "Rally provided from commandline $8" 
-if [-z $8]
+if [[ -z $8 ]]
 then
   echo "No Rally name provided. A Rally name is required"
-  #exit 1
+  exit 1
 else
   echo "Got Rally $8 ..." 
   rally=$8
 fi
 
+if [[ -z $9 ]]
+then
+  echo "No Couchbase Server Group setting to Group 1 ..."
+  cbServerGroup='Group 1'
+else
+  echo "Got Couchbase Server Group $9 ..." 
+  cbServerGroup=$9
+fi
+
 echo "Using the settings:"
 echo version \'$version\'
-echo adminUsername \'$adminUsername\'
-echo adminPassword \'$adminPassword\'
 echo uniqueString \'$uniqueString\'
 echo location \'$location\'
 echo services \'$services\'
@@ -93,10 +99,7 @@ echo "Running couchbase-cli node-init"
   --node-init-hostname=$nodeDNS \
   --node-init-data-path=/datadisk/data \
   --node-init-index-path=/datadisk/index \
-  --user=$adminUsername \
-  --pass=$adminPassword
 
-#if [[ $nodeIndex == "0" ]]
 if [[ $nodeDNS == $rallyDNS ]]
 then
   totalRAM=$(grep MemTotal /proc/meminfo | awk '{print $2}')
@@ -108,20 +111,15 @@ then
     --cluster=$nodeDNS \
     --cluster-ramsize=$dataRAM \
     --cluster-index-ramsize=$indexRAM \
-    --cluster-username=$adminUsername \
-    --cluster-password=$adminPassword \
     --services=$services
 
   if [[ -n $rawGroup && $nodeIndex = "0" ]]
   then
     echo "Creating new group"
-    ./couchbase-cli group-manage \
-    -c $rallyDNS \
-    -u \'$adminUsername\' \
-    -p \'$adminPassword\' --create --group-name $rawGroup
+    ./couchbase-cli group-manage -c $rallyDNS --create --group-name $cbServerGroup
 
     echo "Moving to newly created group" 
-    ./couchbase-cli group-manage -c $rallyDNS -u $adminUsername -p '$adminPassword' --move-servers $nodeDNS --from-group 'Group 1' --to-group $rawGroup
+    ./couchbase-cli group-manage -c $rallyDNS --move-servers $nodeDNS --from-group 'Group 1' --to-group $cbServerGroup
   fi
 else
   echo "Running couchbase-cli server-add"
@@ -130,12 +128,11 @@ else
   do
     output=`./couchbase-cli server-add \
       --cluster=$rallyDNS \
-      --user=\'$adminUsername\' \
-      --pass=\'$adminPassword\' \
       --server-add=$nodeDNS \
       --server-add-username=$adminUsername \
       --server-add-password=$adminPassword \
-      --group-name $rawGroup \
+      --group-name $cbServerGroup \
+      --index-storage-setting memopt \
       --services=$services`
 
     echo server-add output \'$output\'
@@ -146,10 +143,7 @@ else
   output=""
   while [[ ! $output =~ "SUCCESS" ]]
   do
-    output=`./couchbase-cli rebalance \
-      --cluster=$rallyDNS \
-      --user=$adminUsername \
-      --pass=$adminPassword`
+    output=`./couchbase-cli rebalance --cluster=$rallyDNS`
     echo rebalance output \'$output\'
     sleep 10
   done
