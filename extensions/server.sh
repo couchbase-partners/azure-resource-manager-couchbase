@@ -15,8 +15,8 @@ then
   group=""
 else
   rawGroup=$7
-  group="--group-name $7 \\"
-  groupEnd="--group-name $7"
+  #group="--group-name $7 \\"
+  #groupEnd="--group-name $7"
 fi
 
 echo "Rally provided from commandline $8" 
@@ -118,10 +118,10 @@ then
     ./couchbase-cli group-manage \
     -c $rallyDNS \
     -u '$adminUsername' \
-    -p '$adminPassword' \
-    --create \
-    $groupEnd
+    -p '$adminPassword' --create --group-name $rawGroup
 
+    echo "Moving to newly created group" 
+    ./couchbase-cli group-manage -c $rallyDNS -u $adminUsername -p '$adminPassword' --move-servers $nodeIndex --from-group 'Group 1' --to-group $rawGroup
   fi
 else
   echo "Running couchbase-cli server-add"
@@ -135,7 +135,7 @@ else
       --server-add=$nodeDNS \
       --server-add-username=$adminUsername \
       --server-add-password=$adminPassword \
-      ${group}
+      --group-name $rawGroup \
       --services=$services`
 
     echo server-add output \'$output\'
