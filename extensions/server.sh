@@ -111,6 +111,8 @@ then
     --cluster=$nodeDNS \
     --cluster-ramsize=$dataRAM \
     --cluster-index-ramsize=$indexRAM \
+    --cluster-username=$adminUsername \
+    --cluster-password=$adminPassword \
     --services=$services
 
   if [[ -n $rawGroup && $nodeIndex = "0" ]]
@@ -131,7 +133,7 @@ else
       --server-add=$nodeDNS \
       --server-add-username=$adminUsername \
       --server-add-password=$adminPassword \
-      --group-name $cbServerGroup \
+      --group-name $rawGroup \
       --index-storage-setting memopt \
       --services=$services`
 
