@@ -3,8 +3,13 @@ import yaml
 import json
 
 debugStr = "\n--- DEBUG: \n-- "
+rallyConstant = "rallygroup000"
+VMSSPostfix =  "-SVRScaleSet"
+vnetPostfix = "-vnet"
+nsgPostfix = "-nsg"
 def main():
-    filename= sys.argv[1]
+
+    filename = sys.argv[1]
     print('Using user file: ' + filename)
 
     with open(filename, 'r') as stream:
@@ -12,18 +17,15 @@ def main():
 
     print('User file parameters: ' + str(parameters))
     clusters = parameters['clusters']
-    # testString = clusters[0]
-    # print(debugStr + '\n*** clusters: ' + str(testString))
-    # print(debugStr + '\n*** cluster services: ' + str(testString['clusterMeta'][0]['services']))
 
-    template={
+    template = {
         "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
         "contentVersion": "1.0.0.0",
         "parameters": generateParameters(clusters),
         "variables": {
             "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/extensions/",
             "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]",
-            "serverPubIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/server/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public')]",
+            "serverPubIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/', '" + rallyConstant + VMSSPostfix + "',  '/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public')]",
             "syncPubIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/syncgateway/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public')]"
         },
         "resources": [],
@@ -35,13 +37,14 @@ def main():
 
     print(debugStr + " final resources " + str(resources))
     template['resources'] = [i for i in resources[0] if i] # TODO:  This is being built sloppily need to fix eventually, trimming out {} and pulling out the correct item of the list with in the list
-    
+   
     file = open('generatedTemplate.json', 'w')
     file.write(json.dumps(template, sort_keys=False, indent=2, separators=(',', ': ')) + '\n')
     file.close()
 
 def generateParameters(clusters):
-    parameters={
+
+    parameters = {
         "serverVersion": {
             "type": "string"
         },
@@ -63,14 +66,16 @@ def generateParameters(clusters):
 def generateCluster(cluster):
     resources = []
     if cluster['clusterName'] is not None:
-        clusterName = cluster['clusterName'] + "-"
+        # clusterName = cluster['clusterName'] + "-"
+        clusterName = cluster['clusterName']
     else:
         clusterName = ""
-
-    vnetName = cluster['vnetName']
-    if vnetName is None:
+    noVnetControlString = 'eert12231ss'
+    vnetName = cluster.get('vnetName', noVnetControlString)
+    if vnetName == noVnetControlString:
         createVnet = True
-        vnetName = clusterName + 'vnet'
+        vnetName = clusterName + vnetPostfix
+        print(debugStr + 'Creating Vnet ' + vnetName)
     else:
         createVnet = False
         
@@ -78,26 +83,14 @@ def generateCluster(cluster):
     print(debugStr + ' vnetAddrPrefix ' + vnetAddrPrefix)
     region = cluster['clusterRegion']
 
+    nsgName = clusterName + nsgPostfix
     resources.append(dict(generatedGUID()))
-    resources.append(dict(generateNetworkSecurityGroups(clusterName, region)))
+    resources.append(dict(generateNetworkSecurityGroups(nsgName, region)))
     clusterMeta = cluster['clusterMeta']
     print(debugStr + ' clusterMeta ' + str(clusterMeta))
     subnetPrefixes = {}
     subnetPostfix = '-subnet'
-    for group in cluster['clusterMeta'] or {}:
 
-        groupName = group['group'] + subnetPostfix 
-        subnetPrefixes[groupName] = group['subnetAddrPrefix']
-        if not createVnet and group['nodeCount'] > 0:
-            resources.append(dict(generateSubnet(vnetName, groupName, group['subnetAddrPrefix'])))
-
-    if createVnet:
-           
-        resources.append(dict(generateVirtualNetwork(region, vnetName, vnetAddrPrefix, subnetPrefixes)))
-        
-    # print(debugStr + 'clusterRegion ' + str(cluster['clusterRegion']))
-   # i=3
-    print(debugStr + ' clusterMeta ' + str(clusterMeta))
     rallyGroup = ""
 
     for group in cluster['clusterMeta'] or {}:
@@ -105,9 +98,19 @@ def generateCluster(cluster):
         groupName = group['group']
 
         if 'data' in group['services'] and rallyGroup ==  "":
-            groupName = "rallyGroup000" 
+            rallyGroup = rallyConstant
+            groupName = rallyGroup
 
         resources.append(dict(generateGroup(clusterName, region, group, vnetName, createVnet, groupName + subnetPostfix, groupName)))
+
+        if group['nodeCount'] > 0:
+            appGroupName = groupName + subnetPostfix 
+            subnetPrefixes[appGroupName] = group['subnetAddrPrefix']
+
+            if not createVnet:
+                resources.append(dict(generateSubnet(vnetName, appGroupName, group['subnetAddrPrefix'])))
+    if createVnet:
+        resources.append(dict(generateVirtualNetwork(region, vnetName, nsgName, vnetAddrPrefix, subnetPrefixes)))
        #  print(debugStr + "this round of resources ... " + json.dumps(resources, sort_keys=True, indent=4, separators=(',', ': '))) 
 
    #  print(debugStr + "return of generateCluster " + json.dumps(resources, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -117,7 +120,7 @@ def generatedGUID():
     guid={
         "apiVersion": "2017-05-10",
         "type": "Microsoft.Resources/deployments",
-        "name": "[concat(resourceGroup().name, resourceGroup().location, 'pid-bac94ebc-cc78-4dbd-bc39-4b5433e1014c')]",
+        "name": "[concat('pid-couchbase-2018-4dbd-', variables('uniqueString'))]",
         "properties": {
             "mode": "Incremental",
             "template": {
@@ -129,12 +132,12 @@ def generatedGUID():
     }
     return guid
 
-def generateNetworkSecurityGroups(clusterName, region):
-    itemName = clusterName + "nsg"
+def generateNetworkSecurityGroups(nsgName, region):
+
     networkSecurityGroups={
-        "apiVersion": "2016-06-01",
+        "apiVersion": "2018-08-01",
         "type": "Microsoft.Network/networkSecurityGroups",
-        "name": itemName,
+        "name": nsgName,
         "location": region,
         "properties": {
             "securityRules": [
@@ -296,14 +299,14 @@ def generateSubnet(vnetName, subnetName, subnetAddrPrefix):
     }
     return subnet
 
-def generateVirtualNetwork(region, vnetName, vnetAddrPrefix, subnetPrefixes):
+def generateVirtualNetwork(region, vnetName, nsgName, vnetAddrPrefix, subnetPrefixes):
     virtualNetwork={
         "name": vnetName,
         "type": "Microsoft.Network/virtualNetworks",
         "apiVersion": "2015-06-15",
         "location": region,
         "dependsOn": [
-            "Microsoft.Network/networkSecurityGroups/networksecuritygroups"  
+            "Microsoft.Network/networkSecurityGroups/" + nsgName  
         ],
         "properties": {
             "addressSpace": {
@@ -313,12 +316,12 @@ def generateVirtualNetwork(region, vnetName, vnetAddrPrefix, subnetPrefixes):
         }
     }
     for key, value in subnetPrefixes.iteritems():
-        virtualNetwork['subnets'].append({
+        virtualNetwork['properties']['subnets'].append({
             "name": key,
             "properties": {
                 "addressPrefix": value,
                 "networkSecurityGroup": {
-                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'networksecuritygroups')]"
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', '" + nsgName + "')]"
                 }
             }
         })
@@ -347,9 +350,9 @@ def generateServer(region, group, vnetName, createVnet, subnetName, groupName):
     servicesList = ' '.join(services)
     server={
         "type": "Microsoft.Compute/virtualMachineScaleSets",
-        "name": groupName + "-SVRScaleSet",
+        "name": groupName + VMSSPostfix,
         "location": region,
-        "apiVersion": "2017-03-30",
+        "apiVersion": "2018-06-01",
         "dependsOn": [
             "Microsoft.Network/virtualNetworks/" + vnetName
         ],
@@ -364,6 +367,7 @@ def generateServer(region, group, vnetName, createVnet, subnetName, groupName):
             "capacity": nodeCount
         },
         "properties": {
+            "singlePlacementGroup": False,
             "overprovision": False,
             "upgradePolicy": {
                 "mode": "Manual"
@@ -441,7 +445,7 @@ def generateServer(region, group, vnetName, createVnet, subnetName, groupName):
                                     ]
                                 },
                                 "protectedSettings": {
-                                    "commandToExecute": "[concat('bash server.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', '" + region + "', ' ', '" + servicesList + "', ' ', '" + groupName + "', ' ', 'rallyGroup000')]" 
+                                    "commandToExecute": "[concat('bash server.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', '" + region + "', ' ', '" + servicesList + "', ' ', '" + groupName + "', ' ', '" + rallyConstant + "', variables('uniqueString'))]" 
                                 }
                             }
                         }
@@ -468,7 +472,7 @@ def generateSyncGateway(region, group, vnetName, createVnet, subnetName):
         "type": "Microsoft.Compute/virtualMachineScaleSets",
         "name": groupName + "-SGWScaleSet",
         "location": region,
-        "apiVersion": "2017-03-30",
+        "apiVersion": "2018-06-01",
         "dependsOn": [
             "Microsoft.Network/virtualNetworks/" + vnetName
         ],
@@ -581,11 +585,13 @@ def generateOutputs(clusters):
             "value": "[concat('http://', reference(variables('serverPubIP'), '2017-03-30').dnsSettings.fqdn, ':8091')]"
         }
 
-        outputs[clusterName + 'syncGatewayAdminURL']={
-            "type": "string",
-            "value": "[concat('http://', reference(variables('syncPubIP'), '2017-03-30').dnsSettings.fqdn, ':8091')]"
-        }
-    print('\n------\n generateOutputs ' + str(outputs))
+        if any(('syncGateway' in group['services'] and group['nodeCount'] > 0) for group in cluster['clusterMeta']):
+            outputs[clusterName + 'syncGatewayAdminURL']={
+                "type": "string",
+                "value": "[concat('http://', reference(variables('syncPubIP'), '2017-03-30').dnsSettings.fqdn, ':4985/_admin/')]"
+            }
+
+    print(debugStr + ' generateOutputs ' + str(outputs))
     return outputs
 
 main()

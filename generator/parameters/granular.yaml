@@ -3,7 +3,6 @@
   clusters:
     - clusterName: cluster1
       clusterRegion: westus 
-      vnetName: testvnet
       vnetAddrPrefix: 10.0.0.0/8
       clusterMeta:
       - group: data
@@ -28,7 +27,7 @@
         services:
           - index
       - group: fts
-        nodeCount: 1
+        nodeCount: 0
         nodeType: Standard_DS13_v2
         diskSize: 32
         subnetAddrPrefix: 10.96.0.0/11
