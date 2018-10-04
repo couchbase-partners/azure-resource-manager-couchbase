@@ -115,10 +115,16 @@ then
     --cluster-password=$adminPassword \
     --services=$services
 
-  if [[ -n $cbServerGroup && $nodeIndex = "0" ]]
+  if [[ $nodeIndex = "0" ]]
   then
-    echo "Creating new group"
-    ./couchbase-cli group-manage -c $rallyDNS --create --group-name $cbServerGroup
+    echo "Creating new group: $cbServerGroup"
+    output=""
+    while [[ $output != "SUCCESS: Server group created" ]]
+    do
+      output=`./couchbase-cli group-manage -c $rallyDNS --create --group-name $cbServerGroup`
+        echo group-manage --create output \'$output\'
+        sleep 20
+    done
 
     echo "Moving to newly created group" 
     ./couchbase-cli group-manage -c $rallyDNS --move-servers $nodeDNS --from-group 'Group 1' --to-group $cbServerGroup
@@ -128,6 +134,7 @@ else
   output=""
   while [[ $output != "Server $nodeDNS:8091 added" && ! $output =~ "Node is already part of cluster." ]]
   do
+
     output=`./couchbase-cli server-add \
       --cluster=$rallyDNS \
       --server-add=$nodeDNS \
@@ -138,7 +145,7 @@ else
       --services=$services`
 
     echo server-add output \'$output\'
-    sleep 10
+    sleep 20
   done
 
   echo "Running couchbase-cli rebalance"
@@ -147,7 +154,7 @@ else
   do
     output=`./couchbase-cli rebalance --cluster=$rallyDNS`
     echo rebalance output \'$output\'
-    sleep 10
+    sleep 20
   done
 
 fi
