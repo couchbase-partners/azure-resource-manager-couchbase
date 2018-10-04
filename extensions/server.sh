@@ -117,11 +117,11 @@ then
     echo "Creating new group"
     ./couchbase-cli group-manage \
     -c $rallyDNS \
-    -u '$adminUsername' \
-    -p '$adminPassword' --create --group-name $rawGroup
+    -u \'$adminUsername\' \
+    -p \'$adminPassword\' --create --group-name $rawGroup
 
     echo "Moving to newly created group" 
-    ./couchbase-cli group-manage -c $rallyDNS -u $adminUsername -p '$adminPassword' --move-servers $nodeIndex --from-group 'Group 1' --to-group $rawGroup
+    ./couchbase-cli group-manage -c $rallyDNS -u $adminUsername -p '$adminPassword' --move-servers $nodeDNS --from-group 'Group 1' --to-group $rawGroup
   fi
 else
   echo "Running couchbase-cli server-add"
@@ -130,8 +130,8 @@ else
   do
     output=`./couchbase-cli server-add \
       --cluster=$rallyDNS \
-      --user=$adminUsername \
-      --pass=$adminPassword \
+      --user=\'$adminUsername\' \
+      --pass=\'$adminPassword\' \
       --server-add=$nodeDNS \
       --server-add-username=$adminUsername \
       --server-add-password=$adminPassword \
