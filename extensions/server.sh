@@ -16,7 +16,7 @@ if [[ -z $7 ]]
 then
   group="Group 1"
 else
-  rawGroup=$7
+  group=$7
 fi
 
 if [[ -z $8 ]]
@@ -42,9 +42,8 @@ echo version \'$version\'
 echo uniqueString \'$uniqueString\'
 echo location \'$location\'
 echo services \'$services\'
-echo group \'$group\'
-echo groupEnd \'$groupEnd\'
-echo rally \'$rally\'
+echo group \'"$group"\'
+echo rally \'"$rally"\'
 
 echo "Installing prerequisites..."
 apt-get update
@@ -79,7 +78,7 @@ do
     | sed 's/"//'`
 done
 
-nodeDNS='vm'$nodeIndex'.server-'$rawGroup$uniqueString'.'$location'.cloudapp.azure.com'
+nodeDNS='vm'$nodeIndex'.server-'$group$uniqueString'.'$location'.cloudapp.azure.com'
 rallyDNS='vm0.server-'$rally'.'$location'.cloudapp.azure.com'
 
 echo "nodeIndex: $nodeIndex"
@@ -91,7 +90,7 @@ echo "
 127.0.0.1 ${nodeDNS}
 " >> /etc/hosts
 
-cd /opt/couchbase/bin/
+cd /opt/couchbase/bin/ || exit 1
 
 echo "Running couchbase-cli node-init"
 ./couchbase-cli node-init \
@@ -111,13 +110,13 @@ then
     --cluster=$nodeDNS \
     --cluster-ramsize=$dataRAM \
     --cluster-index-ramsize=$indexRAM \
-    --cluster-username=$adminUsername \
-    --cluster-password=$adminPassword \
+    --cluster-username="$adminUsername" \
+    --cluster-password="$adminPassword" \
     --services=$services
 
   echo "Creating new group: $cbServerGroup"
   output=""
-  while [[ ! $output =~ "SUCCESS: Server group created" -o ! $output =~ "ERROR: name - already exists"]]
+  while [[ ! ($output =~ "SUCCESS: Server group created") || ! ($output =~ "ERROR: name - already exists") ]]
   do
     output=`./couchbase-cli group-manage -c $rallyDNS --create --group-name $cbServerGroup`
       echo group-manage --create output \'$output\'
@@ -133,10 +132,10 @@ else
   then
     echo "Creating new group: $cbServerGroup"
     output=""
-    while [[ ! $output =~ "SUCCESS: Server group created" -o ! $output =~ "ERROR: name - already exists" ]]
+    while [[ ! ($output =~ "SUCCESS: Server group created") || ! ($output =~ "ERROR: name - already exists") ]]
     do
       output=`./couchbase-cli group-manage -c $rallyDNS --create --group-name $cbServerGroup`
-        echo group-manage --create output \'$output\'
+        echo group-manage --create output \'"$output"\'
         sleep 10
     done
 
@@ -146,19 +145,19 @@ else
 
   echo "Running couchbase-cli server-add"
   output=""
-  while [[ $output != "Server $nodeDNS:8091 added" && ! $output =~ "Node is already part of cluster." ]]
+  while [[ ($output != "Server $nodeDNS:8091 added") && ! ($output =~ "Node is already part of cluster") ]]
   do
 
     output=`./couchbase-cli server-add \
       --cluster=$rallyDNS \
       --server-add=$nodeDNS \
-      --server-add-username=$adminUsername \
-      --server-add-password=$adminPassword \
+      --server-add-username="$adminUsername" \
+      --server-add-password="$adminPassword" \
       --group-name $cbServerGroup \
       --index-storage-setting memopt \
       --services=$services`
 
-    echo server-add output \'$output\'
+    echo server-add output \'"$output"\'
     sleep 10
   done
 
@@ -167,7 +166,7 @@ else
   while [[ ! $output =~ "SUCCESS" ]]
   do
     output=`./couchbase-cli rebalance --cluster=$rallyDNS`
-    echo rebalance output \'$output\'
+    echo rebalance output \'"$output"\'
     sleep 10
   done
 
