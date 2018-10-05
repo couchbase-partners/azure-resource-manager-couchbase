@@ -116,7 +116,7 @@ then
 
   echo "Creating new group: $cbServerGroup"
   output=""
-  while [[ ! ($output =~ "SUCCESS: Server group created") || ! ($output =~ "ERROR: name - already exists") ]]
+  while [[ ! ($output =~ "SUCCESS: Server group created") && ! ($output =~ "ERROR: name - already exists") ]]
   do
     output=`./couchbase-cli group-manage -c $rallyDNS --create --group-name $cbServerGroup`
       echo group-manage --create output \'$output\'
