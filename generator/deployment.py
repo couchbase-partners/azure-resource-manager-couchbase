@@ -15,7 +15,7 @@ def main():
     with open(filename, 'r') as stream:
         parameters = yaml.load(stream)
 
-    print('User file parameters: ' + str(parameters))
+   # print(debugStr + 'User file parameters: ' + str(parameters))
     clusters = parameters['clusters']
 
     template = {
@@ -35,7 +35,7 @@ def main():
     for cluster in parameters['clusters']:
         resources.append(generateCluster(cluster))
 
-    print(debugStr + " final resources " + str(resources))
+    #print(debugStr + " final resources " + str(resources))
     template['resources'] = [i for i in resources[0] if i] # TODO:  This is being built sloppily need to fix eventually, trimming out {} and pulling out the correct item of the list with in the list
    
     file = open('generatedTemplate.json', 'w')
@@ -75,19 +75,19 @@ def generateCluster(cluster):
     if vnetName == noVnetControlString:
         createVnet = True
         vnetName = clusterName + vnetPostfix
-        print(debugStr + 'Creating Vnet ' + vnetName)
+        #print(debugStr + 'Creating Vnet ' + vnetName)
     else:
         createVnet = False
         
     vnetAddrPrefix = cluster['vnetAddrPrefix']
-    print(debugStr + ' vnetAddrPrefix ' + vnetAddrPrefix)
+    #print(debugStr + ' vnetAddrPrefix ' + vnetAddrPrefix)
     region = cluster['clusterRegion']
 
     nsgName = clusterName + nsgPostfix
     resources.append(dict(generatedGUID()))
     resources.append(dict(generateNetworkSecurityGroups(nsgName, region)))
     clusterMeta = cluster['clusterMeta']
-    print(debugStr + ' clusterMeta ' + str(clusterMeta))
+    #print(debugStr + ' clusterMeta ' + str(clusterMeta))
     subnetPrefixes = {}
     subnetPostfix = '-subnet'
 
@@ -325,7 +325,7 @@ def generateVirtualNetwork(region, vnetName, nsgName, vnetAddrPrefix, subnetPref
                 }
             }
         })
-    print(debugStr + "generateVirtualNetwork "  + json.dumps(virtualNetwork, sort_keys=False, indent=2, separators=(',', ': ')))
+    #print(debugStr + "generateVirtualNetwork "  + json.dumps(virtualNetwork, sort_keys=False, indent=2, separators=(',', ': ')))
     return virtualNetwork
 
 def generateGroup(clusterName, region, group, vnetName, createVnet, subnetName, groupName):
@@ -458,7 +458,7 @@ def generateServer(region, group, vnetName, createVnet, subnetName, groupName):
     if not createVnet:
         del server['dependsOn']
 
-    print (debugStr + 'generateServer \n *- \n *--- ' + json.dumps(server, sort_keys=True, indent=4, separators=(',', ': ')))
+  #  print (debugStr + 'generateServer \n *- \n *--- ' + json.dumps(server, sort_keys=True, indent=4, separators=(',', ': ')))
     return server
 
 def generateSyncGateway(region, group, vnetName, createVnet, subnetName):
@@ -578,7 +578,7 @@ def generateOutputs(clusters):
         else:
             clusterName = ""
 
-        print(debugStr + 'ClusterName ' + clusterName)
+        #print(debugStr + 'ClusterName ' + clusterName)
         #region = cluster['clusterMeta']['region']
 
         outputs[clusterName + 'serverAdminURL']={
@@ -592,7 +592,7 @@ def generateOutputs(clusters):
                 "value": "[concat('http://', reference(variables('syncPubIP'), '2017-03-30').dnsSettings.fqdn, ':4985/_admin/')]"
             }
 
-    print(debugStr + ' generateOutputs ' + str(outputs))
+    #print(debugStr + ' generateOutputs ' + str(outputs))
     return outputs
 
 main()
