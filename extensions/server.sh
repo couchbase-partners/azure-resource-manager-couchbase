@@ -1,49 +1,19 @@
 #!/usr/bin/env bash
 
 echo "Running server.sh"
-echo "Parameters provided $@"
+
 version=$1
 adminUsername=$2
-export CB_REST_USERNAME=$adminUsername
 adminPassword=$3
-export CB_REST_PASSWORD=$adminPassword
 uniqueString=$4
 location=$5
-defaultSvcs='data,index,query,fts'
-services=${6-$defaultSvcs}
-
-if [[ -z $7 ]]
-then
-  group="Group 1"
-else
-  group=$7
-fi
-
-if [[ -z $8 ]]
-then
-  echo "No Rally name provided. A Rally name is required"
-  exit 1
-else
-  echo "Got Rally $8 ..." 
-  rally=$8
-fi
-
-if [[ -z $9 ]]
-then
-  echo "No Couchbase Server Group setting to Group 1 ..."
-  cbServerGroup='Group 1'
-else
-  echo "Got Couchbase Server Group $9 ..." 
-  cbServerGroup=$9
-fi
 
 echo "Using the settings:"
 echo version \'$version\'
+echo adminUsername \'$adminUsername\'
+echo adminPassword \'$adminPassword\'
 echo uniqueString \'$uniqueString\'
 echo location \'$location\'
-echo services \'$services\'
-echo group \'"$group"\'
-echo rally \'"$rally"\'
 
 echo "Installing prerequisites..."
 apt-get update
@@ -78,19 +48,16 @@ do
     | sed 's/"//'`
 done
 
-nodeDNS='vm'$nodeIndex'.server-'$group$uniqueString'.'$location'.cloudapp.azure.com'
-rallyDNS='vm0.server-'$rally'.'$location'.cloudapp.azure.com'
+nodeDNS='vm'$nodeIndex'.server-'$uniqueString'.'$location'.cloudapp.azure.com'
+rallyDNS='vm0.server-'$uniqueString'.'$location'.cloudapp.azure.com'
 
-echo "nodeIndex: $nodeIndex"
-echo "nodeDNS: $nodeDNS"
-echo "rallyDNS: $rallyDNS"
 echo "Adding an entry to /etc/hosts to simulate split brain DNS..."
 echo "
 # Simulate split brain DNS for Couchbase
 127.0.0.1 ${nodeDNS}
 " >> /etc/hosts
 
-cd /opt/couchbase/bin/ || exit 1
+cd /opt/couchbase/bin/
 
 echo "Running couchbase-cli node-init"
 ./couchbase-cli node-init \
@@ -98,8 +65,10 @@ echo "Running couchbase-cli node-init"
   --node-init-hostname=$nodeDNS \
   --node-init-data-path=/datadisk/data \
   --node-init-index-path=/datadisk/index \
+  --user=$adminUsername \
+  --pass=$adminPassword
 
-if [[ $nodeDNS == $rallyDNS ]]
+if [[ $nodeIndex == "0" ]]
 then
   totalRAM=$(grep MemTotal /proc/meminfo | awk '{print $2}')
   dataRAM=$((50 * $totalRAM / 100000))
@@ -110,52 +79,23 @@ then
     --cluster=$nodeDNS \
     --cluster-ramsize=$dataRAM \
     --cluster-index-ramsize=$indexRAM \
-    --cluster-username="$adminUsername" \
-    --cluster-password="$adminPassword" \
-    --services=$services
-
-  echo "Creating new group: $cbServerGroup"
-  output=""
-  while [[ ! ($output =~ "SUCCESS: Server group created") && ! ($output =~ "ERROR: name - already exists") ]]
-  do
-    output=`./couchbase-cli group-manage -c $rallyDNS --create --group-name $cbServerGroup`
-      echo group-manage --create output \'$output\'
-      sleep 10
-  done
-
-  echo "Moving to newly created group" 
-  ./couchbase-cli group-manage -c $rallyDNS --move-servers $nodeDNS --from-group 'Group 1' --to-group $cbServerGroup
-
+    --cluster-username=$adminUsername \
+    --cluster-password=$adminPassword \
+    --services=data,index,query,fts
 else
-
-  if [[ $nodeIndex = "0" ]]
-  then
-    echo "Creating new group: $cbServerGroup"
-    output=""
-    while [[ ! ($output =~ "SUCCESS: Server group created") && ! ($output =~ "ERROR: name - already exists") ]]
-    do
-      output=`./couchbase-cli group-manage -c $rallyDNS --create --group-name $cbServerGroup`
-        echo group-manage --create output \'"$output"\'
-        sleep 10
-    done
-
-  fi
-
   echo "Running couchbase-cli server-add"
   output=""
-  while [[ ($output != "Server $nodeDNS:8091 added") && ! ($output =~ "Node is already part of cluster") ]]
+  while [[ $output != "Server $nodeDNS:8091 added" && ! $output =~ "Node is already part of cluster." ]]
   do
-
     output=`./couchbase-cli server-add \
       --cluster=$rallyDNS \
+      --user=$adminUsername \
+      --pass=$adminPassword \
       --server-add=$nodeDNS \
-      --server-add-username="$adminUsername" \
-      --server-add-password="$adminPassword" \
-      --group-name $cbServerGroup \
-      --index-storage-setting default \
-      --services=$services`
-
-    echo server-add output \'"$output"\'
+      --server-add-username=$adminUsername \
+      --server-add-password=$adminPassword \
+      --services=data,index,query,fts`
+    echo server-add output \'$output\'
     sleep 10
   done
 
@@ -163,8 +103,11 @@ else
   output=""
   while [[ ! $output =~ "SUCCESS" ]]
   do
-    output=`./couchbase-cli rebalance --cluster=$rallyDNS`
-    echo rebalance output \'"$output"\'
+    output=`./couchbase-cli rebalance \
+      --cluster=$rallyDNS \
+      --user=$adminUsername \
+      --pass=$adminPassword`
+    echo rebalance output \'$output\'
     sleep 10
   done
 
