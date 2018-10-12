@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "prefix": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The prefix string to add to a generated string that is unique to the resourceGroup and deployment."
+      }
+    }
+  },
+  "variables": {
+  },
+  "resources": [
+    
+  ],
+  "outputs": {
+    "uniqueString": {
+      "type": "string",
+      "value": "[concat(parameters('prefix'), uniqueString(resourceGroup().id, deployment().name))]"
+    }
+  }
+}
