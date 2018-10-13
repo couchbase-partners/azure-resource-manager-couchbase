@@ -7,43 +7,31 @@ adminUsername=$2
 export CB_REST_USERNAME=$adminUsername
 adminPassword=$3
 export CB_REST_PASSWORD=$adminPassword
-uniqueString=$4
-location=$5
+#uniqueString=$4
+#location=$5
 defaultSvcs='data,index,query,fts'
-services=${6-$defaultSvcs}
+services=${4-$defaultSvcs}
+yamlSS=$5
 
-if [[ -z $7 ]]
-then
-  group="Group 1"
-else
-  group=$7
-fi
-
-if [[ -z $8 ]]
-then
-  echo "The Rally Private IP provided is required."
-  exit 1
-else
-  echo "Got Rally $8 ..." 
-  rally=$8
-fi
-
-if [[ -z $9 ]]
+if [[ -z $6 ]]
 then
   echo "No Couchbase Server Group setting to Group 1 ..."
   cbServerGroup='Group 1'
 else
-  echo "Got Couchbase Server Group $9 ..." 
-  cbServerGroup=$9
+  echo "Got Couchbase Server Group $6 ..." 
+  cbServerGroup=$6
 fi
+
+#rally=$7
+rallyIP=$7
 
 echo "Using the settings:"
 echo version \'$version\'
-echo uniqueString \'$uniqueString\'
-echo location \'$location\'
+#echo uniqueString \'$uniqueString\'
+#echo location \'$location\'
 echo services \'$services\'
-echo group \'"$group"\'
-echo rally \'"$rally"\'
+echo yamlSS \'"$yamlSS"\'
+echo rallyIP \'"$rallyIP"\'
 
 echo "Installing prerequisites..."
 apt-get update
@@ -69,25 +57,31 @@ echo "Configuring Couchbase Server..."
 #nodeIndex = `curl -H Metadata:true "http://169.254.169.254/metadata/instance/compute/name?api-version=2017-04-02&format=text"`
 # good example here https://github.com/bonggeek/Samples/blob/master/imds/imds.sh
 
-nodeIndex="null"
-while [[ $nodeIndex == "null" ]]
-do
-  nodeIndex=`curl -H Metadata:true "http://169.254.169.254/metadata/instance/compute?api-version=2017-04-02" \
-    | jq ".name" \
-    | sed 's/.*_//' \
-    | sed 's/"//'`
-done
+# nodeIndex="null"
+# while [[ $nodeIndex == "null" ]]
+# do
+#   nodeIndex=`curl -H Metadata:true "http://169.254.169.254/metadata/instance/compute?api-version=2017-04-02" \
+#     | jq ".name" \
+#     | sed 's/.*_//' \
+#     | sed 's/"//'`
+# done
 
-#nodeDNS='vm'$nodeIndex'.server-'$group$uniqueString'.'$location'.cloudapp.azure.com'
+#nodeDNS='vm'$nodeIndex'.server-'$yamlSS$uniqueString'.'$location'.cloudapp.azure.com'
 #rallyDNS='vm0.server-'$rally'.'$location'.cloudapp.azure.com'
-rallyPrivateIP=`ip route get 1 | awk '{print $NF;exit}'`
+nodePrivateIP=`ip route get 1 | awk '{print $NF;exit}'`
 
-echo "nodeIndex: $nodeIndex"
+if [[ $yamlSS == 'rallygroup-' ]]
+then
+ echo "This is the rally node Setting ralyIP to this machines ip"
+ rallyPrivateIP=nodePrivateIP
+fi
+ 
+#echo "nodeIndex: $nodeIndex"
 #echo "nodeDNS: $nodeDNS"
 echo "nodePrivateIP: $nodePrivateIP"
 echo "rallyPrivateIP: $rallyPrivateIP"
-echo "Adding an entry to /etc/hosts to simulate split brain DNS..."
-echo "
+#echo "Adding an entry to /etc/hosts to simulate split brain DNS..."
+#echo "
 # Simulate split brain DNS for Couchbase
 # 127.0.0.1 ${nodeDNS}
 # " >> /etc/hosts
