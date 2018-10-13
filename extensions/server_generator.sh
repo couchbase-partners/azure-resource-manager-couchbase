@@ -70,7 +70,7 @@ echo "Configuring Couchbase Server..."
 #rallyDNS='vm0.server-'$rally'.'$location'.cloudapp.azure.com'
 nodePrivateIP=`ip route get 1 | awk '{print $NF;exit}'`
 
-if [[ $yamlSS == 'rallygroup-' ]]
+if [[ $yamlSS == 'rallygroup' ]]
 then
  echo "This is the rally node Setting ralyIP to this machines ip"
  rallyPrivateIP=nodePrivateIP

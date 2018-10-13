@@ -2,14 +2,17 @@ import sys
 import yaml
 import json
 
+#constants
 debugStr = "\n--- DEBUG: \n-- "
-rallyConstant = "rallygroup-"
+rallyTag = 'rally' #from rally yaml
+rallyConstant = "rallygroup"
 VMSSPostfix = "-SVRScaleSet"
 vnetPostfix = "-vnet"
 nsgPostfix = "-nsg"
 availabilitySetPostfix = "-AS"
-def main():
+outputRallyPrivateIP = False
 
+def main():
     filename = sys.argv[1]
     print('Using user file: ' + filename)
 
@@ -19,22 +22,25 @@ def main():
    # print(debugStr + 'User file parameters: ' + str(parameters))
     clusters = parameters['clusters']
 
+    resources = []
+    for cluster in parameters['clusters']:
+        resources.append(generateCluster(cluster))
+
     template = {
         "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
         "contentVersion": "1.0.0.0",
         "parameters": generateParameters(clusters),
         "variables": {
-            "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/extensions/",
-            "uniqueString": "[uniquestring(resourceGroup().id, resourceGroup().location)]"
+            "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/shoManagedService/extensions/",
+            #"uniqueString": "[uniquestring(resourceGroup().id, resourceGroup().location)]",
+            "rallyPrivateIP": "Microsoft.Compute/virtualMachineScaleSets/rallygroup-SVRScaleSet/networkInterfaces/nic"
          #   "serverPubIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/', '" + rallyConstant + VMSSPostfix + "',  '/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public')]",
          #   "syncPubIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/syncgateway/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public')]"
         },
         "resources": [],
         "outputs": generateOutputs(parameters['clusters'])
     }
-    resources = []
-    for cluster in parameters['clusters']:
-        resources.append(generateCluster(cluster))
+
 
     #print(debugStr + " final resources " + str(resources))
     template['resources'] = [i for i in resources[0] if i] # TODO:  This is being built sloppily need to fix eventually, trimming out {} and pulling out the correct item of the list with in the list
@@ -80,17 +86,14 @@ def generateParameters(clusters):
     return parameters
 
 def generateCluster(cluster):
+
     resources = []
     if cluster['clusterName'] is not None:
         # clusterName = cluster['clusterName'] + "-"
         clusterName = cluster['clusterName']
     else:
         clusterName = ""
-    rallyPrivateIP = cluster['rallyPrivateIP']
 
-    if (rallyPrivateIP is None) or rallyPrivateIP == "":
-        print("ERROR: rallyPrivateIP is mandatory! clusters->rallyPrivateIP in the yaml") 
-        exit (1)
 
     noVnetControlString = 'eert12231ss'
     vnetName = cluster.get('vnetName', noVnetControlString)
@@ -98,13 +101,12 @@ def generateCluster(cluster):
         createVnet = True
         vnetName = clusterName + vnetPostfix
         #print(debugStr + 'Creating Vnet ' + vnetName)
+        vnetAddrPrefix = cluster['vnetAddrPrefix']
+        #print(debugStr + ' vnetAddrPrefix ' + vnetAddrPrefix)
     else:
         createVnet = False
         
-    vnetAddrPrefix = cluster['vnetAddrPrefix']
-    #print(debugStr + ' vnetAddrPrefix ' + vnetAddrPrefix)
     region = cluster['clusterRegion']
-
     nsgName = clusterName + nsgPostfix
   #  resources.append(dict(generateDNSZones(vnetName)))
     #resources.append(dict(generateGUID()))
@@ -115,27 +117,41 @@ def generateCluster(cluster):
     subnetPostfix = '-subnet'
 
     rallyGroup = ""
+    rallyPrivateIP = cluster.get('rallyPrivateIP', "")
     for group in clusterMeta or {}:
 
         #The first nodes with the data service will be the rally node.   The rally node initalizes the cluster and is used for api/cli commands 
         #All nodes need to know this rallynode.  The VMSS that includes the rally node is the Rally scaleset
 
         groupName = group['VMSSgroup']
-        groupServices = group['services']
 
-        if 'data' in groupServices and rallyGroup ==  "":
-            rallyGroup = rallyConstant + groupServices 
+        #groupServices = group['services']
+        # if 'data' in groupServices and rallyGroup ==  "":
+        #     rallyGroup = rallyConstant + groupServices 
+        #     groupName = rallyGroup
+
+        if groupName == rallyTag:
+            group['nodeCount'] = 1 #There can only be one rally so ignore the yaml value
+            rallyGroup = rallyConstant
             groupName = rallyGroup
+            #outputRallyPrivateIP = True
 
-        if not createVnet:
-            resources.append(dict(generateGroup(clusterName, region, group, vnetName, createVnet, clusterName + subnetPostfix, groupName, rallyPrivateIP)))
-        else:
-            resources.append(dict(generateGroup(clusterName, region, group, vnetName, createVnet, clusterName + subnetPostfix, groupName, rallyPrivateIP)))
+        elif rallyPrivateIP == "":
+                print("ERROR: rallyPrivateIP is mandatory! clusters->rallyPrivateIP in the yaml") 
+                exit (1)
 
+        resources.append(dict(generateGroup(clusterName, region, group, vnetName, createVnet, clusterName + subnetPostfix, groupName, rallyPrivateIP)))
 
-        if group['nodeCount'] > 0:
-            appGroupName = groupName + subnetPostfix 
-            subnetPrefixes[appGroupName] = group['subnetAddrPrefix']
+        #build Subnet list
+        #this is line is for a single subnet across the cluster
+        
+        if rallyPrivateIP != "":
+            subnetPrefixes[clusterName + subnetPostfix] =  cluster['subnetAddrPrefix']
+
+        #below for a subnet per group
+        # if group['nodeCount'] > 0:
+        #     appGroupName = groupName + subnetPostfix 
+        #     subnetPrefixes[appGroupName] = group['subnetAddrPrefix']
 
           #  if not createVnet:
           #      resources.append(dict(generateSubnet(vnetName, nsgName, appGroupName, group['subnetAddrPrefix'])))
@@ -144,7 +160,7 @@ def generateCluster(cluster):
 #        resources.append(dict(generateSubnet(vnetName, nsgName, clusterName + subnetPostfix, cluster['subnetAddrPrefix'])))
 
     if createVnet:
-        resources.append(dict(generateVirtualNetwork(region, vnetName, nsgName, vnetAddrPrefix, subnetPrefixes)))
+        resources.append(dict(generateVirtualNetwork(region, vnetName, nsgName, vnetAddrPrefix, subnetPrefixes))) #TODO: Make it one subnet even on vnet creation
        #  print(debugStr + "this round of resources ... " + json.dumps(resources, sort_keys=True, indent=4, separators=(',', ': '))) 
 
    #  print(debugStr + "return of generateCluster " + json.dumps(resources, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -164,6 +180,7 @@ def generateDNSZones(vnetName):
         "resolutionVirtualNetworks": [],
         "tags": {}
     }
+
 def generateGUID():
     guid={
         "apiVersion": "2017-05-10",
@@ -518,7 +535,7 @@ def generateServer(region, group, vnetName, createVnet, subnetName, groupName, r
                                     ]
                                 },
                                 "protectedSettings": {
-                                    "commandToExecute": "[concat('bash server_generator.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', parameters('uniqueString'), ' ', '" + region + "', ' ', '" + servicesList + "', ' ', '" + groupName + "', ' ', '" + rallyConstant + "', parameters('uniqueString'), ' ', '" + cbServerGroupName + "')]" 
+                                    "commandToExecute": "[concat('bash server_generator.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', '" + servicesList + "', ' ', '" + groupName + "', ' ', '" + cbServerGroupName + "', ' ', '" + rallyPrivateIP + "')]" 
                                 }
                             }
                         }
@@ -650,10 +667,14 @@ def generateOutputs(clusters):
         else:
             clusterName = ""
 
-        outputs[clusterName + 'buildHosts']={
-           "type": "string",
-           "value": "[concat('.server | syncgateway -', '<group>', parameters('uniqueString'), ' .location ', ' .couchbase-ms.local')]"
-        } 
+        outputs['Rally PrivateIp'] = {
+            "type": "string",
+            "value": "[reference(variables('rallyPrivateIP'), '2016-09-01').ipconfigurations[0].properties.privateIPAddress]"
+        }
+        # outputs[clusterName + 'buildHosts']={
+        #    "type": "string",
+        #    "value": "[concat('.server | syncgateway -', '<group>', parameters('uniqueString'), ' .location ', ' .couchbase-ms.local')]"
+        # } 
         #print(debugStr + 'ClusterName ' + clusterName)
         #region = cluster['clusterMeta']['region']
 
