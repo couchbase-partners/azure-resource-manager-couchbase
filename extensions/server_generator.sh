@@ -72,8 +72,8 @@ nodePrivateIP=`ip route get 1 | awk '{print $NF;exit}'`
 
 if [[ $yamlSS == 'rallygroup' ]]
 then
- echo "This is the rally node Setting ralyIP to this machines ip"
- rallyPrivateIP=nodePrivateIP
+ echo "This is the rally node Setting rallyIP to this machines ip"
+ rallyPrivateIP=$nodePrivateIP
 fi
  
 #echo "nodeIndex: $nodeIndex"
