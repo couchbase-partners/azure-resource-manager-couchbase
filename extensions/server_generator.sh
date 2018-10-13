@@ -78,8 +78,9 @@ do
     | sed 's/"//'`
 done
 
-nodeDNS='vm'$nodeIndex'.server-'$group$uniqueString'.'$location'.cloudapp.azure.com'
-rallyDNS='vm0.server-'$rally'.'$location'.cloudapp.azure.com'
+#nodeDNS='vm'$nodeIndex'.server-'$group$uniqueString'.'$location'.cloudapp.azure.com'
+nodeDNS='vm'$nodeIndex'.server-'$group$uniqueString'.'$location'.couchbase-ms.local'
+rallyDNS='vm0.server-'$rally'.'$location'.couchbase-ms.local'
 
 echo "nodeIndex: $nodeIndex"
 echo "nodeDNS: $nodeDNS"

@@ -1,6 +1,6 @@
 {
     "serverVersion": {
-      "value": "5.5.1"
+      "value": "5.5.2"
     },
     "syncGatewayVersion": {
       "value": "2.1.0"
@@ -13,5 +13,11 @@
     },
     "license": {
       "value": "byol"
+    },
+    "uniqueString": {
+      "value": "n4f5pbg2ayvjc"
+    },
+    "prefix":{
+      "value": "cb-ms-"
     }
-  }
+}

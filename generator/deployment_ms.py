@@ -46,6 +46,12 @@ def main():
 def generateParameters(clusters):
 
     parameters = {
+        "uniqueString": {
+            "type": "string"
+        },
+        "prefix": {
+            "type": "string"
+        },
         "serverVersion": {
             "type": "string"
         },
@@ -154,7 +160,7 @@ def generateGUID():
     guid={
         "apiVersion": "2017-05-10",
         "type": "Microsoft.Resources/deployments",
-        "name": "[concat('pid-couchbase-2018-4dbd-', variables('uniqueString'))]",
+        "name": "[concat('pid-couchbase-2018-4dbd-', parameters('uniqueString'))]",
         "properties": {
             "mode": "Incremental",
             "template": {
@@ -477,7 +483,7 @@ def generateServer(region, group, vnetName, createVnet, subnetName, groupName):
                                                 "properties": {
                                                     "idleTimeoutInMinutes": 30,
                                                     "dnsSettings": {
-                                                        "domainNameLabel": "[concat('server-', '" + groupName + "', variables('uniqueString'))]"
+                                                        "domainNameLabel": "[concat('server-', '" + groupName + "', parameters('uniqueString'))]"
                                                     }
                                                 }
                                             }
@@ -504,7 +510,7 @@ def generateServer(region, group, vnetName, createVnet, subnetName, groupName):
                                     ]
                                 },
                                 "protectedSettings": {
-                                    "commandToExecute": "[concat('bash server_generator.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', '" + region + "', ' ', '" + servicesList + "', ' ', '" + groupName + "', ' ', '" + rallyConstant + "', variables('uniqueString'), ' ', '" + cbServerGroupName + "')]" 
+                                    "commandToExecute": "[concat('bash server_generator.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', parameters('uniqueString'), ' ', '" + region + "', ' ', '" + servicesList + "', ' ', '" + groupName + "', ' ', '" + rallyConstant + "', parameters('uniqueString'), ' ', '" + cbServerGroupName + "')]" 
                                 }
                             }
                         }
@@ -585,7 +591,7 @@ def generateSyncGateway(region, group, vnetName, createVnet, subnetName):
                                                 "properties": {
                                                     "idleTimeoutInMinutes": 30,
                                                     "dnsSettings": {
-                                                        "domainNameLabel": "[concat('syncgateway-', variables('uniqueString'))]"
+                                                        "domainNameLabel": "[concat('syncgateway-', parameters('uniqueString'))]"
                                                     }
                                                 }
                                             }
@@ -636,9 +642,9 @@ def generateOutputs(clusters):
         else:
             clusterName = ""
 
-        outputs[clusterName + 'uniqueString']={
+        outputs[clusterName + 'buildHosts']={
            "type": "string",
-           "value": "[variables('uniqueString')]"
+           "value": "[concat('.server | syncgateway -', '<group>', parameters('uniqueString'), ' .location ', ' .couchbase-ms.local')]"
         } 
         #print(debugStr + 'ClusterName ' + clusterName)
         #region = cluster['clusterMeta']['region']

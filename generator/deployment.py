@@ -7,6 +7,7 @@ rallyConstant = "rallygroup000"
 VMSSPostfix =  "-SVRScaleSet"
 vnetPostfix = "-vnet"
 nsgPostfix = "-nsg"
+availabilitySetPostfix = "-AS"
 def main():
 
     filename = sys.argv[1]
@@ -59,6 +60,15 @@ def generateParameters(clusters):
         },
         "license": {
             "type": "string"
+        },
+        "region": {
+            "type": "string",
+            "defaultValue": "centralus",
+            "allowedValues": [
+                "centralus",
+                "westus2",
+                "eastus2"
+            ] 
         }
     }
     return parameters
@@ -93,7 +103,7 @@ def generateCluster(cluster):
 
     rallyGroup = ""
 
-    for group in cluster['clusterMeta'] or {}:
+    for group in clusterMeta or {}:
 
         groupName = group['VMSSgroup']
 
@@ -328,6 +338,24 @@ def generateVirtualNetwork(region, vnetName, nsgName, vnetAddrPrefix, subnetPref
     #print(debugStr + "generateVirtualNetwork "  + json.dumps(virtualNetwork, sort_keys=False, indent=2, separators=(',', ': ')))
     return virtualNetwork
 
+def generateAvailabiltySet(clusterName, groupName, numVM, region):
+    
+    availabilitySet = {
+            "apiVersion": "2018-06-01",
+            "type": "Microsoft.Compute/availabilitySets",
+            "name": clusterName + '-' + groupName + availabilitySetPostfix,
+            "location": region,
+            "properties": {
+                "platformUpdateDomainCount": 2,
+                "platformFaultDomainCount": 5,
+                "virtualMachines": []
+            },
+            "tags": {},
+            "sku": {
+                "name": "[parameters('sku')]"
+            }
+    }
+    return availabilitySet
 def generateGroup(clusterName, region, group, vnetName, createVnet, subnetName, groupName):
     #print('DEBUG: generateGroup ***\n ***\n ' + str(group))
     
@@ -354,6 +382,7 @@ def generateServer(region, group, vnetName, createVnet, subnetName, groupName):
         "name": groupName + VMSSPostfix,
         "location": region,
         "apiVersion": "2018-06-01",
+        "zones": [ "1", "2", "3"],
         "dependsOn": [
             "Microsoft.Network/virtualNetworks/" + vnetName
         ],
@@ -441,12 +470,12 @@ def generateServer(region, group, vnetName, createVnet, subnetName, groupName):
                                 "autoUpgradeMinorVersion": True,
                                 "settings": {
                                     "fileUris": [
-                                        "[concat(variables('extensionUrl'), 'server.sh')]",
+                                        "[concat(variables('extensionUrl'), 'server_generator.sh')]",
                                         "[concat(variables('extensionUrl'), 'util.sh')]"
                                     ]
                                 },
                                 "protectedSettings": {
-                                    "commandToExecute": "[concat('bash server.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', '" + region + "', ' ', '" + servicesList + "', ' ', '" + groupName + "', ' ', '" + rallyConstant + "', variables('uniqueString'), ' ', '" + cbServerGroupName + "')]" 
+                                    "commandToExecute": "[concat('bash server_generator.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', '" + region + "', ' ', '" + servicesList + "', ' ', '" + groupName + "', ' ', '" + rallyConstant + "', variables('uniqueString'), ' ', '" + cbServerGroupName + "')]" 
                                 }
                             }
                         }

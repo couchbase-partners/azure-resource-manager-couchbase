@@ -1,35 +1,17 @@
-license: hourly_pricing
-username: couchbase
-password: foo123!
-serverVersion: 5.5.0
-syncGatewayVersion: 2.1.0
-clusters:
-  - cluster: cluster1
-    region: eastus
-    groups:
-      - group: group1
+  serverVersion: 5.5.0
+  syncGatewayVersion: 2.1.0
+  clusters:
+    - clusterName: cluster2
+      clusterRegion: eastus 
+      vnetAddrPrefix: 10.0.0.0/8
+      clusterMeta:
+      - VMSSgroup: xdcr
+        CBServerGroup: three
+        nodeCount: 1
+        nodeType: Standard_DS13_v2
         diskSize: 32
-        nodeCount: 5
-        nodeType: Standard_DS3_v2
+        subnetAddrPrefix: 10.224.0.0/11
         services:
           - data
-      - group: group2
-        diskSize: 32
-        nodeCount: 5
-        nodeType: Standard_DS3_v2
-        services:
-          - query
           - index
-          - fts
-  - cluster: cluster2
-    region: westus
-    groups:
-      - group: group1
-        diskSize: 32
-        nodeCount: 5
-        nodeType: Standard_DS3_v2
-        services:
-          - data
           - query
-          - index
-          - fts

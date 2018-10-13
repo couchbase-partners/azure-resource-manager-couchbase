@@ -1,16 +1,16 @@
-  serverVersion: 5.5.0
-  syncGatewayVersion: 2.1.0
   clusters:
     - clusterName: cluster1
-      clusterRegion: eastus 
-      vnetAddrPrefix: 10.0.0.0/8
+      clusterRegion: westus2
+      vnetAddrPrefix: 10.0.0.0/24
+      subnetAddrPrefix: 10.0.0.0/25
+      vnetName: shoDNSvnet
       clusterMeta:
-      - VMSSgroup: data
+      - VMSSgroup: kv
         CBServerGroup: one
         nodeCount: 2
         nodeType: Standard_DS13_v2
         diskSize: 32
-        subnetAddrPrefix: 10.0.0.0/11
+        subnetAddrPrefix: 10.0.0.0/27
         services:
           - data
       - VMSSgroup: query
@@ -18,16 +18,15 @@
         nodeCount: 1
         nodeType: Standard_DS13_v2
         diskSize: 32
-        subnetAddrPrefix: 10.32.0.0/11
+        subnetAddrPrefix: 10.0.0.32/27
         services:
-          - index
           - query
       - VMSSgroup: index
         CBServerGroup: one
         nodeCount: 0
         nodeType: Standard_DS13_v2
         diskSize: 32
-        subnetAddrPrefix: 10.64.0.0/11
+        subnetAddrPrefix: 10.0.0.64/27
         services:
           - index
       - VMSSgroup: fts
@@ -35,15 +34,16 @@
         nodeCount: 0
         nodeType: Standard_DS13_v2
         diskSize: 32
-        subnetAddrPrefix: 10.96.0.0/11
+        subnetAddrPrefix: 10.0.0.96/27
         services:
           - fts
+          - data
       - VMSSgroup: analytics
         CBServerGroup: one
         nodeCount: 0
         nodeType: Standard_DS13_v2
         diskSize: 32
-        subnetAddrPrefix: 10.128.0.0/11
+        subnetAddrPrefix: 10.0.0.128/27
         services:
           - analytics
       - VMSSgroup: eventing
@@ -51,12 +51,12 @@
         nodeCount: 0
         nodeType: Standard_DS13_v2
         diskSize: 32
-        subnetAddrPrefix: 10.160.0.0/11
+        subnetAddrPrefix: 10.0.0.160/27
         services:
           - eventing
       - VMSSgroup: syncgateway
         nodeCount: 0
         nodeType: Standard_DS13_v2
-        subnetAddrPrefix: 10.192.0.0/11
+        subnetAddrPrefix: 10.0.0.192/27
         services:
           - syncGateway

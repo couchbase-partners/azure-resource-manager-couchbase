@@ -80,3 +80,17 @@ echo "
 vm.swappiness = 0
 " >> /etc/sysctl.conf
 }
+
+addCBGroup ()
+{    
+    $username = $1
+    $password = $2
+    path = ${3-'/opt/couchbase/bin/'}
+    cli=${path}couchbase-cli group-manage
+    ls $path
+    $cli --username $username --password $password --create --group-name
+    #runs in the directory where couchbase is installed
+{
+
+
+}
