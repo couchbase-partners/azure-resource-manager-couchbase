@@ -1,0 +1,55 @@
+  clusters:
+    - clusterName: cluster1
+      clusterRegion: westus2
+      subnetAddrPrefix: 10.0.0.0/25
+      rallyPrivateIP: 10.0.0.5 
+      vnetName: shoDNSvnet
+      clusterMeta:
+      - VMSSgroup: kv
+        CBServerGroup: one
+        nodeCount: 2
+        nodeType: Standard_DS13_v2
+        diskSize: 32
+        services:
+          - data
+      - VMSSgroup: query
+        CBServerGroup: two
+        nodeCount: 1
+        nodeType: Standard_DS13_v2
+        diskSize: 32
+        services:
+          - query
+      - VMSSgroup: index
+        CBServerGroup: one
+        nodeCount: 0
+        nodeType: Standard_DS13_v2
+        diskSize: 32
+        services:
+          - index
+      - VMSSgroup: fts
+        CBServerGroup: two
+        nodeCount: 0
+        nodeType: Standard_DS13_v2
+        diskSize: 32
+        services:
+          - fts
+          - data
+      - VMSSgroup: analytics
+        CBServerGroup: one
+        nodeCount: 0
+        nodeType: Standard_DS13_v2
+        diskSize: 32
+        services:
+          - analytics
+      - VMSSgroup: eventing
+        CBServerGroup: one
+        nodeCount: 0
+        nodeType: Standard_DS13_v2
+        diskSize: 32
+        services:
+          - eventing
+      - VMSSgroup: syncgateway
+        nodeCount: 0
+        nodeType: Standard_DS13_v2
+        services:
+          - syncGateway

@@ -21,7 +21,7 @@ fi
 
 if [[ -z $8 ]]
 then
-  echo "No Rally name provided. A Rally name is required"
+  echo "The Rally Private IP provided is required."
   exit 1
 else
   echo "Got Rally $8 ..." 
@@ -79,28 +79,29 @@ do
 done
 
 #nodeDNS='vm'$nodeIndex'.server-'$group$uniqueString'.'$location'.cloudapp.azure.com'
-nodeDNS='vm'$nodeIndex'.server-'$group$uniqueString'.'$location'.couchbase-ms.local'
-rallyDNS='vm0.server-'$rally'.'$location'.couchbase-ms.local'
+#rallyDNS='vm0.server-'$rally'.'$location'.cloudapp.azure.com'
+rallyPrivateIP=`ip route get 1 | awk '{print $NF;exit}'`
 
 echo "nodeIndex: $nodeIndex"
-echo "nodeDNS: $nodeDNS"
-echo "rallyDNS: $rallyDNS"
+#echo "nodeDNS: $nodeDNS"
+echo "nodePrivateIP: $nodePrivateIP"
+echo "rallyPrivateIP: $rallyPrivateIP"
 echo "Adding an entry to /etc/hosts to simulate split brain DNS..."
 echo "
 # Simulate split brain DNS for Couchbase
-127.0.0.1 ${nodeDNS}
-" >> /etc/hosts
+# 127.0.0.1 ${nodeDNS}
+# " >> /etc/hosts
 
 cd /opt/couchbase/bin/ || exit 1
 
 echo "Running couchbase-cli node-init"
 ./couchbase-cli node-init \
-  --cluster=$nodeDNS \
-  --node-init-hostname=$nodeDNS \
+  --cluster=$nodePrivateIP \
+  --node-init-hostname=$nodePrivateIP \
   --node-init-data-path=/datadisk/data \
   --node-init-index-path=/datadisk/index \
 
-if [[ $nodeDNS == $rallyDNS ]]
+if [[ $nodePrivateIP == $rallyPrivateIP ]]
 then
   totalRAM=$(grep MemTotal /proc/meminfo | awk '{print $2}')
   dataRAM=$((50 * $totalRAM / 100000))
@@ -108,7 +109,7 @@ then
 
   echo "Running couchbase-cli cluster-init"
   ./couchbase-cli cluster-init \
-    --cluster=$nodeDNS \
+    --cluster=$nodePrivateIP \
     --cluster-ramsize=$dataRAM \
     --cluster-index-ramsize=$indexRAM \
     --cluster-username="$adminUsername" \
@@ -119,13 +120,13 @@ then
   output=""
   while [[ ! ($output =~ "SUCCESS: Server group created") && ! ($output =~ "ERROR: name - already exists") ]]
   do
-    output=`./couchbase-cli group-manage -c $rallyDNS --create --group-name $cbServerGroup`
+    output=`./couchbase-cli group-manage -c $rallyPrivateIP --create --group-name $cbServerGroup`
       echo group-manage --create output \'$output\'
       sleep 10
   done
 
   echo "Moving to newly created group" 
-  ./couchbase-cli group-manage -c $rallyDNS --move-servers $nodeDNS --from-group 'Group 1' --to-group $cbServerGroup
+  ./couchbase-cli group-manage -c $rallyPrivateIP --move-servers $nodePrivateIP --from-group 'Group 1' --to-group $cbServerGroup
 
 else
 
@@ -135,7 +136,7 @@ else
     output=""
     while [[ ! ($output =~ "SUCCESS: Server group created") && ! ($output =~ "ERROR: name - already exists") ]]
     do
-      output=`./couchbase-cli group-manage -c $rallyDNS --create --group-name $cbServerGroup`
+      output=`./couchbase-cli group-manage -c $rallyPrivateIP --create --group-name $cbServerGroup`
         echo group-manage --create output \'"$output"\'
         sleep 10
     done
@@ -144,12 +145,12 @@ else
 
   echo "Running couchbase-cli server-add"
   output=""
-  while [[ ($output != "Server $nodeDNS:8091 added") && ! ($output =~ "Node is already part of cluster") ]]
+  while [[ ($output != "Server $nodePrivateIP:8091 added") && ! ($output =~ "Node is already part of cluster") ]]
   do
 
     output=`./couchbase-cli server-add \
-      --cluster=$rallyDNS \
-      --server-add=$nodeDNS \
+      --cluster=$rallyPrivateIP \
+      --server-add=$nodePrivateIP \
       --server-add-username="$adminUsername" \
       --server-add-password="$adminPassword" \
       --group-name $cbServerGroup \
@@ -164,7 +165,7 @@ else
   output=""
   while [[ ! $output =~ "SUCCESS" ]]
   do
-    output=`./couchbase-cli rebalance --cluster=$rallyDNS`
+    output=`./couchbase-cli rebalance --cluster=$rallyPrivateIP`
     echo rebalance output \'"$output"\'
     sleep 10
   done

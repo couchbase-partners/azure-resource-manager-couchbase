@@ -3,8 +3,8 @@ import yaml
 import json
 
 debugStr = "\n--- DEBUG: \n-- "
-rallyConstant = "rallygroup000"
-VMSSPostfix =  "-SVRScaleSet"
+rallyConstant = "rallygroup-"
+VMSSPostfix = "-SVRScaleSet"
 vnetPostfix = "-vnet"
 nsgPostfix = "-nsg"
 availabilitySetPostfix = "-AS"
@@ -86,6 +86,12 @@ def generateCluster(cluster):
         clusterName = cluster['clusterName']
     else:
         clusterName = ""
+    rallyPrivateIP = cluster['rallyPrivateIP']
+
+    if (rallyPrivateIP is None) or rallyPrivateIP == "":
+        print("ERROR: rallyPrivateIP is mandatory! clusters->rallyPrivateIP in the yaml") 
+        exit (1)
+
     noVnetControlString = 'eert12231ss'
     vnetName = cluster.get('vnetName', noVnetControlString)
     if vnetName == noVnetControlString:
@@ -109,20 +115,22 @@ def generateCluster(cluster):
     subnetPostfix = '-subnet'
 
     rallyGroup = ""
-
     for group in clusterMeta or {}:
 
-        groupName = group['VMSSgroup']
+        #The first nodes with the data service will be the rally node.   The rally node initalizes the cluster and is used for api/cli commands 
+        #All nodes need to know this rallynode.  The VMSS that includes the rally node is the Rally scaleset
 
-        if 'data' in group['services'] and rallyGroup ==  "":
-            rallyGroup = rallyConstant
+        groupName = group['VMSSgroup']
+        groupServices = group['services']
+
+        if 'data' in groupServices and rallyGroup ==  "":
+            rallyGroup = rallyConstant + groupServices 
             groupName = rallyGroup
 
-
         if not createVnet:
-            resources.append(dict(generateGroup(clusterName, region, group, vnetName, createVnet, clusterName + subnetPostfix, groupName)))
+            resources.append(dict(generateGroup(clusterName, region, group, vnetName, createVnet, clusterName + subnetPostfix, groupName, rallyPrivateIP)))
         else:
-            resources.append(dict(generateGroup(clusterName, region, group, vnetName, createVnet, groupName + subnetPostfix, groupName)))
+            resources.append(dict(generateGroup(clusterName, region, group, vnetName, createVnet, clusterName + subnetPostfix, groupName, rallyPrivateIP)))
 
 
         if group['nodeCount'] > 0:
@@ -390,7 +398,7 @@ def generateAvailabiltySet(clusterName, groupName, numVM, region):
     }
     return availabilitySet
 
-def generateGroup(clusterName, region, group, vnetName, createVnet, subnetName, groupName):
+def generateGroup(clusterName, region, group, vnetName, createVnet, subnetName, groupName, rallyPrivateIP):
     #print('DEBUG: generateGroup ***\n ***\n ' + str(group))
     
     services = group['services']
@@ -398,11 +406,11 @@ def generateGroup(clusterName, region, group, vnetName, createVnet, subnetName, 
     if ('syncGateway'.lower() in (service.lower() for service in services) or 'sgw'.lower() in (service.lower() for service in services)):
         resources = generateSyncGateway(region, group, vnetName, createVnet, subnetName)
     else:
-        resources = generateServer(region, group, vnetName, createVnet, subnetName, groupName)
+        resources = generateServer(region, group, vnetName, createVnet, subnetName, groupName, rallyPrivateIP)
 
     return resources
 
-def generateServer(region, group, vnetName, createVnet, subnetName, groupName):
+def generateServer(region, group, vnetName, createVnet, subnetName, groupName, rallyPrivateIP):
     nodeCount = group['nodeCount']
     if nodeCount < 1:
         return {} 
@@ -477,16 +485,16 @@ def generateServer(region, group, vnetName, createVnet, subnetName, groupName):
                                         "properties": {
                                             "subnet": {
                                                 "id": "[concat(resourceId('Microsoft.Network/virtualNetworks/', '" + vnetName + "'), '/subnets/" + subnetName + "')]"
-                                            },
-                                            "publicipaddressconfiguration": {
-                                                "name": "public",
-                                                "properties": {
-                                                    "idleTimeoutInMinutes": 30,
-                                                    "dnsSettings": {
-                                                        "domainNameLabel": "[concat('server-', '" + groupName + "', parameters('uniqueString'))]"
-                                                    }
-                                                }
                                             }
+                                            # "publicipaddressconfiguration": {
+                                            #     "name": "public",
+                                            #     "properties": {
+                                            #         "idleTimeoutInMinutes": 30,
+                                            #         "dnsSettings": {
+                                            #             "domainNameLabel": "[concat('server-', '" + groupName + "', parameters('uniqueString'))]"
+                                            #         }
+                                            #     }
+                                            # }
                                         }
                                     }
                                 ]

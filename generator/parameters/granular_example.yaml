@@ -1,0 +1,75 @@
+  clusters:
+    - clusterName: cluster2
+      clusterRegion: eastus 
+      vnetAddrPrefix: 10.0.0.0/8
+      clusterMeta:
+      - VMSSgroup: data
+        CBServerGroup: one
+        nodeCount: 1
+        nodeType: Standard_DS13_v2
+        diskSize: 32
+        subnetAddrPrefix: 10.224.0.0/11
+        services:
+          - data
+          - index
+          - query
+    - clusterName: cluster1
+      clusterRegion: eastus 
+      vnetAddrPrefix: 10.0.0.0/8
+      clusterMeta:
+      - VMSSgroup: data
+        CBServerGroup: one
+        nodeCount: 2
+        nodeType: Standard_DS13_v2
+        diskSize: 32
+        subnetAddrPrefix: 10.0.0.0/11
+        services:
+          - data
+      - VMSSgroup: query
+        CBServerGroup: two
+        nodeCount: 1
+        nodeType: Standard_DS13_v2
+        diskSize: 32
+        subnetAddrPrefix: 10.32.0.0/11
+        services:
+          - index
+          - query
+      - VMSSgroup: index
+        CBServerGroup: one
+        nodeCount: 0
+        nodeType: Standard_DS13_v2
+        diskSize: 32
+        subnetAddrPrefix: 10.64.0.0/11
+        services:
+          - index
+      - VMSSgroup: fts
+        CBServerGroup: two
+        nodeCount: 2
+        nodeType: Standard_DS13_v2
+        diskSize: 32
+        subnetAddrPrefix: 10.96.0.0/11
+        services:
+          - fts
+          - data
+      - VMSSgroup: analytics
+        CBServerGroup: one
+        nodeCount: 0
+        nodeType: Standard_DS13_v2
+        diskSize: 32
+        subnetAddrPrefix: 10.128.0.0/11
+        services:
+          - analytics
+      - VMSSgroup: eventing
+        CBServerGroup: one
+        nodeCount: 0
+        nodeType: Standard_DS13_v2
+        diskSize: 32
+        subnetAddrPrefix: 10.160.0.0/11
+        services:
+          - eventing
+      - VMSSgroup: syncgateway
+        nodeCount: 0
+        nodeType: Standard_DS13_v2
+        subnetAddrPrefix: 10.192.0.0/11
+        services:
+          - syncGateway
