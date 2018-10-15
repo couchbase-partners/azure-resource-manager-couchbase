@@ -33,7 +33,7 @@ def main():
         "variables": {
             "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/shoManagedService/extensions/",
             #"uniqueString": "[uniquestring(resourceGroup().id, resourceGroup().location)]",
-            "rallyPrivateIP": "Microsoft.Compute/virtualMachineScaleSets/rallygroup-SVRScaleSet/networkInterfaces/nic"
+            "rallyPrivateIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/', '" + rallyConstant + VMSSPostfix + "', '/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig')]"
          #   "serverPubIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/', '" + rallyConstant + VMSSPostfix + "',  '/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public')]",
          #   "syncPubIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/syncgateway/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public')]"
         },
@@ -145,8 +145,8 @@ def generateCluster(cluster):
         #build Subnet list
         #this is line is for a single subnet across the cluster
         
-        if rallyPrivateIP != "":
-            subnetPrefixes[clusterName + subnetPostfix] =  cluster['subnetAddrPrefix']
+       # if rallyPrivateIP != "":
+       #     subnetPrefixes[clusterName + subnetPostfix] =  cluster['subnetAddrPrefix']
 
         #below for a subnet per group
         # if group['nodeCount'] > 0:
@@ -669,7 +669,7 @@ def generateOutputs(clusters):
 
         outputs['Rally PrivateIp'] = {
             "type": "string",
-            "value": "[reference(variables('rallyPrivateIP'), '2016-09-01').ipconfigurations[0].properties.privateIPAddress]"
+            "value": "[reference(variables('rallyPrivateIP'), '2016-09-01').privateIPAddress]"
         }
         # outputs[clusterName + 'buildHosts']={
         #    "type": "string",

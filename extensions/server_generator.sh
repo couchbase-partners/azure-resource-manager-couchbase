@@ -74,6 +74,17 @@ if [[ $yamlSS == 'rallygroup' ]]
 then
  echo "This is the rally node Setting rallyIP to this machines ip"
  rallyPrivateIP=$nodePrivateIP
+else
+
+ if [[ -z $rallyIP ]]
+ then
+  echo "rallyIP was not provided in a non Rally situation. can not continue!"
+  exit 1
+ else
+  echo "Setting rallyPrivateIP to $rallyIP"
+  rallyPrivateIP=$rallyIP
+ fi 
+
 fi
  
 #echo "nodeIndex: $nodeIndex"
