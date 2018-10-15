@@ -57,14 +57,14 @@ echo "Configuring Couchbase Server..."
 #nodeIndex = `curl -H Metadata:true "http://169.254.169.254/metadata/instance/compute/name?api-version=2017-04-02&format=text"`
 # good example here https://github.com/bonggeek/Samples/blob/master/imds/imds.sh
 
-# nodeIndex="null"
-# while [[ $nodeIndex == "null" ]]
-# do
-#   nodeIndex=`curl -H Metadata:true "http://169.254.169.254/metadata/instance/compute?api-version=2017-04-02" \
-#     | jq ".name" \
-#     | sed 's/.*_//' \
-#     | sed 's/"//'`
-# done
+ nodeIndex="null"
+ while [[ $nodeIndex == "null" ]]
+ do
+   nodeIndex=`curl -H Metadata:true "http://169.254.169.254/metadata/instance/compute?api-version=2017-04-02" \
+     | jq ".name" \
+     | sed 's/.*_//' \
+     | sed 's/"//'`
+ done
 
 #nodeDNS='vm'$nodeIndex'.server-'$yamlSS$uniqueString'.'$location'.cloudapp.azure.com'
 #rallyDNS='vm0.server-'$rally'.'$location'.cloudapp.azure.com'
@@ -87,7 +87,7 @@ else
 
 fi
  
-#echo "nodeIndex: $nodeIndex"
+echo "nodeIndex: $nodeIndex"
 #echo "nodeDNS: $nodeDNS"
 echo "nodePrivateIP: $nodePrivateIP"
 echo "rallyPrivateIP: $rallyPrivateIP"
