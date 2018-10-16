@@ -1,7 +1,8 @@
   clusters:
     - clusterName: cluster1
       clusterRegion: westus2
-      vnetName: shoDNSvnet
+      subnetAddrPrefix: 10.0.0.0/26
+      vnetName: shodnsvnet
       clusterMeta:
       - VMSSgroup: rally
         CBServerGroup: one
