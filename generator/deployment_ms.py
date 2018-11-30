@@ -7,10 +7,12 @@ debugStr = "\n--- DEBUG: \n-- "
 rallyTag = 'rally' #from rally yaml
 rallyConstant = "rallygroup"
 VMSSPostfix = "-SVRScaleSet"
+VMSS_SGW_Postfix =  "-SGWScaleSet"
 vnetPostfix = "-vnet"
 nsgPostfix = "-nsg"
 availabilitySetPostfix = "-AS"
 outputRallyPrivateIP = False
+SGWGroupConstant = "syncGateway"
 
 def main():
     filename = sys.argv[1]
@@ -33,9 +35,9 @@ def main():
         "variables": {
             "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/shoManagedService/extensions/",
             #"uniqueString": "[uniquestring(resourceGroup().id, resourceGroup().location)]",
-            "rallyPrivateIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/', '" + rallyConstant + VMSSPostfix + "', '/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig')]"
+            "rallyPrivateIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/', '" + rallyConstant + VMSSPostfix + "', '/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig')]",
          #   "serverPubIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/', '" + rallyConstant + VMSSPostfix + "',  '/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public')]",
-         #   "syncPubIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/syncgateway/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public')]"
+            "syncPubIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/" + SGWGroupConstant + VMSS_SGW_Postfix + "/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public')]"
         },
         "resources": [],
         "outputs": generateOutputs(parameters['clusters'])
@@ -136,7 +138,7 @@ def generateCluster(cluster):
             groupName = rallyGroup
             #outputRallyPrivateIP = True
 
-        elif rallyPrivateIP == "":
+        elif rallyPrivateIP == "" and not (groupName.lower() == SGWGroupConstant.lower()):
                 print("ERROR: rallyPrivateIP is mandatory! clusters->rallyPrivateIP in the yaml") 
                 exit (1)
 
@@ -560,7 +562,7 @@ def generateSyncGateway(region, group, vnetName, createVnet, subnetName):
     groupName = group['VMSSgroup']
     syncGateway={
         "type": "Microsoft.Compute/virtualMachineScaleSets",
-        "name": groupName + "-SGWScaleSet",
+        "name": SGWGroupConstant + VMSS_SGW_Postfix,
         "location": region,
         "apiVersion": "2018-06-01",
         "dependsOn": [
@@ -643,7 +645,7 @@ def generateSyncGateway(region, group, vnetName, createVnet, subnetName):
                                     ]
                                 },
                                 "protectedSettings": {
-                                    "commandToExecute": "[concat('bash syncGateway.sh ', parameters('syncGatewayVersion'), ' ', " + region + ")]"
+                                    "commandToExecute": "[concat('bash syncGateway.sh ', parameters('syncGatewayVersion'))]"
                                 }
                             }
                         }
