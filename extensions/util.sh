@@ -3,7 +3,6 @@
 adjustTCPKeepalive ()
 {
 # Azure public IPs have some odd keep alive behaviour
-# A summary is available here https://docs.mongodb.org/ecosystem/platforms/windows-azure/
 
 echo "Setting TCP keepalive..."
 sysctl -w net.ipv4.tcp_keepalive_time=120
