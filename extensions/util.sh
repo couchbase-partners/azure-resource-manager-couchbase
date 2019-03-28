@@ -89,7 +89,4 @@ addCBGroup ()
     ls $path
     $cli --username $username --password $password --create --group-name
     #runs in the directory where couchbase is installed
-{
-
-
 }
