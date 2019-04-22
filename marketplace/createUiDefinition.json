@@ -85,7 +85,7 @@
             "imageReference": {
               "publisher": "Canonical",
               "offer": "UbuntuServer",
-              "sku": "14.04.5-LTS",
+              "sku": "16.04-LTS",
               "version": "latest"
             }
           },
@@ -267,38 +267,19 @@
             "name": "serverVersion",
             "type": "Microsoft.Common.DropDown",
             "label": "Server Version",
-            "defaultValue": "6.0.0",
+            "defaultValue": "6.0.1",
             "toolTip": "Server Version",
             "constraints": {
               "allowedValues": [
                 {
-                  "label": "6.0.0",
-                  "value": "6.0.0"
+                  "label": "6.0.1",
+                  "value": "6.0.1"
                 },
                 {
-                  "label": "5.5.0",
-                  "value": "5.5.0"
-                },
-                {
-                  "label": "5.1.1",
-                  "value": "5.1.1"
-                },
-                {
-                  "label": "5.0.1",
-                  "value": "5.0.1"
-                },
-                {
-                  "label": "5.1.0",
-                  "value": "5.1.0"
-                },
-                {
-                  "label": "5.0.1",
-                  "value": "5.0.1"
-                },
-                {
-                  "label": "4.6.5",
-                  "value": "4.6.5"
+                  "label": "5.5.3",
+                  "value": "5.5.3"
                 }
+                
               ]
             }
           },
@@ -445,11 +426,14 @@
             "name": "syncGatewayVersion",
             "type": "Microsoft.Common.DropDown",
             "label": "Sync Gateway Version",
-            "defaultValue": "2.1.0",
+            "defaultValue": "2.1.3",
             "toolTip": "Sync Gateway Version",
             "constraints": {
               "allowedValues": [
                 {
+                  "label": "2.1.3",
+                  "value": "2.1.3"
+                },                {
                   "label": "2.1.0",
                   "value": "2.1.0"
                 },

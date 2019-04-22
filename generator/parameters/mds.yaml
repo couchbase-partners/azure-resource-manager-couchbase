@@ -1,8 +1,8 @@
-license: hourly_pricing
+license: hourly_pricing_mar19
 username: couchbase
 password: foo123!
-serverVersion: 5.5.0
-syncGatewayVersion: 2.1.0
+serverVersion: 6.0.1
+syncGatewayVersion: 2.1.3
 clusters:
   - cluster: cluster1
     region: eastus

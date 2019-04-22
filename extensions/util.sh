@@ -22,6 +22,7 @@ MOUNTPOINT="/datadisk"
 
 echo "Partitioning the disk."
 echo "n
+g
 p
 1
 

@@ -33,7 +33,7 @@ def main():
         "contentVersion": "1.0.0.0",
         "parameters": generateParameters(clusters),
         "variables": {
-            "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/shoManagedService/extensions/",
+            "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/extensions/",
             #"uniqueString": "[uniquestring(resourceGroup().id, resourceGroup().location)]",
             "rallyPrivateIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/', '" + rallyConstant + VMSSPostfix + "', '/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig')]",
          #   "serverPubIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/', '" + rallyConstant + VMSSPostfix + "',  '/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public')]",

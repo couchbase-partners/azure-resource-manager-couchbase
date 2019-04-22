@@ -16,5 +16,5 @@ function makeArchive()
   rm -rf tmp
 }
 
-makeArchive byol
-makeArchive hourly_pricing
+makeArchive byol_2019
+makeArchive hourly_pricing_mar19

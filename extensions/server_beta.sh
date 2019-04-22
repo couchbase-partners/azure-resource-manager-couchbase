@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "Running server.sh"
+echo "Running server_beta.sh"
 
 version=$1
 adminUsername=$2
