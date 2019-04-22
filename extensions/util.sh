@@ -21,8 +21,8 @@ PARTITION="/dev/disk/azure/scsi1/lun0-part1"
 MOUNTPOINT="/datadisk"
 
 echo "Partitioning the disk."
-echo "n
-g
+echo "g
+n
 p
 1
 
