@@ -63,7 +63,7 @@ Update granular_ms.yaml with clusters-> vnetName <to the name of your vnet>
 
 Now run:
 
-`./deploy_rally.sh granular_rally <Resource Group> <region>`
+`./deploy_ms.sh granular_ms <Resource Group> <region>`
 
 This will create a deployment called NonRallyDeployment
 
