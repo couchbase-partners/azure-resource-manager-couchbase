@@ -533,7 +533,7 @@ def generateServer(region, group, vnetName, createVnet, subnetName, groupName, r
                                 "settings": {
                                     "fileUris": [
                                         "[concat(variables('extensionUrl'), 'server_generator.sh')]",
-                                        "[concat(variables('extensionUrl'), 'util.sh')]"
+                                        "[concat(variables('extensionUrl'), 'util_ms.sh')]"
                                     ]
                                 },
                                 "protectedSettings": {
@@ -641,7 +641,7 @@ def generateSyncGateway(region, group, vnetName, createVnet, subnetName):
                                 "settings": {
                                     "fileUris": [
                                         "[concat(variables('extensionUrl'), 'syncGateway.sh')]",
-                                        "[concat(variables('extensionUrl'), 'util.sh')]"
+                                        "[concat(variables('extensionUrl'), 'util_ms.sh')]"
                                     ]
                                 },
                                 "protectedSettings": {

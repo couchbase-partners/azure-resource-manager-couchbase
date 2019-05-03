@@ -65,20 +65,25 @@ echo "Running couchbase-cli node-init"
   --node-init-hostname=$nodeDNS \
   --node-init-data-path=/datadisk/data \
   --node-init-index-path=/datadisk/index \
+  --node-init-analytics-path=/datadisk/analytics \
   --user=$adminUsername \
   --pass=$adminPassword
 
 if [[ $nodeIndex == "0" ]]
 then
   totalRAM=$(grep MemTotal /proc/meminfo | awk '{print $2}')
-  dataRAM=$((50 * $totalRAM / 100000))
-  indexRAM=$((15 * $totalRAM / 100000))
+  dataRAM=$((45 * $totalRAM / 100000))
+  indexRAM=$((8 * $totalRAM / 100000))
 
   echo "Running couchbase-cli cluster-init"
   ./couchbase-cli cluster-init \
     --cluster=$nodeDNS \
     --cluster-ramsize=$dataRAM \
     --cluster-index-ramsize=$indexRAM \
+    --index-storage-setting=memopt \
+    --cluster-analytics-ramsize=$indexRAM \
+    --cluster-fts-ramsize=$indexRAM \
+    --cluster-eventing-ramsize=$indexRAM \
     --cluster-username=$adminUsername \
     --cluster-password=$adminPassword \
     --services=data,index,query,fts,eventing,analytics
