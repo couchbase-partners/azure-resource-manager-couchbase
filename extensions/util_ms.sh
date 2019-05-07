@@ -12,23 +12,18 @@ echo "net.ipv4.tcp_keepalive_time = 120
 " >> /etc/sysctl.conf
 }
 
+# Update waagent.conf to setup swap on boot (32G)
+cat << EOF >> /etc/waagent.conf
+ResourceDisk.Format=y
+ResourceDisk.EnableSwap=y
+ResourceDisk.SwapSizeMB=32768
+EOF
+# restart waagentlinux to make changes active
+systemctl restart walinuxagent.service
+
 formatDataDisk ()
 {
 # This script formats and mounts the drive on lun0 as /datadisk
-# It also sets the swap file to 32GB on /mnt which is the temporary disk on /dev/sdb
-
-SWAPFILE="/mnt/swapFile.swap"
-
-echo "Creating and formating a new swap file ..."
-
-fallocate -l 1g ${SWAPFILE}
-chmod 600 ${SWAPFILE}
-echo "Formating the swap file ..."
-mkswap ${SWAPFILE}
-echo "Enabling the swap file ..."
-swapon ${SWAPFILE}
-echo "${SWAPFILE} swap swap defaults 0 0" | sudo tee -a /etc/fstab
-
 DISK="/dev/disk/azure/scsi1/lun0"
 PARTITION="/dev/disk/azure/scsi1/lun0-part1"
 MOUNTPOINT="/datadisk"
