@@ -46,7 +46,8 @@ apt-get -y install couchbase-server
 
 echo "Calling util_ms.sh..."
 source util_ms.sh
-formatDataDisk
+formatDataDisk2
+#formatDataDisk
 turnOffTHPsystemd
 #turnOffTransparentHugepages
 setSwappinessToZero
@@ -178,4 +179,5 @@ else
 
 fi
 #set swap
-addSwapFile
+#addSwapFile
+#TODO: USE to create swap and restart waagent

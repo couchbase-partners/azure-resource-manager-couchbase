@@ -26,6 +26,53 @@ sed -i 's/ResourceDisk.SwapSizeMB=0/ResourceDisk.SwapSizeMB=32768/g' $WAAGENT_CO
 systemctl restart walinuxagent.service
 }
 
+formatDisk2 (){
+# This script formats and mounts the drive on lun0 as /datadisk
+
+DISK1="/dev/disk/azure/scsi1/lun0"
+PARTITION1="/dev/disk/azure/scsi1/lun0-part1"
+MOUNTPOINT1="/datadisk/data"
+DISK2="/dev/disk/azure/scsi1/lun1"
+PARTITION2="/dev/disk/azure/scsi1/lun1-part1"
+MOUNTPOINT2="/datadisk/index"
+
+echo "Partitioning the disk."
+echo "g
+n
+p
+1
+
+
+t
+83
+w"| fdisk ${DISK}
+
+echo "Waiting for the symbolic link to be created..."
+udevadm settle --exit-if-exists=$PARTITION1
+udevadm settle --exit-if-exists=$PARTITION2
+
+echo "Creating the filesystem."
+mkfs -j -t ext4 ${PARTITION1}
+mkfs -j -t ext4 ${PARTITION2}
+
+echo "Updating fstab"
+LINE1="${PARTITION1}\t${MOUNTPOINT1}\text4\tnoatime,nodiratime,nodev,noexec,nosuid\t1\t2"
+LINE2="${PARTITION2}\t${MOUNTPOINT2}\text4\tnoatime,nodiratime,nodev,noexec,nosuid\t1\t2"
+echo -e ${LINE1} >> /etc/fstab
+echo -e ${LINE2} >> /etc/fstab
+
+echo "Mounting the disk"
+mkdir -p $MOUNTPOINT1
+mkdir -p $MOUNTPOINT2
+mount -a
+
+echo "Changing permissions"
+chown couchbase $MOUNTPOINT1
+chown couchbase $MOUNTPOINT2
+chgrp couchbase $MOUNTPOINT1
+chgrp couchbase $MOUNTPOINT2   
+}
+
 formatDataDisk ()
 {
 # This script formats and mounts the drive on lun0 as /datadisk
