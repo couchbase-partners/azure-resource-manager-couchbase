@@ -532,12 +532,12 @@ def generateServer(region, group, vnetName, createVnet, subnetName, groupName, r
                                 "autoUpgradeMinorVersion": True,
                                 "settings": {
                                     "fileUris": [
-                                        "[concat(variables('extensionUrl'), 'server_generator.sh')]",
+                                        "[concat(variables('extensionUrl'), 'server_ms.sh')]",
                                         "[concat(variables('extensionUrl'), 'util_ms.sh')]"
                                     ]
                                 },
                                 "protectedSettings": {
-                                    "commandToExecute": "[concat('bash server_generator.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', '" + servicesList + "', ' ', '" + groupName + "', ' ', '" + cbServerGroupName + "', ' ', '" + rallyPrivateIP + "')]" 
+                                    "commandToExecute": "[concat('bash server_ms.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', '" + servicesList + "', ' ', '" + groupName + "', ' ', '" + cbServerGroupName + "', ' ', '" + rallyPrivateIP + "')]" 
                                 }
                             }
                         }
