@@ -45,7 +45,18 @@ p
 
 t
 83
-w"| fdisk ${DISK}
+w"| fdisk ${DISK1}
+
+echo "Partitioning the disk."
+echo "g
+n
+p
+1
+
+
+t
+83
+w"| fdisk ${DISK2}
 
 echo "Waiting for the symbolic link to be created..."
 udevadm settle --exit-if-exists=$PARTITION1
