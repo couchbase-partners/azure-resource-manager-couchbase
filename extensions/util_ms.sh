@@ -60,6 +60,26 @@ chown couchbase $MOUNTPOINT
 chgrp couchbase $MOUNTPOINT
 }
 
+turnOffTHPsystemd ()
+{
+#Turn off thp using systemd
+cat << EOM > /etc/systemd/system/disable-thp.service
+[Unit]
+Description=Disable Transparent Huge Pages (THP)
+
+[Service]
+Type=simple
+ExecStart=/bin/sh -c "echo 'never' > /sys/kernel/mm/transparent_hugepage/enabled && echo 'never' > /sys/kernel/mm/transparent_hugepage/defrag"
+
+[Install]
+WantedBy=multi-user.target
+EOM
+systemctl daemon-reload
+systemctl start disable-thp
+systemctl enable disable-thp
+
+}
+
 turnOffTransparentHugepages ()
 {
 echo "#!/bin/bash

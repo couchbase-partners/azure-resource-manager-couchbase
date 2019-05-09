@@ -47,7 +47,8 @@ apt-get -y install couchbase-server
 echo "Calling util_ms.sh..."
 source util_ms.sh
 formatDataDisk
-turnOffTransparentHugepages
+turnOffTHPsystemd
+#turnOffTransparentHugepages
 setSwappinessToZero
 adjustTCPKeepalive
 
