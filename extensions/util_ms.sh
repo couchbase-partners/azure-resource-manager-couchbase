@@ -12,19 +12,23 @@ echo "net.ipv4.tcp_keepalive_time = 120
 " >> /etc/sysctl.conf
 }
 
-formatDataDisk ()
+addSwapFile ()
 {
-# This script formats and mounts the drive on lun0 as /datadisk
 # It also sets the swap file to 32GB on /mnt which is the temporary disk on /dev/sdb
 # This expects the waagent to be running and /etc/waagent.conf to exist
 
 WAAGENT_CONF="/etc/waagent.conf"
 
-sudo sed -i 's/ResourceDisk.Format=n/ResourceDisk.Format=y/g' $WAAGENT_CONF
-sudo sed -i 's/ResourceDisk.EnableSwap=n/ResourceDisk.EnableSwap=y/g' $WAAGENT_CONF
-sudo sed -i 's/ResourceDisk.SwapSizeMB=0/ResourceDisk.SwapSizeMB=32768/g' $WAAGENT_CONF
+sed -i 's/ResourceDisk.Format=n/ResourceDisk.Format=y/g' $WAAGENT_CONF
+sed -i 's/ResourceDisk.EnableSwap=n/ResourceDisk.EnableSwap=y/g' $WAAGENT_CONF
+sed -i 's/ResourceDisk.SwapSizeMB=0/ResourceDisk.SwapSizeMB=32768/g' $WAAGENT_CONF
 
 systemctl restart walinuxagent.service
+}
+
+formatDataDisk ()
+{
+# This script formats and mounts the drive on lun0 as /datadisk
 
 DISK="/dev/disk/azure/scsi1/lun0"
 PARTITION="/dev/disk/azure/scsi1/lun0-part1"

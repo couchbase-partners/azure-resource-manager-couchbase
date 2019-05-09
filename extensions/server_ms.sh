@@ -177,3 +177,5 @@ else
   done
 
 fi
+#set swap
+addSwapFile
