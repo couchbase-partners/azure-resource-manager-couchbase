@@ -26,7 +26,7 @@ sed -i 's/ResourceDisk.SwapSizeMB=0/ResourceDisk.SwapSizeMB=32768/g' $WAAGENT_CO
 systemctl restart walinuxagent.service
 }
 
-formatDisk2 (){
+formatDataDisk2 (){
 # This script formats and mounts the drive on lun0 as /datadisk
 
 DISK1="/dev/disk/azure/scsi1/lun0"
