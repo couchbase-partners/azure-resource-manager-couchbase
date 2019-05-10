@@ -29,7 +29,7 @@ apt-get -y install couchbase-server
 echo "Calling util.sh..."
 source util.sh
 formatDataDisk
-turnOffTransparentHugepages
+turnOffTHPsystemd
 setSwappinessToZero
 adjustTCPKeepalive
 
@@ -56,6 +56,25 @@ echo "
 # Simulate split brain DNS for Couchbase
 127.0.0.1 ${nodeDNS}
 " >> /etc/hosts
+
+#######################################################
+####### Wait until web interface is available #########
+####### Needed for the cli to work	          #########
+#######################################################
+
+checksCount=0
+
+printf "Waiting for server startup..."
+until curl -o /dev/null -s -f http://localhost:8091/ui/index.html || [[ $checksCount -ge 50 ]]; do
+   (( checksCount += 1 ))
+   printf "." && sleep 3
+done
+echo "server is up."
+
+if [[ "$checksCount" -ge 50 ]]
+then
+  printf >&2 "ERROR: Couchbase Webserver is not available after script Couchbase REST readiness retry limit" 
+fi
 
 cd /opt/couchbase/bin/
 

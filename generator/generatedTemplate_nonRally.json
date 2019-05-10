@@ -1,0 +1,406 @@
+{
+  "parameters": {
+    "prefix": {
+      "type": "string"
+    },
+    "syncGatewayVersion": {
+      "type": "string"
+    },
+    "license": {
+      "type": "string"
+    },
+    "adminPassword": {
+      "type": "securestring"
+    },
+    "adminUsername": {
+      "type": "securestring"
+    },
+    "region": {
+      "defaultValue": "centralus",
+      "type": "string",
+      "allowedValues": [
+        "centralus",
+        "westus2",
+        "eastus2"
+      ]
+    },
+    "uniqueString": {
+      "type": "string"
+    },
+    "serverVersion": {
+      "type": "string"
+    }
+  },
+  "outputs": {
+    "Rally PrivateIp": {
+      "type": "string",
+      "value": "[reference(variables('rallyPrivateIP'), '2016-09-01').privateIPAddress]"
+    }
+  },
+  "variables": {
+    "syncPubIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/syncGateway-SGWScaleSet/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public')]",
+    "rallyPrivateIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/', 'rallygroup-SVRScaleSet', '/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig')]",
+    "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/extensions/"
+  },
+  "contentVersion": "1.0.0.0",
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "resources": [
+    {
+      "location": "westus2",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "SSH",
+            "properties": {
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Inbound",
+              "protocol": "Tcp",
+              "description": "SSH",
+              "destinationPortRange": "22",
+              "sourceAddressPrefix": "VirtualNetwork",
+              "destinationAddressPrefix": "*",
+              "sourcePortRange": "*"
+            }
+          },
+          {
+            "name": "ErlangPortMapper",
+            "properties": {
+              "access": "Allow",
+              "priority": 101,
+              "direction": "Inbound",
+              "protocol": "Tcp",
+              "description": "Erlang Port Mapper (epmd)",
+              "destinationPortRange": "4369",
+              "sourceAddressPrefix": "VirtualNetwork",
+              "destinationAddressPrefix": "*",
+              "sourcePortRange": "*"
+            }
+          },
+          {
+            "name": "SyncGateway",
+            "properties": {
+              "access": "Allow",
+              "priority": 102,
+              "direction": "Inbound",
+              "protocol": "Tcp",
+              "description": "Sync Gateway",
+              "destinationPortRange": "4984-4985",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "sourcePortRange": "*"
+            }
+          },
+          {
+            "name": "Server",
+            "properties": {
+              "access": "Allow",
+              "priority": 103,
+              "direction": "Inbound",
+              "protocol": "Tcp",
+              "description": "Server",
+              "destinationPortRange": "8091-8096",
+              "sourceAddressPrefix": "VirtualNetwork",
+              "destinationAddressPrefix": "*",
+              "sourcePortRange": "*"
+            }
+          },
+          {
+            "name": "Index",
+            "properties": {
+              "access": "Allow",
+              "priority": 104,
+              "direction": "Inbound",
+              "protocol": "Tcp",
+              "description": "Index",
+              "destinationPortRange": "9100-9105",
+              "sourceAddressPrefix": "VirtualNetwork",
+              "destinationAddressPrefix": "*",
+              "sourcePortRange": "*"
+            }
+          },
+          {
+            "name": "Analytics",
+            "properties": {
+              "access": "Allow",
+              "priority": 105,
+              "direction": "Inbound",
+              "protocol": "Tcp",
+              "description": "Analytics",
+              "destinationPortRange": "9110-9122",
+              "sourceAddressPrefix": "VirtualNetwork",
+              "destinationAddressPrefix": "*",
+              "sourcePortRange": "*"
+            }
+          },
+          {
+            "name": "Internal",
+            "properties": {
+              "access": "Allow",
+              "priority": 106,
+              "direction": "Inbound",
+              "protocol": "Tcp",
+              "description": "Internal",
+              "destinationPortRange": "9998-9999",
+              "sourceAddressPrefix": "VirtualNetwork",
+              "destinationAddressPrefix": "*",
+              "sourcePortRange": "*"
+            }
+          },
+          {
+            "name": "XDCR",
+            "properties": {
+              "access": "Allow",
+              "priority": 107,
+              "direction": "Inbound",
+              "protocol": "Tcp",
+              "description": "XDCR",
+              "destinationPortRange": "11207-11215",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "sourcePortRange": "*"
+            }
+          },
+          {
+            "name": "SSL",
+            "properties": {
+              "access": "Allow",
+              "priority": 108,
+              "direction": "Inbound",
+              "protocol": "Tcp",
+              "description": "SSL",
+              "destinationPortRange": "18091-18096",
+              "sourceAddressPrefix": "VirtualNetwork",
+              "destinationAddressPrefix": "*",
+              "sourcePortRange": "*"
+            }
+          },
+          {
+            "name": "NodeDataExchange",
+            "properties": {
+              "access": "Allow",
+              "priority": 109,
+              "direction": "Inbound",
+              "protocol": "Tcp",
+              "description": "Node data exchange",
+              "destinationPortRange": "21100-21299",
+              "sourceAddressPrefix": "VirtualNetwork",
+              "destinationAddressPrefix": "*",
+              "sourcePortRange": "*"
+            }
+          }
+        ]
+      },
+      "apiVersion": "2018-08-01",
+      "name": "cluster1-nsg"
+    },
+    {
+      "sku": {
+        "tier": "Standard",
+        "capacity": 2,
+        "name": "Standard_DS4_v2"
+      },
+      "name": "kv-SVRScaleSet",
+      "apiVersion": "2018-06-01",
+      "zones": [
+        "1",
+        "2",
+        "3"
+      ],
+      "plan": {
+        "publisher": "couchbase",
+        "product": "couchbase-server-enterprise",
+        "name": "[parameters('license')]"
+      },
+      "type": "Microsoft.Compute/virtualMachineScaleSets",
+      "properties": {
+        "virtualMachineProfile": {
+          "storageProfile": {
+            "imageReference": {
+              "sku": "[parameters('license')]",
+              "publisher": "couchbase",
+              "version": "latest",
+              "offer": "couchbase-server-enterprise"
+            },
+            "osDisk": {
+              "createOption": "FromImage"
+            },
+            "dataDisks": [
+              {
+                "caching": "None",
+                "managedDisk": {
+                  "storageAccountType": "Premium_LRS"
+                },
+                "createOption": "Empty",
+                "lun": 0,
+                "diskSizeGB": 32
+              },
+              {
+                "caching": "None",
+                "managedDisk": {
+                  "storageAccountType": "Premium_LRS"
+                },
+                "createOption": "Empty",
+                "lun": 1,
+                "diskSizeGB": 32
+              }
+            ]
+          },
+          "extensionProfile": {
+            "extensions": [
+              {
+                "name": "extension",
+                "properties": {
+                  "publisher": "Microsoft.Azure.Extensions",
+                  "settings": {
+                    "fileUris": [
+                      "[concat(variables('extensionUrl'), 'server_ms.sh')]",
+                      "[concat(variables('extensionUrl'), 'util_ms.sh')]"
+                    ]
+                  },
+                  "typeHandlerVersion": "2.0",
+                  "autoUpgradeMinorVersion": true,
+                  "protectedSettings": {
+                    "commandToExecute": "[concat('bash server_ms.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', 'data', ' ', 'kv', ' ', 'one', ' ', '10.0.1.4')]"
+                  },
+                  "type": "CustomScript"
+                }
+              }
+            ]
+          },
+          "osProfile": {
+            "computerNamePrefix": "server",
+            "adminUsername": "[parameters('adminUsername')]",
+            "adminPassword": "[parameters('adminPassword')]"
+          },
+          "networkProfile": {
+            "networkInterfaceConfigurations": [
+              {
+                "name": "nic",
+                "properties": {
+                  "primary": true,
+                  "ipConfigurations": [
+                    {
+                      "name": "ipconfig",
+                      "properties": {
+                        "subnet": {
+                          "id": "[concat(resourceId('Microsoft.Network/virtualNetworks/', 'shoVnet'), '/subnets/cluster1-subnet')]"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "singlePlacementGroup": false,
+        "overprovision": false,
+        "upgradePolicy": {
+          "mode": "Manual"
+        }
+      },
+      "location": "westus2"
+    },
+    {
+      "sku": {
+        "tier": "Standard",
+        "capacity": 2,
+        "name": "Standard_DS4_v2"
+      },
+      "name": "index-SVRScaleSet",
+      "apiVersion": "2018-06-01",
+      "zones": [
+        "1",
+        "2",
+        "3"
+      ],
+      "plan": {
+        "publisher": "couchbase",
+        "product": "couchbase-server-enterprise",
+        "name": "[parameters('license')]"
+      },
+      "type": "Microsoft.Compute/virtualMachineScaleSets",
+      "properties": {
+        "virtualMachineProfile": {
+          "storageProfile": {
+            "imageReference": {
+              "sku": "[parameters('license')]",
+              "publisher": "couchbase",
+              "version": "latest",
+              "offer": "couchbase-server-enterprise"
+            },
+            "osDisk": {
+              "createOption": "FromImage"
+            },
+            "dataDisks": [
+              {
+                "caching": "None",
+                "managedDisk": {
+                  "storageAccountType": "Premium_LRS"
+                },
+                "createOption": "Empty",
+                "lun": 0,
+                "diskSizeGB": 32
+              }
+            ]
+          },
+          "extensionProfile": {
+            "extensions": [
+              {
+                "name": "extension",
+                "properties": {
+                  "publisher": "Microsoft.Azure.Extensions",
+                  "settings": {
+                    "fileUris": [
+                      "[concat(variables('extensionUrl'), 'server_ms.sh')]",
+                      "[concat(variables('extensionUrl'), 'util_ms.sh')]"
+                    ]
+                  },
+                  "typeHandlerVersion": "2.0",
+                  "autoUpgradeMinorVersion": true,
+                  "protectedSettings": {
+                    "commandToExecute": "[concat('bash server_ms.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', 'index', ' ', 'index', ' ', 'one', ' ', '10.0.1.4')]"
+                  },
+                  "type": "CustomScript"
+                }
+              }
+            ]
+          },
+          "osProfile": {
+            "computerNamePrefix": "server",
+            "adminUsername": "[parameters('adminUsername')]",
+            "adminPassword": "[parameters('adminPassword')]"
+          },
+          "networkProfile": {
+            "networkInterfaceConfigurations": [
+              {
+                "name": "nic",
+                "properties": {
+                  "primary": true,
+                  "ipConfigurations": [
+                    {
+                      "name": "ipconfig",
+                      "properties": {
+                        "subnet": {
+                          "id": "[concat(resourceId('Microsoft.Network/virtualNetworks/', 'shoVnet'), '/subnets/cluster1-subnet')]"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "singlePlacementGroup": false,
+        "overprovision": false,
+        "upgradePolicy": {
+          "mode": "Manual"
+        }
+      },
+      "location": "westus2"
+    }
+  ]
+}

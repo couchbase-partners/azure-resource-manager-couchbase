@@ -4,6 +4,9 @@ echo "Running syncGateway.sh"
 
 version=$1
 
+echo "Sleeping to prevent dpkg lock"
+sleep 20s #workaround for dpkg lock issue
+
 echo "Using the settings:"
 echo version \'$version\'
 
