@@ -91,7 +91,7 @@ echo "Running couchbase-cli node-init"
 if [[ $nodeIndex == "0" ]]
 then
   totalRAM=$(grep MemTotal /proc/meminfo | awk '{print $2}')
-  dataRAM=$((45 * $totalRAM / 100000))
+  dataRAM=$((38 * $totalRAM / 100000))
   indexRAM=$((8 * $totalRAM / 100000))
 
   echo "Running couchbase-cli cluster-init"
