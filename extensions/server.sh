@@ -99,7 +99,6 @@ then
     --cluster=$nodeDNS \
     --cluster-ramsize=$dataRAM \
     --cluster-index-ramsize=$indexRAM \
-    --index-storage-setting=memopt \
     --cluster-analytics-ramsize=$indexRAM \
     --cluster-fts-ramsize=$indexRAM \
     --cluster-eventing-ramsize=$indexRAM \
