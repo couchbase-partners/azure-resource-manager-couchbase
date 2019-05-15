@@ -109,7 +109,7 @@ then
 else
   echo "Running couchbase-cli server-add"
   output=""
-  while [[ $output != "Server $nodeDNS:8091 added" && ! $output =~ "Node is already part of cluster." ]]
+  while [[ ! "$output" =~ "SUCCESS" && ! $output =~ "Node is already part of cluster." ]]
   do
     output=`./couchbase-cli server-add \
       --cluster=$rallyDNS \
