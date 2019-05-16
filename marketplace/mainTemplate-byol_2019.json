@@ -50,7 +50,7 @@
   },
   "resources": [
     {
-      "apiVersion": "2017-05-10",
+      "apiVersion": "2019-05-01",
       "type": "Microsoft.Resources/deployments",
       "name": "pid-bac94ebc-cc78-4dbd-bc39-4b5433e1014c",
       "properties": {
@@ -215,7 +215,7 @@
     {
       "name": "vnet",
       "type": "Microsoft.Network/virtualNetworks",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2019-04-01",
       "location": "[parameters('location')]",
       "dependsOn": [
         "Microsoft.Network/networkSecurityGroups/networksecuritygroups"
@@ -223,14 +223,14 @@
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
-            "10.0.0.0/8"
+            "10.0.0.0/23"
           ]
         },
         "subnets": [
           {
             "name": "subnet",
             "properties": {
-              "addressPrefix": "10.0.0.0/16",
+              "addressPrefix": "10.0.0.0/24",
               "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'networksecuritygroups')]"
               }
@@ -243,7 +243,7 @@
       "type": "Microsoft.Compute/virtualMachineScaleSets",
       "name": "server",
       "location": "[parameters('location')]",
-      "apiVersion": "2017-03-30",
+      "apiVersion": "2019-03-01",
       "dependsOn": [
         "Microsoft.Network/virtualNetworks/vnet"
       ],
@@ -271,12 +271,12 @@
               "publisher": "couchbase",
               "offer": "couchbase-server-enterprise",
               "sku": "[parameters('license')]",
-              "version": "latest"
+              "version": "3.0.2"
             },
             "dataDisks": [
               {
-                "lun": "0",
-                "createOption": "empty",
+                "lun": 0,
+                "createOption": "Empty",
                 "managedDisk": {
                   "storageAccountType": "Premium_LRS"
                 },
@@ -348,7 +348,7 @@
       "type": "Microsoft.Compute/virtualMachineScaleSets",
       "name": "syncgateway",
       "location": "[parameters('location')]",
-      "apiVersion": "2017-03-30",
+      "apiVersion": "2019-03-01",
       "dependsOn": [
         "Microsoft.Network/virtualNetworks/vnet"
       ],
@@ -376,7 +376,7 @@
               "publisher": "couchbase",
               "offer": "couchbase-sync-gateway-enterprise",
               "sku": "[parameters('license')]",
-              "version": "latest"
+              "version": "3.0.2"
             }
           },
           "osProfile": {
@@ -389,7 +389,7 @@
               {
                 "name": "nic",
                 "properties": {
-                  "primary": "true",
+                  "primary": true,
                   "ipConfigurations": [
                     {
                       "name": "ipconfig",
