@@ -46,8 +46,9 @@ apt-get -y install couchbase-server
 
 echo "Calling util_ms.sh..."
 source util_ms.sh
-formatDataDisk2
-#formatDataDisk
+#TODO: switch on co-located data and index
+#formatDataDisk2
+formatDataDisk
 turnOffTHPsystemd
 #turnOffTransparentHugepages
 setSwappinessToZero

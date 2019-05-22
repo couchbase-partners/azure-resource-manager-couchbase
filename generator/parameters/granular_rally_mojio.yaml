@@ -1,0 +1,13 @@
+  clusters:
+    - clusterName: cluster1
+      clusterRegion: centralus
+      subnetAddrPrefix: 192.168.0.0/16
+      vnetName: PROD-CB
+      clusterMeta:
+      - VMSSgroup: rally
+        CBServerGroup: Group1
+        nodeCount: 1
+        nodeType: Standard_E32-16s_v3
+        diskSize: 4095
+        services:
+          - data
