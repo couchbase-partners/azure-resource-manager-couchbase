@@ -44,7 +44,7 @@
         },
         "baseUrl": {
             "type": "string",
-            "defaultValue": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/extensions",
+            "defaultValue": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/scripts",
             "metadata": {
                 "description": "The base URL for dependent assets"
             }

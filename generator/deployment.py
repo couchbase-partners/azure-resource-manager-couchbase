@@ -24,7 +24,7 @@ def main():
         "contentVersion": "1.0.0.0",
         "parameters": generateParameters(clusters),
         "variables": {
-            "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/extensions/",
+            "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/scripts/",
             "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]",
             "serverPubIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/', '" + rallyConstant + VMSSPostfix + "',  '/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public')]",
             "syncPubIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/syncgateway/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public')]"

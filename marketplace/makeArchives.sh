@@ -8,7 +8,7 @@ function makeArchive()
 
   cp mainTemplate-${license}.json tmp/mainTemplate.json
   cp createUiDefinition.json tmp
-  cp ../extensions/* tmp
+  cp ../scripts/* tmp
 
   cd tmp
   zip -r -X ../archive-${license}.zip *
