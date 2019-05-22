@@ -258,7 +258,7 @@
                   "typeHandlerVersion": "2.0",
                   "autoUpgradeMinorVersion": true,
                   "protectedSettings": {
-                    "commandToExecute": "[concat('bash server_ms.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', 'data', ' ', 'kv2', ' ', 'Group 2', ' ', '192.168.0.5')]"
+                    "commandToExecute": "[concat('bash server_ms.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', 'data', ' ', 'kv2', ' ', 'Group_2', ' ', '192.168.0.5')]"
                   },
                   "type": "CustomScript"
                 }
@@ -355,7 +355,7 @@
                   "typeHandlerVersion": "2.0",
                   "autoUpgradeMinorVersion": true,
                   "protectedSettings": {
-                    "commandToExecute": "[concat('bash server_ms.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', 'data', ' ', 'kv3', ' ', 'Group 3', ' ', '192.168.0.5')]"
+                    "commandToExecute": "[concat('bash server_ms.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', 'data', ' ', 'kv3', ' ', 'Group_3', ' ', '192.168.0.5')]"
                   },
                   "type": "CustomScript"
                 }
@@ -452,7 +452,7 @@
                   "typeHandlerVersion": "2.0",
                   "autoUpgradeMinorVersion": true,
                   "protectedSettings": {
-                    "commandToExecute": "[concat('bash server_ms.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', 'query', ' ', 'query', ' ', 'Group 1', ' ', '192.168.0.5')]"
+                    "commandToExecute": "[concat('bash server_ms.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', 'query', ' ', 'query', ' ', 'Group_1', ' ', '192.168.0.5')]"
                   },
                   "type": "CustomScript"
                 }
@@ -549,7 +549,7 @@
                   "typeHandlerVersion": "2.0",
                   "autoUpgradeMinorVersion": true,
                   "protectedSettings": {
-                    "commandToExecute": "[concat('bash server_ms.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', 'index', ' ', 'index', ' ', 'Group 1', ' ', '192.168.0.5')]"
+                    "commandToExecute": "[concat('bash server_ms.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', 'index', ' ', 'index', ' ', 'Group_1', ' ', '192.168.0.5')]"
                   },
                   "type": "CustomScript"
                 }

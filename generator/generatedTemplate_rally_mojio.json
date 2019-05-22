@@ -258,7 +258,7 @@
                   "typeHandlerVersion": "2.0",
                   "autoUpgradeMinorVersion": true,
                   "protectedSettings": {
-                    "commandToExecute": "[concat('bash server_ms.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', 'data', ' ', 'rallygroup', ' ', 'Group1', ' ', '')]"
+                    "commandToExecute": "[concat('bash server_ms.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', 'data', ' ', 'rallygroup', ' ', 'Group_1', ' ', '')]"
                   },
                   "type": "CustomScript"
                 }

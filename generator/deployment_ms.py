@@ -81,7 +81,14 @@ def generateParameters(clusters):
             "allowedValues": [
                 "centralus",
                 "westus2",
-                "eastus2"
+                "eastus",
+                "eastus2",
+                "francecentral",
+                "japaneast",
+                "southeastasia",
+                "westeurope",
+                "uksouth",
+                "northeurope"
             ] 
         }
     }

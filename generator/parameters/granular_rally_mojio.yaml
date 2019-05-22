@@ -5,7 +5,7 @@
       vnetName: PROD-CB
       clusterMeta:
       - VMSSgroup: rally
-        CBServerGroup: Group1
+        CBServerGroup: Group_1
         nodeCount: 1
         nodeType: Standard_E32-16s_v3
         diskSize: 4095

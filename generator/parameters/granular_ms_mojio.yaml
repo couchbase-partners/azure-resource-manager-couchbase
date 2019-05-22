@@ -5,42 +5,42 @@
       vnetName: PROD-CB
       clusterMeta:
       - VMSSgroup: kv2
-        CBServerGroup: Group 2
+        CBServerGroup: Group_2
         nodeCount: 1 
         nodeType: Standard_E32-16s_v3
         diskSize: 4095
         services:
           - data
       - VMSSgroup: kv3
-        CBServerGroup: Group 3
+        CBServerGroup: Group_3
         nodeCount: 1
         nodeType: Standard_E32-16s_v3
         diskSize: 4095
         services:
           - data          
       - VMSSgroup: query
-        CBServerGroup: Group 1
+        CBServerGroup: Group_1
         nodeCount: 1
         nodeType: Standard_E32-16s_v3
         diskSize: 128
         services:
           - query
       - VMSSgroup: index
-        CBServerGroup: Group 1
+        CBServerGroup: Group_1
         nodeCount: 1
         nodeType: Standard_E32-16s_v3
         diskSize: 4095
         services:
           - index
       - VMSSgroup: analytics
-        CBServerGroup: Group 1
+        CBServerGroup: Group_1
         nodeCount: 0
         nodeType: Standard_DS13_v2
         diskSize: 32
         services:
           - analytics
       - VMSSgroup: eventing
-        CBServerGroup: Group 1
+        CBServerGroup: Group_1
         nodeCount: 0
         nodeType: Standard_DS13_v2
         diskSize: 32
