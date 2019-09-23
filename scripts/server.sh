@@ -12,8 +12,8 @@ location=$5
 
 echo "Using the settings:"
 echo version \'$version\'
-#echo adminUsername \'$adminUsername\'
-#echo adminPassword \'$adminPassword\'
+echo adminUsername \'$adminUsername\'
+echo adminPassword \'$adminPassword\'
 
 echo uniqueString \'$uniqueString\'
 echo location \'$location\'
@@ -88,8 +88,6 @@ echo "Running couchbase-cli node-init"
   --node-init-data-path=/datadisk/data \
   --node-init-index-path=/datadisk/index \
   --node-init-analytics-path=/datadisk/analytics \
-  -u="$adminUsername" \
-  -p="$adminPassword"
 
 if [[ $nodeIndex == "0" ]]
 then
@@ -115,8 +113,6 @@ else
   do
     output=`./couchbase-cli server-add \
       --cluster=$rallyDNS \
-      -u="$adminUsername" \
-      -p="$adminPassword" \
       --server-add=$nodeDNS \
       --server-add-username="$adminUsername" \
       --server-add-password="$adminPassword" \
@@ -130,9 +126,7 @@ else
   while [[ ! $output =~ "SUCCESS" ]]
   do
     output=`./couchbase-cli rebalance \
-      --cluster=$rallyDNS \
-      -u="$adminUsername" \
-      -p="$adminPassword"`
+      --cluster=$rallyDNS`
     echo rebalance output \'$output\'
     sleep 10
   done
