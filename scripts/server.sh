@@ -4,9 +4,9 @@ echo "Running server.sh"
 
 version=$1
 adminUsername=$2
-export CB_REST_USERNAME=$adminUsername
+export CB_REST_USERNAME="$adminUsername"
 adminPassword=$3
-export CB_REST_USERNAME=$adminUsername
+export CB_REST_PASSWORD="$adminPassword"
 uniqueString=$4
 location=$5
 
@@ -14,8 +14,6 @@ echo "Using the settings:"
 echo version \'$version\'
 #echo adminUsername \'$adminUsername\'
 #echo adminPassword \'$adminPassword\'
-adminUsername=$2
-adminPassword=$3
 
 echo uniqueString \'$uniqueString\'
 echo location \'$location\'
@@ -107,8 +105,8 @@ then
     --cluster-analytics-ramsize=$indexRAM \
     --cluster-fts-ramsize=$indexRAM \
     --cluster-eventing-ramsize=$indexRAM \
-    --cluster-username=$adminUsername \
-    --cluster-password=$adminPassword \
+    --cluster-username="$adminUsername" \
+    --cluster-password="$adminPassword" \
     --services=data,index,query,fts,eventing
 else
   echo "Running couchbase-cli server-add"
@@ -120,8 +118,8 @@ else
       -u="$adminUsername" \
       -p="$adminPassword" \
       --server-add=$nodeDNS \
-      --server-add-username=$adminUsername \
-      --server-add-password=$adminPassword \
+      --server-add-username="$adminUsername" \
+      --server-add-password="$adminPassword" \
       --services=data,index,query,fts,eventing`
     echo server-add output \'$output\'
     sleep 10
