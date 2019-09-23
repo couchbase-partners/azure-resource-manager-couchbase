@@ -6,7 +6,7 @@
      "value": 32
   },
   "serverVersion": {
-    "value": "6.0.1"
+    "value": "6.0.2"
   },
   "syncGatewayNodeCount": {
     "value": 2
@@ -21,7 +21,7 @@
     "value": "couchbase"
   },
   "adminPassword": {
-    "value": "foo123!"
+    "value": "foo123!&"
   },
   "license": {
     "value": "hourly_pricing_mar19"

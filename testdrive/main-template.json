@@ -20,11 +20,11 @@
         },
         "syncGatewayVersion": {
             "type": "string",
-            "defaultValue": "2.5.0"
+            "defaultValue": "2.6.0"
         },
         "vmSize": {
             "type": "string",
-            "defaultValue": "Standard_DS12_v2"
+            "defaultValue": "Standard_B4ms"
         },
         "adminUsername": {
             "type": "string",

@@ -4,14 +4,19 @@ echo "Running server.sh"
 
 version=$1
 adminUsername=$2
+export CB_REST_USERNAME=$adminUsername
 adminPassword=$3
+export CB_REST_USERNAME=$adminUsername
 uniqueString=$4
 location=$5
 
 echo "Using the settings:"
 echo version \'$version\'
-echo adminUsername \'$adminUsername\'
-echo adminPassword \'$adminPassword\'
+#echo adminUsername \'$adminUsername\'
+#echo adminPassword \'$adminPassword\'
+adminUsername=$2
+adminPassword=$3
+
 echo uniqueString \'$uniqueString\'
 echo location \'$location\'
 
