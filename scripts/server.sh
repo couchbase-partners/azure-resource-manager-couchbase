@@ -4,9 +4,9 @@ echo "Running server.sh"
 
 version=$1
 adminUsername=$2
-export CB_REST_USERNAME="$adminUsername"
+export CB_REST_USERNAME='$adminUsername'
 adminPassword=$3
-export CB_REST_PASSWORD="$adminPassword"
+export CB_REST_PASSWORD='$adminPassword'
 uniqueString=$4
 location=$5
 
