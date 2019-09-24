@@ -54,6 +54,8 @@ done
 nodeDNS='vm'$nodeIndex'.server-'$uniqueString'.'$location'.cloudapp.azure.com'
 rallyDNS='vm0.server-'$uniqueString'.'$location'.cloudapp.azure.com'
 
+echo nodeDNS='$nodeDNS'
+echo rallyDNS='$rallyDNS'
 echo "Adding an entry to /etc/hosts to simulate split brain DNS..."
 echo "
 # Simulate split brain DNS for Couchbase
@@ -103,8 +105,8 @@ then
     --cluster-analytics-ramsize=$indexRAM \
     --cluster-fts-ramsize=$indexRAM \
     --cluster-eventing-ramsize=$indexRAM \
-    --cluster-username="$adminUsername" \
-    --cluster-password="$adminPassword" \
+    --cluster-username='$adminUsername'\
+    --cluster-password='$adminPassword' \
     --services=data,index,query,fts,eventing
 else
   echo "Running couchbase-cli server-add"
