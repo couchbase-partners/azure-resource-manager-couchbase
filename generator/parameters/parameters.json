@@ -1,9 +1,9 @@
 {
     "serverVersion": {
-      "value": "6.0.1"
+      "value": "6.0.3"
     },
     "syncGatewayVersion": {
-      "value": "2.1.3"
+      "value": "2.6.0"
     },
     "adminUsername": {
       "value": "couchbase"
@@ -13,11 +13,5 @@
     },
     "license": {
       "value": "byol_2019"
-    },
-    "uniqueString": {
-      "value": "n4f5pbg2ayvjc"
-    },
-    "prefix":{
-      "value": "cb-ms-"
     }
 }

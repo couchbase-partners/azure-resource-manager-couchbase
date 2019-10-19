@@ -7,31 +7,26 @@ adminUsername=$2
 export CB_REST_USERNAME=$adminUsername
 adminPassword=$3
 export CB_REST_PASSWORD=$adminPassword
-#uniqueString=$4
-#location=$5
+uniqueString=$4
+location=$5
 defaultSvcs='data,index,query,fts'
-services=${4-$defaultSvcs}
-yamlSS=$5
+services=${6-$defaultSvcs}
+#yamlSS=$7
 
-if [[ -z $6 ]]
+if [[ -z $7 ]]
 then
   echo "No Couchbase Server Group setting to Group 1 ..."
   cbServerGroup='Group 1'
 else
-  echo "Got Couchbase Server Group $6 ..." 
-  cbServerGroup=$6
+  echo "Got Couchbase Server Group $7 ..." 
+  cbServerGroup=$7
 fi
 
-#rally=$7
-rallyIP=$7
-
 echo "Using the settings:"
-echo version \'$version\'
-#echo uniqueString \'$uniqueString\'
-#echo location \'$location\'
-echo services \'$services\'
-echo yamlSS \'"$yamlSS"\'
-echo rallyIP \'"$rallyIP"\'
+echo version \'"$version"\'
+echo uniqueString \'"$uniqueString"\'
+echo location \'"$location"\'
+echo services \'"$services"\'
 
 echo "Installing prerequisites..."
 apt-get update
@@ -47,7 +42,7 @@ apt-get -y install couchbase-server
 echo "Calling util.sh..."
 source util.sh
 formatDataDisk
-turnOffTransparentHugepages
+turnOffTHPsystemd
 setSwappinessToZero
 adjustTCPKeepalive
 
@@ -66,57 +61,79 @@ echo "Configuring Couchbase Server..."
      | sed 's/"//'`
  done
 
-#nodeDNS='vm'$nodeIndex'.server-'$yamlSS$uniqueString'.'$location'.cloudapp.azure.com'
-#rallyDNS='vm0.server-'$rally'.'$location'.cloudapp.azure.com'
-nodePrivateIP=`ip route get 1 | awk '{print $NF;exit}'`
+nodeDNS='vm'$nodeIndex'.server-'$uniqueString'.'$location'.cloudapp.azure.com'
+rallyDNS='vm0.server-'$uniqueString'.'$location'.cloudapp.azure.com'
+echo "nodeDNS: $nodeDNS"
+echo "rallyDNS: $rallyDNS"
 
-if [[ $yamlSS == 'rallygroup' ]]
-then
- echo "This is the rally node Setting rallyIP to this machines ip"
- rallyPrivateIP=$nodePrivateIP
-else
+#nodePrivateIP=`ip route get 1 | awk '{print $NF;exit}'`
 
- if [[ -z $rallyIP ]]
- then
-  echo "rallyIP was not provided in a non Rally situation. can not continue!"
-  exit 1
- else
-  echo "Setting rallyPrivateIP to $rallyIP"
-  rallyPrivateIP=$rallyIP
- fi 
+# if [[ $yamlSS == 'rallygroup' ]]
+# then
+#  echo "This is the rally node Setting rallyIP to this machines ip"
+#  rallyPrivateIP=$nodePrivateIP
+# else
 
-fi
- 
-echo "nodeIndex: $nodeIndex"
-#echo "nodeDNS: $nodeDNS"
-echo "nodePrivateIP: $nodePrivateIP"
-echo "rallyPrivateIP: $rallyPrivateIP"
-#echo "Adding an entry to /etc/hosts to simulate split brain DNS..."
-#echo "
+#  if [[ -z $rallyIP ]]
+#  then
+#   echo "rallyIP was not provided in a non Rally situation. can not continue!"
+#   exit 1
+#  else
+#   echo "Setting rallyPrivateIP to $rallyIP"
+#   rallyPrivateIP=$rallyIP
+#  fi 
+
+# fi
+
+echo "Adding an entry to /etc/hosts to simulate split brain DNS..."
+echo "
 # Simulate split brain DNS for Couchbase
-# 127.0.0.1 ${nodeDNS}
-# " >> /etc/hosts
+127.0.0.1 ${nodeDNS}
+" >> /etc/hosts
 
-cd /opt/couchbase/bin/ || exit 1
+#cd /opt/couchbase/bin/ || exit 1
+#######################################################
+####### Wait until web interface is available #########
+####### Needed for the cli to work	          #########
+#######################################################
+
+checksCount=0
+
+printf "Waiting for server startup..."
+until curl -o /dev/null -s -f http://localhost:8091/ui/index.html || [[ $checksCount -ge 50 ]]; do
+   (( checksCount += 1 ))
+   printf "." && sleep 3
+done
+echo "server is up."
+
+if [[ "$checksCount" -ge 50 ]]
+then
+  printf >&2 "ERROR: Couchbase Webserver is not available after script Couchbase REST readiness retry limit" 
+fi
+
+cd /opt/couchbase/bin/
 
 echo "Running couchbase-cli node-init"
 ./couchbase-cli node-init \
-  --cluster=$nodePrivateIP \
-  --node-init-hostname=$nodePrivateIP \
+  --cluster=$nodeDNS \
+  --node-init-hostname=$nodeDNS \
   --node-init-data-path=/datadisk/data \
   --node-init-index-path=/datadisk/index \
+  --node-init-analytics-path=/datadisk/analytics
 
-if [[ $nodePrivateIP == $rallyPrivateIP ]]
+if [[ $nodeDNS == $rallyDNS ]]
 then
   totalRAM=$(grep MemTotal /proc/meminfo | awk '{print $2}')
-  dataRAM=$((50 * $totalRAM / 100000))
-  indexRAM=$((15 * $totalRAM / 100000))
+  dataRAM=$((38 * $totalRAM / 100000))
+  indexRAM=$((8 * $totalRAM / 100000))
 
   echo "Running couchbase-cli cluster-init"
   ./couchbase-cli cluster-init \
-    --cluster=$nodePrivateIP \
+    --cluster=$rallyDNS \
     --cluster-ramsize=$dataRAM \
     --cluster-index-ramsize=$indexRAM \
+    --cluster-fts-ramsize=$indexRAM \
+    --cluster-eventing-ramsize=$indexRAM \
     --cluster-username="$adminUsername" \
     --cluster-password="$adminPassword" \
     --services=$services
@@ -125,23 +142,23 @@ then
   output=""
   while [[ ! ($output =~ "SUCCESS: Server group created") && ! ($output =~ "ERROR: name - already exists") ]]
   do
-    output=`./couchbase-cli group-manage -c $rallyPrivateIP --create --group-name $cbServerGroup`
+    output=`./couchbase-cli group-manage -c $rallyDNS --create --group-name $cbServerGroup`
       echo group-manage --create output \'$output\'
       sleep 10
   done
 
   echo "Moving to newly created group" 
-  ./couchbase-cli group-manage -c $rallyPrivateIP --move-servers $nodePrivateIP --from-group 'Group 1' --to-group $cbServerGroup
+  ./couchbase-cli group-manage -c $rallyDNS --move-servers $nodeDNS --from-group 'Group 1' --to-group $cbServerGroup
 
 else
 
-  if [[ $nodeIndex = "0" ]]
+  if [[ $nodeDNS == $rallyDNS ]]
   then
     echo "Creating new group: $cbServerGroup"
     output=""
     while [[ ! ($output =~ "SUCCESS: Server group created") && ! ($output =~ "ERROR: name - already exists") ]]
     do
-      output=`./couchbase-cli group-manage -c $rallyPrivateIP --create --group-name $cbServerGroup`
+      output=`./couchbase-cli group-manage -c $rallyDNS --create --group-name $cbServerGroup`
         echo group-manage --create output \'"$output"\'
         sleep 10
     done
@@ -150,12 +167,12 @@ else
 
   echo "Running couchbase-cli server-add"
   output=""
-  while [[ ($output != "Server $nodePrivateIP:8091 added") && ! ($output =~ "Node is already part of cluster") ]]
+  while [[ ! "$output" =~ "SUCCESS" ]]
   do
 
     output=`./couchbase-cli server-add \
-      --cluster=$rallyPrivateIP \
-      --server-add=$nodePrivateIP \
+      --cluster=$rallyDNS \
+      --server-add=$nodeDNS \
       --server-add-username="$adminUsername" \
       --server-add-password="$adminPassword" \
       --group-name $cbServerGroup \
@@ -170,7 +187,7 @@ else
   output=""
   while [[ ! $output =~ "SUCCESS" ]]
   do
-    output=`./couchbase-cli rebalance --cluster=$rallyPrivateIP`
+    output=`./couchbase-cli rebalance --cluster=$rallyDNS`
     echo rebalance output \'"$output"\'
     sleep 10
   done
