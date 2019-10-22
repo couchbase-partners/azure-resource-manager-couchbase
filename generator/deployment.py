@@ -67,7 +67,14 @@ def generateParameters(clusters):
             "allowedValues": [
                 "centralus",
                 "westus2",
-                "eastus2"
+                "eastus",
+                "eastus2",
+                "francecentral",
+                "japaneast",
+                "southeastasia",
+                "westeurope",
+                "uksouth",
+                "northeurope"
             ] 
         }
     }
@@ -448,7 +455,7 @@ def generateServer(region, group, vnetName, createVnet, subnetName, groupName):
                                                 "properties": {
                                                     "idleTimeoutInMinutes": 30,
                                                     "dnsSettings": {
-                                                        "domainNameLabel": "[concat('server-', variables('uniqueString'))]"
+                                                        "domainNameLabel": "[concat('server-', '" + groupName + "', variables('uniqueString'))]"
                                                     }
                                                 }
                                             }
@@ -475,7 +482,7 @@ def generateServer(region, group, vnetName, createVnet, subnetName, groupName):
                                     ]
                                 },
                                 "protectedSettings": {
-                                    "commandToExecute": "[concat('bash server_generator.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', '" + region + "', ' ', '" + servicesList + "', ' ', '" + cbServerGroupName + "')]" 
+                                    "commandToExecute": "[concat('bash server_generator.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', variables('uniqueString'), ' ', '" + region + "', ' ', '" + servicesList + "', ' ', '" + groupName + "', ' ', '" + rallyConstant + "', ' ', '" + cbServerGroupName + "')]" 
                                 }
                             }
                         }

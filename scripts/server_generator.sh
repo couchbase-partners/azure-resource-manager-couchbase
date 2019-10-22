@@ -11,14 +11,15 @@ uniqueString=$4
 location=$5
 defaultSvcs='data,index,query,fts'
 services=${6-$defaultSvcs}
-#yamlSS=$7
+yamlSS=$7 #VMSSgroup is the generator yamls
+rallyConstant=$8 #from deployment*.py
 
-if [[ -z $7 ]]
+if [[ -z $9 ]]
 then
   echo "No Couchbase Server Group setting to Group 1 ..."
   cbServerGroup='Group 1'
 else
-  echo "Got Couchbase Server Group $7 ..." 
+  echo "Got Couchbase Server Group $9 ..." 
   cbServerGroup=$7
 fi
 
@@ -27,6 +28,8 @@ echo version \'"$version"\'
 echo uniqueString \'"$uniqueString"\'
 echo location \'"$location"\'
 echo services \'"$services"\'
+echo services \'"$yamlSS"\'
+echo services \'"$rallyConstant"\'
 
 echo "Installing prerequisites..."
 apt-get update
@@ -61,8 +64,8 @@ echo "Configuring Couchbase Server..."
      | sed 's/"//'`
  done
 
-nodeDNS='vm'$nodeIndex'.server-'$uniqueString'.'$location'.cloudapp.azure.com'
-rallyDNS='vm0.server-'$uniqueString'.'$location'.cloudapp.azure.com'
+nodeDNS='vm'$nodeIndex'.server-'$yamlSS'-'$uniqueString'.'$location'.cloudapp.azure.com'
+rallyDNS='vm0.server-'$rallyConstant'-'$uniqueString'.'$location'.cloudapp.azure.com'
 echo "nodeDNS: $nodeDNS"
 echo "rallyDNS: $rallyDNS"
 
