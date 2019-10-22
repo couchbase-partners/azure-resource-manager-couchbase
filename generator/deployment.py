@@ -455,7 +455,7 @@ def generateServer(region, group, vnetName, createVnet, subnetName, groupName):
                                                 "properties": {
                                                     "idleTimeoutInMinutes": 30,
                                                     "dnsSettings": {
-                                                        "domainNameLabel": "[concat('server-', '" + groupName + "', variables('uniqueString'))]"
+                                                        "domainNameLabel": "[concat('server-', '" + groupName + "-', variables('uniqueString'))]"
                                                     }
                                                 }
                                             }
