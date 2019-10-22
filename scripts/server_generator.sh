@@ -20,7 +20,7 @@ then
   cbServerGroup='Group 1'
 else
   echo "Got Couchbase Server Group $9 ..." 
-  cbServerGroup=$7
+  cbServerGroup=$9
 fi
 
 echo "Using the settings:"
@@ -28,8 +28,8 @@ echo version \'"$version"\'
 echo uniqueString \'"$uniqueString"\'
 echo location \'"$location"\'
 echo services \'"$services"\'
-echo services \'"$yamlSS"\'
-echo services \'"$rallyConstant"\'
+echo yamlSS \'"$yamlSS"\'
+echo rallyConstant \'"$rallyConstant"\'
 
 echo "Installing prerequisites..."
 apt-get update
