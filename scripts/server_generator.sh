@@ -155,18 +155,18 @@ then
 
 else
 
-  if [[ $nodeDNS == $rallyDNS ]]
-  then
-    echo "Creating new group: $cbServerGroup"
-    output=""
-    while [[ ! ($output =~ "SUCCESS: Server group created") && ! ($output =~ "ERROR: name - already exists") ]]
-    do
-      output=`./couchbase-cli group-manage -c $rallyDNS --create --group-name $cbServerGroup`
-        echo group-manage --create output \'"$output"\'
-        sleep 10
-    done
+  #if [[ $nodeDNS == $rallyDNS ]]
+  #then
+  echo "Creating new group: $cbServerGroup"
+  output=""
+  while [[ ! ($output =~ "SUCCESS: Server group created") && ! ($output =~ "ERROR: name - already exists") ]]
+  do
+    output=`./couchbase-cli group-manage -c $rallyDNS --create --group-name $cbServerGroup`
+      echo group-manage --create output \'"$output"\'
+      sleep 10
+  done
 
-  fi
+  #fi
 
   echo "Running couchbase-cli server-add"
   output=""
