@@ -107,7 +107,7 @@ then
     --cluster-eventing-ramsize=$indexRAM \
     --cluster-username=$adminUsername \
     --cluster-password=$adminPassword \
-    --services=data,index,query,fts,eventing
+    --services=data,index,query,fts,eventing,analytics
 else
   echo "Running couchbase-cli server-add"
   output=""
@@ -120,7 +120,7 @@ else
       --server-add=$nodeDNS \
       --server-add-username=$adminUsername \
       --server-add-password=$adminPassword \
-      --services=data,index,query,fts,eventing`
+      --services=data,index,query,fts,eventing,analytics`
     echo server-add output \'$output\'
     sleep 10
   done
