@@ -22,10 +22,8 @@ apt-get -y install jq
 
 echo "Installing Couchbase Server..."
 #only 6.5 beta
-wget https://tassttedftestmad.s3-us-west-2.amazonaws.com/couchbase-server-enterprise_6.5.0-4960-ubuntu16.04_amd64.deb
-#wget http://packages.couchbase.com/releases/${version}/couchbase-server-enterprise_${version}-ubuntu16.04_amd64.deb
-dpkg -i couchbase-server-enterprise_6.5.0-4960-ubuntu16.04_amd64.deb
-#dpkg -i couchbase-server-enterprise_${version}-ubuntu16.04_amd64.deb
+wget http://packages.couchbase.com/releases/${version}/couchbase-server-enterprise_${version}-ubuntu16.04_amd64.deb
+dpkg -i couchbase-server-enterprise_${version}-ubuntu16.04_amd64.deb
 apt-get update
 apt-get -y install couchbase-server
 
@@ -88,8 +86,8 @@ echo "Running couchbase-cli node-init"
   --node-init-data-path=/datadisk/data \
   --node-init-index-path=/datadisk/index \
   --node-init-analytics-path=/datadisk/analytics \
-  --username=$adminUsername \
-  --password=$adminPassword
+  -u=$adminUsername \
+  -p=$adminPassword
 
 if [[ $nodeIndex == "0" ]]
 then
@@ -115,8 +113,8 @@ else
   do
     output=`./couchbase-cli server-add \
       --cluster=$rallyDNS \
-      --username=$adminUsername \
-      --password=$adminPassword \
+      -u=$adminUsername \
+      -p=$adminPassword \
       --server-add=$nodeDNS \
       --server-add-username=$adminUsername \
       --server-add-password=$adminPassword \
@@ -131,8 +129,8 @@ else
   do
     output=`./couchbase-cli rebalance \
       --cluster=$rallyDNS \
-      --username=$adminUsername \
-      --password=$adminPassword`
+      -u=$adminUsername \
+      -p=$adminPassword`
     echo rebalance output \'$output\'
     sleep 10
   done

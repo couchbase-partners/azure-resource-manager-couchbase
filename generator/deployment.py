@@ -590,7 +590,7 @@ def generateSyncGateway(region, group, vnetName, createVnet, subnetName):
                                     ]
                                 },
                                 "protectedSettings": {
-                                    "commandToExecute": "[concat('bash syncGateway.sh ', parameters('syncGatewayVersion'), ' ', " + region + ")]"
+                                    "commandToExecute": "[concat('bash syncGateway.sh ', parameters('syncGatewayVersion'), ' ', '" + region + "')]"
                                 }
                             }
                         }
