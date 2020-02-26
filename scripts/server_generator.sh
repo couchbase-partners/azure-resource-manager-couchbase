@@ -11,15 +11,16 @@ uniqueString=$4
 location=$5
 defaultSvcs='data,index,query,fts'
 services=${6-$defaultSvcs}
-#yamlSS=$7
+yamlSS=$7 #VMSSgroup is the generator yamls
+rallyConstant=$8 #from deployment*.py
 
-if [[ -z $7 ]]
+if [[ -z $9 ]]
 then
   echo "No Couchbase Server Group setting to Group 1 ..."
   cbServerGroup='Group 1'
 else
-  echo "Got Couchbase Server Group $7 ..." 
-  cbServerGroup=$7
+  echo "Got Couchbase Server Group $9 ..." 
+  cbServerGroup=$9
 fi
 
 echo "Using the settings:"
@@ -27,6 +28,8 @@ echo version \'"$version"\'
 echo uniqueString \'"$uniqueString"\'
 echo location \'"$location"\'
 echo services \'"$services"\'
+echo yamlSS \'"$yamlSS"\'
+echo rallyConstant \'"$rallyConstant"\'
 
 echo "Installing prerequisites..."
 apt-get update
@@ -61,8 +64,8 @@ echo "Configuring Couchbase Server..."
      | sed 's/"//'`
  done
 
-nodeDNS='vm'$nodeIndex'.server-'$uniqueString'.'$location'.cloudapp.azure.com'
-rallyDNS='vm0.server-'$uniqueString'.'$location'.cloudapp.azure.com'
+nodeDNS='vm'$nodeIndex'.server-'$yamlSS'-'$uniqueString'.'$location'.cloudapp.azure.com'
+rallyDNS='vm0.server-'$rallyConstant'-'$uniqueString'.'$location'.cloudapp.azure.com'
 echo "nodeDNS: $nodeDNS"
 echo "rallyDNS: $rallyDNS"
 
@@ -152,18 +155,18 @@ then
 
 else
 
-  if [[ $nodeDNS == $rallyDNS ]]
-  then
-    echo "Creating new group: $cbServerGroup"
-    output=""
-    while [[ ! ($output =~ "SUCCESS: Server group created") && ! ($output =~ "ERROR: name - already exists") ]]
-    do
-      output=`./couchbase-cli group-manage -c $rallyDNS --create --group-name $cbServerGroup`
-        echo group-manage --create output \'"$output"\'
-        sleep 10
-    done
+  #if [[ $nodeDNS == $rallyDNS ]]
+  #then
+  echo "Creating new group: $cbServerGroup"
+  output=""
+  while [[ ! ($output =~ "SUCCESS: Server group created") && ! ($output =~ "ERROR: name - already exists") ]]
+  do
+    output=`./couchbase-cli group-manage -c $rallyDNS --create --group-name $cbServerGroup`
+      echo group-manage --create output \'"$output"\'
+      sleep 10
+  done
 
-  fi
+  #fi
 
   echo "Running couchbase-cli server-add"
   output=""
