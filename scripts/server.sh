@@ -85,8 +85,8 @@ echo "Running couchbase-cli node-init"
   --node-init-data-path=/datadisk/data \
   --node-init-index-path=/datadisk/index \
   --node-init-analytics-path=/datadisk/analytics \
-  --user=$adminUsername \
-  --pass=$adminPassword
+  --username=$adminUsername \
+  --password=$adminPassword
 
 if [[ $nodeIndex == "0" ]]
 then
@@ -104,7 +104,7 @@ then
     --cluster-eventing-ramsize=$indexRAM \
     --cluster-username=$adminUsername \
     --cluster-password=$adminPassword \
-    --services=data,index,query,fts,eventing
+    --services=data,index,query,fts,eventing,analytics
 else
   echo "Running couchbase-cli server-add"
   output=""
@@ -112,8 +112,8 @@ else
   do
     output=`./couchbase-cli server-add \
       --cluster=$rallyDNS \
-      --user=$adminUsername \
-      --pass=$adminPassword \
+      --username=$adminUsername \
+      --password=$adminPassword \
       --server-add=$nodeDNS \
       --server-add-username=$adminUsername \
       --server-add-password=$adminPassword \
@@ -128,8 +128,8 @@ else
   do
     output=`./couchbase-cli rebalance \
       --cluster=$rallyDNS \
-      --user=$adminUsername \
-      --pass=$adminPassword`
+      --username=$adminUsername \
+      --password=$adminPassword`
     echo rebalance output \'$output\'
     sleep 10
   done

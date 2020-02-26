@@ -12,7 +12,7 @@
         },
         "serverVersion": {
             "type": "string",
-            "defaultValue": "6.0.1"
+            "defaultValue": "6.5.0"
         },
         "syncGatewayNodeCount": {
             "type": "int",
@@ -20,11 +20,11 @@
         },
         "syncGatewayVersion": {
             "type": "string",
-            "defaultValue": "2.5.0"
+            "defaultValue": "2.7.0"
         },
         "vmSize": {
             "type": "string",
-            "defaultValue": "Standard_DS12_v2"
+            "defaultValue": "Standard_D4s_v3"
         },
         "adminUsername": {
             "type": "string",
