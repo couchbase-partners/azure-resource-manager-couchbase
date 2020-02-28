@@ -7,6 +7,7 @@ adminUsername=$2
 adminPassword=$3
 uniqueString=$4
 location=$5
+services={$6-'data,index,query,fts,eventing,analytics'}
 
 echo "Using the settings:"
 echo version \'$version\'
