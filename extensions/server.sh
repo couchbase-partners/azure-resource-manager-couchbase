@@ -36,16 +36,16 @@ adjustTCPKeepalive
 echo "Configuring Couchbase Server..."
 
 # We can get the index directly with this, but unsure how to test for sucess.  Come back to later...
-#nodeIndex = `curl -H Metadata:true "http://169.254.169.254/metadata/instance/compute/name?api-version=2017-04-02&format=text"`
+#nodeIndex = $(curl -H Metadata:true "http://169.254.169.254/metadata/instance/compute/name?api-version=2017-04-02&format=text")
 # good example here https://github.com/bonggeek/Samples/blob/master/imds/imds.sh
 
 nodeIndex="null"
 while [[ $nodeIndex == "null" ]]
 do
-  nodeIndex=`curl -H Metadata:true "http://169.254.169.254/metadata/instance/compute?api-version=2017-04-02" \
+  nodeIndex=$(curl -H Metadata:true "http://169.254.169.254/metadata/instance/compute?api-version=2017-04-02" \
     | jq ".name" \
     | sed 's/.*_//' \
-    | sed 's/"//'`
+    | sed 's/"//')
 done
 
 nodeDNS='vm'$nodeIndex'.server-'$uniqueString'.'$location'.cloudapp.azure.com'
@@ -85,8 +85,8 @@ echo "Running couchbase-cli node-init"
   --node-init-data-path=/datadisk/data \
   --node-init-index-path=/datadisk/index \
   --node-init-analytics-path=/datadisk/analytics \
-  --user=$adminUsername \
-  --pass=$adminPassword
+  -u=$adminUsername \
+  -p=$adminPassword
 
 if [[ $nodeIndex == "0" ]]
 then
@@ -110,14 +110,14 @@ else
   output=""
   while [[ ! "$output" =~ "SUCCESS" ]]
   do
-    output=`./couchbase-cli server-add \
+    output=$(./couchbase-cli server-add \
       --cluster=$rallyDNS \
-      --user=$adminUsername \
-      --pass=$adminPassword \
+      -u=$adminUsername \
+      -p=$adminPassword \
       --server-add=$nodeDNS \
       --server-add-username=$adminUsername \
       --server-add-password=$adminPassword \
-      --services=data,index,query,fts,eventing`
+      --services=data,index,query,fts,eventing)
     echo server-add output \'$output\'
     sleep 10
   done
@@ -126,10 +126,10 @@ else
   output=""
   while [[ ! $output =~ "SUCCESS" ]]
   do
-    output=`./couchbase-cli rebalance \
+    output=$(./couchbase-cli rebalance \
       --cluster=$rallyDNS \
-      --user=$adminUsername \
-      --pass=$adminPassword`
+      -u=$adminUsername \
+      -p=$adminPassword)
     echo rebalance output \'$output\'
     sleep 10
   done

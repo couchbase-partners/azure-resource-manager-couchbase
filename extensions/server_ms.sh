@@ -105,6 +105,8 @@ cd /opt/couchbase/bin/ || exit 1
 echo "Running couchbase-cli node-init"
 ./couchbase-cli node-init \
   --cluster=$nodePrivateIP \
+  -u=$adminUsername
+  -p=$adminPassword
   --node-init-hostname=$nodePrivateIP \
   --node-init-data-path=/datadisk/data \
   --node-init-index-path=/datadisk/index \

@@ -158,6 +158,20 @@
               "priority": 105,
               "direction": "Inbound"
             }
+          },          
+          {
+            "name": "FTSGrpcPort",
+            "properties": {
+              "description": "FTSGrpcPort",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "9130",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 110,
+              "direction": "Inbound"
+            }
           },
           {
             "name": "Internal",

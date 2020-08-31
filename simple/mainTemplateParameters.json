@@ -1,18 +1,18 @@
 {
   "serverNodeCount": {
-    "value": 3
+    "value": 2
   },
   "serverDiskSize": {
      "value": 32
   },
   "serverVersion": {
-    "value": "6.5.0"
+    "value": "6.6.0"
   },
   "syncGatewayNodeCount": {
-    "value": 0
+    "value": 1
   },
   "syncGatewayVersion": {
-    "value": "2.7.0"
+    "value": "2.7.3"
   },
   "vmSize": {
     "value": "Standard_D4s_v3"
@@ -25,5 +25,19 @@
   },
   "license": {
     "value": "byol_2019"
+  },
+  "vnetName": {
+    "value": "vnet"
+  },
+  "NSGName": {
+    "value": "networksecuritygroups"
+  },
+  "subnetName": {
+    "value": "subnet"
+  },
+  "subnetPrefix": {
+    "value": "10.0.0.0/24"
   }
+
+
 }

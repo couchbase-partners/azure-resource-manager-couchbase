@@ -12,7 +12,7 @@
         },
         "serverVersion": {
             "type": "string",
-            "defaultValue": "6.5.0"
+            "defaultValue": "6.5.1"
         },
         "syncGatewayNodeCount": {
             "type": "int",
@@ -20,7 +20,7 @@
         },
         "syncGatewayVersion": {
             "type": "string",
-            "defaultValue": "2.7.0"
+            "defaultValue": "2.7.1"
         },
         "vmSize": {
             "type": "string",
@@ -149,6 +149,20 @@
                         }
                     },
                     {
+                        "name": "FTSGrpcPort",
+                        "properties": {
+                          "description": "FTSGrpcPort",
+                          "protocol": "Tcp",
+                          "sourcePortRange": "*",
+                          "destinationPortRange": "9130",
+                          "sourceAddressPrefix": "Internet",
+                          "destinationAddressPrefix": "*",
+                          "access": "Allow",
+                          "priority": 110,
+                          "direction": "Inbound"
+                        }
+                      },
+                      {
                         "name": "Internal",
                         "properties": {
                             "description": "Internal",

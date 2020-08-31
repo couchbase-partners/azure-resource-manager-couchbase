@@ -19,7 +19,7 @@ def main():
     print('Using user file: ' + filename)
 
     with open(filename, 'r') as stream:
-        parameters = yaml.load(stream)
+        parameters = yaml.load(stream, Loader=yaml.FullLoader)
 
    # print(debugStr + 'User file parameters: ' + str(parameters))
     clusters = parameters['clusters']

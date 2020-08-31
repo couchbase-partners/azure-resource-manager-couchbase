@@ -14,7 +14,7 @@ def main():
     print('Using user file: ' + filename)
 
     with open(filename, 'r') as stream:
-        parameters = yaml.load(stream)
+        parameters = yaml.load(stream, Loader=yaml.FullLoader)
 
    # print(debugStr + 'User file parameters: ' + str(parameters))
     clusters = parameters['clusters']
@@ -240,6 +240,20 @@ def generateNetworkSecurityGroups(nsgName, region):
                         "access": "Allow",
                         "priority": 105,
                         "direction": "Inbound"
+                    }
+                },
+                {
+                    "name": "FTSGrpcPort",
+                    "properties": {
+                    "description": "Analytics",
+                    "protocol": "Tcp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "9130",
+                    "sourceAddressPrefix": "Internet",
+                    "destinationAddressPrefix": "*",
+                    "access": "Allow",
+                    "priority": 105,
+                    "direction": "Inbound"
                     }
                 },
                 {

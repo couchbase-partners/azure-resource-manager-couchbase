@@ -36,7 +36,7 @@ adjustTCPKeepalive
 
 echo "Configuring Couchbase Server..."
 
-# We can get the index directly with this, but unsure how to test for sucess.  Come back to later...
+# We can get the index directly with this, but unsure how to test for success.  Come back to later...
 #nodeIndex = `curl -H Metadata:true "http://169.254.169.254/metadata/instance/compute/name?api-version=2017-04-02&format=text"`
 # good example here https://github.com/bonggeek/Samples/blob/master/imds/imds.sh
 
@@ -86,8 +86,8 @@ echo "Running couchbase-cli node-init"
   --node-init-data-path=/datadisk/data \
   --node-init-index-path=/datadisk/index \
   --node-init-analytics-path=/datadisk/analytics \
-  --username=$adminUsername \
-  --password=$adminPassword
+  -u=$adminUsername \
+  -p=$adminPassword
 
 if [[ $nodeIndex == "0" ]]
 then
@@ -113,8 +113,8 @@ else
   do
     output=`./couchbase-cli server-add \
       --cluster=$rallyDNS \
-      --username=$adminUsername \
-      --password=$adminPassword \
+      -u=$adminUsername \
+      -p=$adminPassword \
       --server-add=$nodeDNS \
       --server-add-username=$adminUsername \
       --server-add-password=$adminPassword \
@@ -129,8 +129,8 @@ else
   do
     output=`./couchbase-cli rebalance \
       --cluster=$rallyDNS \
-      --username=$adminUsername \
-      --password=$adminPassword`
+      -u=$adminUsername \
+      -p=$adminPassword`
     echo rebalance output \'$output\'
     sleep 10
   done
