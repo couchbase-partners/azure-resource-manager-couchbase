@@ -48,13 +48,22 @@
     "subnetPrefix": {
       "type": "string",
       "defaultValue": "10.0.0.0/24"
+    },
+    "serverVMSS": {
+      "type": "string",
+      "defaultValue": "server"
+    },
+    "SGWVMSS": {
+      "type": "string",
+      "defaultValue": "syncgateway"
     }
+
   },
   "variables": {
     "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/scripts/",
     "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]",
-    "serverPubIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/server/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public')]",
-    "syncPubIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/syncgateway/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public')]"
+    "serverPubIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/', parameters('serverVMSS'), '/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public')]",
+    "syncPubIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/', parameters('SGWVMSS'), '/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public')]"
   },
   "resources": [
     {
@@ -263,7 +272,7 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachineScaleSets",
-      "name": "server",
+      "name": "[parameters('serverVMSS')]",
       "location": "[parameters('location')]",
       "apiVersion": "2019-03-01",
       "dependsOn": [
@@ -368,7 +377,7 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachineScaleSets",
-      "name": "syncgateway",
+      "name": "[parameters('SGWVMSS')]",
       "location": "[parameters('location')]",
       "apiVersion": "2019-03-01",
       "dependsOn": [
