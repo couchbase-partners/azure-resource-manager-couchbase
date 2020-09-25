@@ -16,5 +16,8 @@
   },
   "adminPassword": {
     "value": "foo123!"
+  },
+  "publicIpAddresses": {
+    "value": true
   }
 }

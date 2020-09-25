@@ -6,12 +6,14 @@ version=$1
 adminUsername=$2
 adminPassword=$3
 rallyFQDN=$4
+nodeDNS=$5
 
 echo "Using the settings:"
 echo version \'$version\'
 echo adminUsername \'$adminUsername\'
 echo adminPassword \'$adminPassword\'
 echo rallyFQDN \'$rallyFQDN\'
+echo nodeDNS \'$nodeDNS\'
 
 echo "Installing prerequisites..."
 apt-get update
@@ -19,8 +21,8 @@ apt-get -y install python-httplib2
 apt-get -y install jq
 
 echo "Installing Couchbase Server..."
-wget http://packages.couchbase.com/releases/${version}/couchbase-server-enterprise_${version}-ubuntu14.04_amd64.deb
-dpkg -i couchbase-server-enterprise_${version}-ubuntu14.04_amd64.deb
+wget http://packages.couchbase.com/releases/${version}/couchbase-server-enterprise_${version}-ubuntu18.04_amd64.deb
+dpkg -i couchbase-server-enterprise_${version}-ubuntu18.04_amd64.deb
 apt-get update
 apt-get -y install couchbase-server
 
@@ -33,8 +35,8 @@ adjustTCPKeepalive
 
 echo "Configuring Couchbase Server..."
 
-nodeIndex=`hostname | sed s/server//`
-nodeDNS=`echo $rallyFQDN | sed s/server0-/server${nodeIndex}-/`
+nodeIndex=`hostname | tail -c -2`
+#nodeDNS=`echo $rallyFQDN | sed s/server0-/server${nodeIndex}-/`
 rallyDNS=${rallyFQDN}
 
 echo "Adding an entry to /etc/hosts to simulate split brain DNS..."
@@ -46,6 +48,13 @@ echo "
 cd /opt/couchbase/bin/
 
 echo "Running couchbase-cli node-init"
+echo "./couchbase-cli node-init \
+  --cluster=$nodeDNS \
+  --node-init-hostname=$nodeDNS \
+  --node-init-data-path=/datadisk/data \
+  --node-init-index-path=/datadisk/index \
+  --user=$adminUsername \
+  --pass=$adminPassword"
 ./couchbase-cli node-init \
   --cluster=$nodeDNS \
   --node-init-hostname=$nodeDNS \
@@ -61,6 +70,13 @@ then
   indexRAM=$((15 * $totalRAM / 100000))
 
   echo "Running couchbase-cli cluster-init"
+  echo "./couchbase-cli cluster-init \
+    --cluster=$nodeDNS \
+    --cluster-ramsize=$dataRAM \
+    --cluster-index-ramsize=$indexRAM \
+    --cluster-username=$adminUsername \
+    --cluster-password=$adminPassword \
+    --services=data,index,query,fts"
   ./couchbase-cli cluster-init \
     --cluster=$nodeDNS \
     --cluster-ramsize=$dataRAM \
@@ -75,12 +91,13 @@ else
   do
     output=`./couchbase-cli server-add \
       --cluster=$rallyDNS \
-      --user=$adminUsername \
-      --pass=$adminPassword \
+      --username=$adminUsername \
+      --password=$adminPassword \
       --server-add=$nodeDNS \
       --server-add-username=$adminUsername \
       --server-add-password=$adminPassword \
       --services=data,index,query,fts`
+    echo $output
     echo server-add output \'$output\'
     sleep 10
   done
@@ -91,8 +108,9 @@ else
   do
     output=`./couchbase-cli rebalance \
       --cluster=$rallyDNS \
-      --user=$adminUsername \
-      --pass=$adminPassword`
+      --username=$adminUsername \
+      --password=$adminPassword`
+    echo $output
     echo rebalance output \'$output\'
     sleep 10
   done

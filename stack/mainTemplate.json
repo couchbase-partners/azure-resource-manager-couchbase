@@ -1,47 +1,148 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    /* The number of nodes to deploy */
     "serverNodeCount": {
       "type": "int",
       "defaultValue": 3
     },
+    /* The size of the HDD */
     "serverDiskSize": {
       "type": "int",
       "defaultValue": 32
     },
+    // The version of Couchbase to install.  In format X.Y.Z
     "serverVersion": {
       "type": "string",
       "defaultValue": "6.0.0"
     },
+    // The size of the VM
+    // Use:
+    // az vm list-sizes --location <LOCATION>
+    // To get list of vm sizes available in specified location
     "vmSize": {
       "type": "string",
       "defaultValue": "Standard_DS3_v2"
     },
+    // The user name for the couchbase cluster and for the OS 
     "adminUsername": {
       "type": "string",
       "defaultValue": "couchbase"
     },
+    // The password for the couchbase cluster and for the OS user
     "adminPassword": {
       "type": "securestring"
     },
+    // The region/location of Azure the deployment is to be placed in
     "location": {
       "type": "string",
       "defaultValue": "[resourceGroup().location]"
+    },
+    // True ->  Each node will have a public IP address and can be accessed via the internet
+    // False -> Each node will not have a public IP address
+    "publicIpAddresses": {
+      "type": "bool",
+      "defaultValue": true
+    },
+    // The uri where to pull the custom scripts to be executed
+    // Defaults to https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/stack/
+    "scriptsUri": {
+      "type": "string",
+      "defaultValue": "[variables('extensionUrl')]"
     }
   },
+  "functions": [
+    {
+      "namespace": "couchbase",
+      "members": {
+        // Uses a trick to generate the properties of the NIC based on whether usePublicIps is true or not
+        // Returns a JSON object that can be unioned with another JSON object to create the properties
+        "getExternalIpId": {
+          "parameters": [{
+            "name": "name",
+            "type": "string"
+          }],
+          "output": {
+            "type": "object",
+            "value": "[
+                        createObject(
+                          'publicIpAddress', 
+                          createObject(
+                            'id', 
+                            resourceId('Microsoft.Network/publicIPAddresses', parameters('name'))
+                          )
+                        )
+                      ]"
+          }
+        },
+        // Creates a resource name based on the type of resource and the index of creation.  
+        // Format will be cb-<RESOURCE>-<UNIQUE_STRING>-<INDEX>
+        "generateResourceNameWithIndex": {
+            "parameters": [{
+            "name": "index",
+            "type": "int"
+          }, {
+            "name": "resource",
+            "type": "string"
+          }],
+          "output": {
+            "type": "string",
+            "value": "[
+                        concat(
+                                'cb-', 
+                                parameters('resource'),
+                                '-', 
+                                uniquestring(resourceGroup().id, deployment().name),
+                                '-',
+                                parameters('index')
+                              )
+                      ]"
+          }
+        },
+        // Creates sa resource name based on the type of resource without an index
+        // Format will be cb-<RESOURCE>-<UNIQUE_STRING>
+        "generateResourceName": {
+          "parameters": [{
+            "name": "resource",
+            "type": "string"
+          }],
+          "output": {
+            "type": "string",
+            "value": "[
+                        concat(
+                                'cb-', 
+                                parameters('resource'),
+                                '-', 
+                                uniquestring(resourceGroup().id, deployment().name)
+                              )
+                      ]"
+          }
+        }
+      }
+    }
+  ],
   "variables": {
     "extensionUrl": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/stack/",
+    // Used to differentiate resources and associate them together
     "uniqueString": "[uniquestring(resourceGroup().id, deployment().name)]",
     "storageAccountName": "[concat('sa', variables('uniqueString'))]",
+    "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
     "storageAccountContainerName": "[concat('sac', variables('uniqueString'))]",
-    "serverPubIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/server/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public')]"
+    "serverPubIP": "[concat(resourceGroup().id, '/providers/Microsoft.Compute/virtualMachineScaleSets/server/virtualMachines/0/networkInterfaces/nic/ipConfigurations/ipconfig/publicIPAddresses/public')]",
+    // just a simplification
+    "usePublicIps": "[parameters('publicIpAddresses')]",
+    "internal": {
+      "subnet": {
+        "id": "[concat(resourceId('Microsoft.Network/virtualNetworks',couchbase.generateResourceName('vnet')),'/subnets/', couchbase.generateResourceName('subnet'))]"
+      }
+    }
   },
   "resources": [
     {
       "apiVersion": "2016-09-01",
       "type": "Microsoft.Resources/deployments",
-      "name": "pid-bac94ebc-cc78-4dbd-bc39-4b5433e1014c",
+      "name": "[couchbase.generateResourceName('pid')]",
       "properties": {
         "mode": "Incremental",
         "template": {
@@ -52,9 +153,9 @@
       }
     },
     {
-      "apiVersion": "2016-06-01",
+      "apiVersion": "2020-05-01",
       "type": "Microsoft.Network/networkSecurityGroups",
-      "name": "networksecuritygroups",
+      "name": "[couchbase.generateResourceName('networksecuritygroups')]",
       "location": "[parameters('location')]",
       "properties": {
         "securityRules": [
@@ -202,12 +303,12 @@
       }
     },
     {
-      "name": "vnet",
+      "name": "[couchbase.generateResourceName('vnet')]",
       "type": "Microsoft.Network/virtualNetworks",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2020-05-01",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "Microsoft.Network/networkSecurityGroups/networksecuritygroups"
+        "[concat('Microsoft.Network/networkSecurityGroups/', couchbase.generateResourceName('networksecuritygroups'))]"
       ],
       "properties": {
         "addressSpace": {
@@ -217,12 +318,21 @@
         },
         "subnets": [
           {
-            "name": "subnet",
+            "name": "[couchbase.generateResourceName('subnet')]",
             "properties": {
               "addressPrefix": "10.0.0.0/16",
               "networkSecurityGroup": {
-                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'networksecuritygroups')]"
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', couchbase.generateResourceName('networksecuritygroups'))]"
               }
+            }
+          },
+          {
+            // This sets up an Azure Bastion Subnet for using Bastion
+            // https://docs.microsoft.com/en-us/azure/bastion/bastion-overview
+            // This is a service that will allow you to ssh into the servers if usePublicIps is false
+            "name": "AzureBastionSubnet",
+            "properties": {
+              "addressPrefix": "10.1.0.0/27"
             }
           }
         ]
@@ -230,18 +340,19 @@
     },
     {
       "type": "Microsoft.Compute/availabilitySets",
-      "name": "availabilityset",
+      "name": "[couchbase.generateResourceName('availabilityset')]",
       "apiVersion": "2015-06-15",
       "location": "[parameters('location')]",
       "properties": {
-        "platformFaultDomainCount": "1",
-        "platformUpdateDomainCount": "1"
+        "platformFaultDomainCount": 1,
+        "platformUpdateDomainCount": 1
       }
     },
     {
-      "apiVersion": "2015-06-15",
+      "condition": "[parameters('publicIpAddresses')]",
+      "apiVersion": "2020-05-01",
       "type": "Microsoft.Network/publicIPAddresses",
-      "name": "[concat('pip', copyindex())]",
+      "name": "[couchbase.generateResourceNameWithIndex(copyindex(), 'pip')]",
       "location": "[parameters('location')]",
       "copy": {
         "name": "publicIPLoop",
@@ -255,31 +366,36 @@
       }
     },
     {
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2020-05-01",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat('nic', copyindex())]",
+      "name": "[couchbase.generateResourceNameWithIndex(copyIndex(), 'nic')]",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "nicLoop",
         "count": "[parameters('serverNodeCount')]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/publicIPAddresses/pip', copyindex())]",
-        "Microsoft.Network/virtualNetworks/vnet"
+        "[concat('Microsoft.Network/virtualNetworks/', couchbase.generateResourceName('vnet'))]"
       ],
       "properties": {
         "ipConfigurations": [
           {
             "name": "ipconfig",
-            "properties": {
-              "privateIPAllocationMethod": "Dynamic",
-              "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('pip', copyindex()))]"
-              },
-              "subnet": {
-                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks','vnet'),'/subnets/subnet')]"
-              }
-            }
+            // This is how we determine whether to add the external IP address configuration to this nic
+            // If usePublicIps is true, we union the 'internal' variable and the result of the getExternalIpId custom method
+            // Otherwise, we only use the internal
+            "properties": "[
+                              if(
+                                  variables('usePublicIps'), 
+                                  union(
+                                    variables('internal'), 
+                                    couchbase.getExternalIpId(
+                                      couchbase.generateResourceNameWithIndex(copyindex(), 'pip')
+                                      )
+                                  ), 
+                                  variables('internal')
+                                )
+                          ]"
           }
         ]
       }
@@ -294,27 +410,27 @@
       }
     },
     {
-      "apiVersion": "2016-03-30",
+      "apiVersion": "2019-07-01",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat('server', copyindex())]",
+      "name": "[couchbase.generateResourceNameWithIndex(copyindex(), 'server')]",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "vmLoop",
         "count": "[parameters('serverNodeCount')]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', 'nic', copyindex())]",
+        "[concat('Microsoft.Network/networkInterfaces/', couchbase.generateResourceNameWithIndex(copyindex(), 'nic'))]",
         "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
       ],
       "properties": {
         "availabilitySet": {
-          "id": "[resourceId('Microsoft.Compute/availabilitySets', 'availabilityset')]"
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', couchbase.generateResourceName('availabilityset'))]"
         },
         "hardwareProfile": {
           "vmSize": "[parameters('vmSize')]"
         },
         "osProfile": {
-          "computerName": "[concat('server', copyindex())]",
+          "computerName": "[couchbase.generateResourceNameWithIndex(copyindex(), 'server')]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
@@ -322,13 +438,21 @@
           "imageReference": {
             "publisher": "Canonical",
             "offer": "UbuntuServer",
-            "sku": "14.04.5-LTS",
+            "sku": "18.04-LTS",
             "version": "latest"
           },
           "osDisk": {
             "name": "osdisk",
             "vhd": {
-              "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob, 'vhds/', 'server', copyindex(), '-osdisk.vhd')]"
+              "uri": "[concat(
+                          reference(
+                            concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')
+                          ), 
+                            providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob, 
+                            'vhds/', 
+                            couchbase.generateResourceNameWithIndex(copyindex(), 'server'),
+                            '-osdisk.vhd'
+                        )]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -339,7 +463,15 @@
               "diskSizeGB": "[parameters('serverDiskSize')]",
               "lun": 0,
               "vhd": {
-                "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob, 'vhds/', 'server', copyindex(), '-datadisk.vhd')]"
+                "uri": "[concat(
+                          reference(
+                            concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')
+                          ), 
+                            providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob, 
+                            'vhds/', 
+                            couchbase.generateResourceNameWithIndex(copyindex(), 'server'),
+                            '-datadisk.vhd'
+                        )]"
               },
               "createOption": "Empty"
             }
@@ -348,23 +480,28 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat('nic', copyindex()))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', couchbase.generateResourceNameWithIndex(copyindex(), 'nic'))]"
             }
           ]
         }
       }
     },
     {
-      "apiVersion": "2016-03-30",
+      "apiVersion": "2019-07-01",
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat('server', copyindex(), '/install')]",
+      /*For troubleshooting the script being executed see https://docs.microsoft.com/en-us/azure/virtual-machines/extensions/custom-script-linux#troubleshooting
+        Note:  You will need to be root on the box to see /var/lib/waagent/custom-script/download/0/stdout */
+      "name": "[concat(
+                        couchbase.generateResourceNameWithIndex(copyindex(), 'server'), 
+                        '/install'
+                      )]",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "vmLoop",
         "count": "[parameters('serverNodeCount')]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/server', copyindex())]"
+        "[concat('Microsoft.Compute/virtualMachines/', couchbase.generateResourceNameWithIndex(copyindex(), 'server'))]"
       ],
       "properties": {
         "publisher": "Microsoft.Azure.Extensions",
@@ -373,12 +510,47 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "[concat(variables('extensionUrl'), 'server.sh')]",
-            "[concat(variables('extensionUrl'), 'util.sh')]"
+            /*The following files are downloaded and made available for execution by this custom extension
+              the default is to pull the script files from the master branch of the github repo,  however 
+              it is possible to override this by passsing in the scriptsUri*/
+            "[concat(parameters('scriptsUri'), 'server.sh')]",
+            "[concat(parameters('scriptsUri'), 'util.sh')]"
           ]
         },
         "protectedSettings":{
-          "commandToExecute": "[concat('bash server.sh ', parameters('serverVersion'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', reference(concat('Microsoft.Network/publicIPAddresses/', 'pip0')).dnsSettings.fqdn)]"
+          /*Here we are executing the server.sh with the following parameters (index based):
+                  Server Version (Version of Couchbase to install)
+                  Admin Username (The admin username for both the OS and Couchbase Server)
+                  Admin Password (The admin password for both the OS and Couchbase Server)
+                  RallyNodeDNS (The IP or FQDN of the rally node (server0))
+                  NodeDns (The IP or FQDN of this specific node)
+          */
+          "commandToExecute": "[
+                                concat(
+                                  'bash server.sh ', 
+                                  parameters('serverVersion'),
+                                  ' ',
+                                  parameters('adminUsername'),
+                                  ' ',
+                                  parameters('adminPassword'),
+                                  ' ',
+                                  if (variables('usePublicIps'), 
+                                    reference(
+                                      concat('Microsoft.Network/publicIPAddresses/', couchbase.generateResourceNameWithIndex(0, 'pip'))
+                                    ).dnsSettings.fqdn,
+                                    reference(couchbase.generateResourceNameWithIndex(0, 'nic')).ipConfigurations[0].properties.privateIPAddress
+                                  ),
+                                  ' ',
+                                  if (variables('usePublicIps'),
+                                    reference(
+                                      concat('Microsoft.Network/publicIPAddresses/', couchbase.generateResourceNameWithIndex(copyindex(), 'pip'))
+                                    ).dnsSettings.fqdn,
+                                    reference(
+                                      couchbase.generateResourceNameWithIndex(copyindex(), 'nic')
+                                    ).ipConfigurations[0].properties.privateIPAddress
+                                  )
+                                )
+                              ]"
         }
       }
     }
@@ -386,7 +558,13 @@
   "outputs": {
     "serverAdminURL": {
       "type": "string",
-      "value": "[concat('http://', reference(concat('Microsoft.Network/publicIPAddresses/', 'pip0')).dnsSettings.fqdn, ':8091')]"
+      /*Output the FQDN of the public IP if public Ip's are enabled.  Return the private IP address of the nic0 (which is on the rally node)*/
+      "value": "[
+                  if (variables('usePublicIps'), 
+                    reference(concat('Microsoft.Network/publicIPAddresses/', couchbase.generateResourceNameWithIndex(0, 'pip'))).dnsSettings.fqdn,
+                    reference(couchbase.generateResourceNameWithIndex(0, 'nic')).ipConfigurations[0].properties.privateIPAddress
+                  )
+                ]"
     }
   }
 }

@@ -1,0 +1,27 @@
+{
+    "serverNodeCount": {
+      "value": 3
+    },
+    "serverDiskSize": {
+       "value": 32
+    },
+    "serverVersion": {
+      "value": "6.5.1"
+    },
+    "vmSize": {
+      "value": "Standard_DS3_v2"
+    },
+    "adminUsername": {
+      "value": "couchbase"
+    },
+    "adminPassword": {
+      "value": "foo123!"
+    },
+    "publicIpAddresses": {
+      "value": true
+    },
+    "scriptsUri": {
+        "value": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/stack/"
+    }
+  }
+  

@@ -267,10 +267,14 @@
             "name": "serverVersion",
             "type": "Microsoft.Common.DropDown",
             "label": "Server Version",
-            "defaultValue": "6.6.0",
+            "defaultValue": "6.6.1",
             "toolTip": "Server Version",
             "constraints": {
               "allowedValues": [
+                {
+                  "label": "6.6.1",
+                  "value": "6.6.1"
+                },
                 {
                   "label": "6.6.0",
                   "value": "6.6.0"
