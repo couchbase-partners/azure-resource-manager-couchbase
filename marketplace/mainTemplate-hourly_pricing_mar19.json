@@ -291,7 +291,7 @@
               "publisher": "couchbase",
               "offer": "couchbase-server-enterprise",
               "sku": "[parameters('license')]",
-              "version": "3.0.2"
+              "version": "18.4.0"
             },
             "dataDisks": [
               {
@@ -396,7 +396,7 @@
               "publisher": "couchbase",
               "offer": "couchbase-sync-gateway-enterprise",
               "sku": "[parameters('license')]",
-              "version": "3.0.2"
+              "version": "18.4.0"
             }
           },
           "osProfile": {
