@@ -56,6 +56,7 @@ echo "./couchbase-cli node-init \
   --node-init-index-path=/datadisk/index \
   --user=$adminUsername \
   --pass=$adminPassword"
+
 ./couchbase-cli node-init \
   --cluster="$nodeDNS" \
   --node-init-hostname="$nodeDNS" \
@@ -66,6 +67,7 @@ echo "./couchbase-cli node-init \
 
 if [[ $nodeIndex == "0" ]]
 then
+# TODO: would be nice to check vm memory and set total ram accordingly. There's been times that we've been burned by this static calculation.
   totalRAM=$(grep MemTotal /proc/meminfo | awk '{print $2}')
   dataRAM=$((50 * "$totalRAM" / 100000))
   indexRAM=$((15 * "$totalRAM" / 100000))
@@ -78,6 +80,7 @@ then
     --cluster-username=$adminUsername \
     --cluster-password=$adminPassword \
     --services=data,index,query,fts"
+
   ./couchbase-cli cluster-init \
     --cluster="$nodeDNS" \
     --cluster-ramsize="$dataRAM" \
@@ -88,7 +91,7 @@ then
 else
   echo "Running couchbase-cli server-add"
   output=""
-  while [[ $output != "Server $nodeDNS:8091 added" && ! $output = "Node is already part of cluster." ]]
+  while [[ $output != "Server $nodeDNS:8091 added" && ! $output == *"Node is already part of cluster."* ]]
   do
     output=$(./couchbase-cli server-add \
       --cluster="$rallyDNS" \

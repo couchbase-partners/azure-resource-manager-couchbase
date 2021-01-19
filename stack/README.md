@@ -19,7 +19,7 @@ optional -s parameter will prevent the removal of the resource group.  This oper
       "type": "int",
       "defaultValue": 3
     },
-    /* The size of the HDD */
+    /* The size of the HDD in GB */
     "serverDiskSize": {
       "type": "int",
       "defaultValue": 32

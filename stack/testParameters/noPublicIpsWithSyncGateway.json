@@ -18,14 +18,16 @@
       "value": "foo123!"
     },
     "publicIpAddresses": {
-      "value": true
+      "value": false
     },
     "scriptsUri": {
-<<<<<<< HEAD
         "value": "https://raw.githubusercontent.com/malscent/azure-resource-manager-couchbase/master/stack/"
-=======
-        "value": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/stack/"
->>>>>>> 3721ebe... Update to 18.04 image base, update to 6.6 and SGW 2.7.3
+    },
+    "syncGatewayVersion": {
+       "value": "2.7.3"
+    },
+    "syncGatewayNodeCount": {
+      "value": 3
     }
   }
   
