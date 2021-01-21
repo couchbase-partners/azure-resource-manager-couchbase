@@ -15,7 +15,17 @@
     // The version of Couchbase to install.  In format X.Y.Z
     "serverVersion": {
       "type": "string",
-      "defaultValue": "6.0.0"
+      "defaultValue": "6.6.1"
+    },
+    /* The number of sync gateway nodes to deploy */
+    "syncGatewayNodeCount": {
+      "type": "int",
+      "defaultValue": 0
+    },
+    /* The version of Sync Gateway to install */    
+    "syncGatewayVersion": {
+      "type": "string",
+      "defaultValue": "2.7.3"
     },
     // The size of the VM
     // Use:
@@ -364,6 +374,22 @@
           "domainNameLabel": "[concat('server', copyindex(), '-', variables('uniqueString'))]"
         }
       }
+    },{
+      "condition": "[parameters('publicIpAddresses')]",
+      "apiVersion": "2020-05-01",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[couchbase.generateResourceNameWithIndex(copyindex(), 'sync-gateway-pip')]",
+      "location": "[parameters('location')]",
+      "copy": {
+        "name": "sync-gatewayPublicIpLoop",
+        "count": "[parameters('syncGatewayNodeCount')]"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[concat('sync-gateway-server', copyindex(), '-', variables('uniqueString'))]"
+        }
+      }
     },
     {
       "apiVersion": "2020-05-01",
@@ -391,6 +417,41 @@
                                     variables('internal'), 
                                     couchbase.getExternalIpId(
                                       couchbase.generateResourceNameWithIndex(copyindex(), 'pip')
+                                      )
+                                  ), 
+                                  variables('internal')
+                                )
+                          ]"
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2020-05-01",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[couchbase.generateResourceNameWithIndex(copyIndex(), 'sync-gateway-nic')]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "sync-gateway-nic-loop",
+        "count": "[parameters('syncGatewayNodeCount')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/virtualNetworks/', couchbase.generateResourceName('vnet'))]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig",
+            // This is how we determine whether to add the external IP address configuration to this nic
+            // If usePublicIps is true, we union the 'internal' variable and the result of the getExternalIpId custom method
+            // Otherwise, we only use the internal
+            "properties": "[
+                              if(
+                                  variables('usePublicIps'), 
+                                  union(
+                                    variables('internal'), 
+                                    couchbase.getExternalIpId(
+                                      couchbase.generateResourceNameWithIndex(copyindex(), 'sync-gateway-pip')
                                       )
                                   ), 
                                   variables('internal')
@@ -549,6 +610,131 @@
                                       couchbase.generateResourceNameWithIndex(copyindex(), 'nic')
                                     ).ipConfigurations[0].properties.privateIPAddress
                                   )
+                                )
+                              ]"
+        }
+      }
+    },
+    {
+      "apiVersion": "2019-07-01",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[couchbase.generateResourceNameWithIndex(copyindex(), 'sync-gateway-server')]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "sync-gateway-loop",
+        "count": "[parameters('syncGatewayNodeCount')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', couchbase.generateResourceNameWithIndex(copyindex(), 'sync-gateway-nic'))]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
+      ],
+      "properties": {
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', couchbase.generateResourceName('availabilityset'))]"
+        },
+        "hardwareProfile": {
+          "vmSize": "[parameters('vmSize')]"
+        },
+        "osProfile": {
+          "computerName": "[couchbase.generateResourceNameWithIndex(copyindex(), 'sync-gateway-server')]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "Canonical",
+            "offer": "UbuntuServer",
+            "sku": "18.04-LTS",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "osdisk",
+            "vhd": {
+              "uri": "[concat(
+                          reference(
+                            concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')
+                          ), 
+                            providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob, 
+                            'vhds/', 
+                            couchbase.generateResourceNameWithIndex(copyindex(), 'sync-gateway-server'),
+                            '-osdisk.vhd'
+                        )]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          },
+          "dataDisks": [
+            {
+              "name": "datadisk",
+              "diskSizeGB": "[parameters('serverDiskSize')]",
+              "lun": 0,
+              "vhd": {
+                "uri": "[concat(
+                          reference(
+                            concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')
+                          ), 
+                            providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob, 
+                            'vhds/', 
+                            couchbase.generateResourceNameWithIndex(copyindex(), 'sync-gateway-server'),
+                            '-datadisk.vhd'
+                        )]"
+              },
+              "createOption": "Empty"
+            }
+          ]
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', couchbase.generateResourceNameWithIndex(copyindex(), 'sync-gateway-nic'))]"
+            }
+          ]
+        }
+      }
+    },{
+      "apiVersion": "2019-07-01",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      /*For troubleshooting the script being executed see https://docs.microsoft.com/en-us/azure/virtual-machines/extensions/custom-script-linux#troubleshooting
+        Note:  You will need to be root on the box to see /var/lib/waagent/custom-script/download/0/stdout */
+      "name": "[concat(
+                        couchbase.generateResourceNameWithIndex(copyindex(), 'sync-gateway-server'), 
+                        '/install'
+                      )]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "sync-gateway-loop",
+        "count": "[parameters('syncGatewayNodeCount')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', couchbase.generateResourceNameWithIndex(copyindex(), 'sync-gateway-server'))]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Azure.Extensions",
+        "type": "CustomScript",
+        "typeHandlerVersion": "2.0",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "fileUris": [
+            /*The following files are downloaded and made available for execution by this custom extension
+              the default is to pull the script files from the master branch of the github repo,  however 
+              it is possible to override this by passsing in the scriptsUri*/
+            "[concat(parameters('scriptsUri'), 'syncGateway.sh')]",
+            "[concat(parameters('scriptsUri'), 'util.sh')]"
+          ]
+        },
+        "protectedSettings":{
+          /*Here we are executing the server.sh with the following parameters (index based):
+                  Server Version (Version of Couchbase to install)
+                  Admin Username (The admin username for both the OS and Couchbase Server)
+                  Admin Password (The admin password for both the OS and Couchbase Server)
+                  RallyNodeDNS (The IP or FQDN of the rally node (server0))
+                  NodeDns (The IP or FQDN of this specific node)
+          */
+          "commandToExecute": "[
+                                concat(
+                                  'bash syncGateway.sh ', 
+                                  parameters('syncGatewayVersion')
+
                                 )
                               ]"
         }
