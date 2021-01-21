@@ -734,6 +734,7 @@
                                 concat(
                                   'bash syncGateway.sh ', 
                                   parameters('syncGatewayVersion')
+
                                 )
                               ]"
         }

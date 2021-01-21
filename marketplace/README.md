@@ -22,6 +22,7 @@ Documentation on the process is here.  It is incomplete at best.
 
 You need the url or urlAlias for the image you want to use.  
 
+
 ~~az vm image list-skus --publish Canonical --location westus --offer UbuntuServer~~
 
 use 
