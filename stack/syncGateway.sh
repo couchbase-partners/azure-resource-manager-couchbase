@@ -20,6 +20,7 @@ adjustTCPKeepalive
 
 echo "Configuring Couchbase Sync Gateway..."
 file="/home/sync_gateway/sync_gateway.json"
+#TODO - Create bucket and connect sync gateway too it?
 echo '
 {
   "interface": "0.0.0.0:4984",
