@@ -15,6 +15,7 @@ echo adminPassword \'"$adminPassword"\'
 echo rallyFQDN \'"$rallyFQDN"\'
 echo nodeDNS \'"$nodeDNS"\'
 
+
 echo "Installing prerequisites..."
 apt-get update
 apt-get -y install python-httplib2
@@ -23,6 +24,7 @@ apt-get -y install jq
 echo "Installing Couchbase Server..."
 wget http://packages.couchbase.com/releases/"${version}"/couchbase-server-enterprise_"${version}"-ubuntu18.04_amd64.deb
 dpkg -i couchbase-server-enterprise_"${version}"-ubuntu18.04_amd64.deb
+
 apt-get update
 apt-get -y install couchbase-server
 
@@ -37,6 +39,7 @@ adjustTCPKeepalive
 echo "Configuring Couchbase Server..."
 
 nodeIndex=$(hostname | tail -c -2)
+
 #nodeDNS=`echo $rallyFQDN | sed s/server0-/server${nodeIndex}-/`
 rallyDNS=${rallyFQDN}
 
@@ -50,6 +53,13 @@ cd /opt/couchbase/bin/ || { echo "Failed to change to couchbase directory."; exi
 
 echo "Running couchbase-cli node-init"
 echo "./couchbase-cli node-init \
+  --cluster=$nodeDNS \
+  --node-init-hostname=$nodeDNS \
+  --node-init-data-path=/datadisk/data \
+  --node-init-index-path=/datadisk/index \
+  --user=$adminUsername \
+  --pass=$adminPassword"
+./couchbase-cli node-init \
   --cluster=$nodeDNS \
   --node-init-hostname=$nodeDNS \
   --node-init-data-path=/datadisk/data \
@@ -74,6 +84,13 @@ then
 
   echo "Running couchbase-cli cluster-init"
   echo "./couchbase-cli cluster-init \
+    --cluster=$nodeDNS \
+    --cluster-ramsize=$dataRAM \
+    --cluster-index-ramsize=$indexRAM \
+    --cluster-username=$adminUsername \
+    --cluster-password=$adminPassword \
+    --services=data,index,query,fts"
+  ./couchbase-cli cluster-init \
     --cluster=$nodeDNS \
     --cluster-ramsize=$dataRAM \
     --cluster-index-ramsize=$indexRAM \
