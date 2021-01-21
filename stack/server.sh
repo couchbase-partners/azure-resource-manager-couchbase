@@ -60,14 +60,6 @@ echo "./couchbase-cli node-init \
   --user=$adminUsername \
   --pass=$adminPassword"
 ./couchbase-cli node-init \
-  --cluster=$nodeDNS \
-  --node-init-hostname=$nodeDNS \
-  --node-init-data-path=/datadisk/data \
-  --node-init-index-path=/datadisk/index \
-  --user=$adminUsername \
-  --pass=$adminPassword"
-
-./couchbase-cli node-init \
   --cluster="$nodeDNS" \
   --node-init-hostname="$nodeDNS" \
   --node-init-data-path=/datadisk/data \
@@ -90,14 +82,6 @@ then
     --cluster-username=$adminUsername \
     --cluster-password=$adminPassword \
     --services=data,index,query,fts"
-  ./couchbase-cli cluster-init \
-    --cluster=$nodeDNS \
-    --cluster-ramsize=$dataRAM \
-    --cluster-index-ramsize=$indexRAM \
-    --cluster-username=$adminUsername \
-    --cluster-password=$adminPassword \
-    --services=data,index,query,fts"
-
   ./couchbase-cli cluster-init \
     --cluster="$nodeDNS" \
     --cluster-ramsize="$dataRAM" \
