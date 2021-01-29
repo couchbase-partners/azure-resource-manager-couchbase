@@ -1,0 +1,38 @@
+{
+    "serverNodeCount": {
+      "value": "32"
+    },
+    "serverDiskSize": {
+      "value": "30"
+    },
+    "serverVersion": {
+      "value": "6.6.1"
+    },
+    "syncGatewayNodeCount": {
+      "value": "0"
+    },
+    "syncGatewayVersion": {
+      "value": "2.7.3"
+    },
+    "vmSize": {
+      "value": "Standard_DS3_v2"
+    },
+    "adminUsername": {
+      "value": "couchbase"
+    },
+    "adminPassword": {
+      "value": "Foo123!"
+    },
+    "location": {
+      "value": "useast1"
+    },
+    "license": {
+      "value": "byol_2019"
+    },
+    "_artifactsLocation": {
+      "value": "string"
+    },
+    "_artifactsLocationSasToken": {
+      "value": ""
+    }
+  }

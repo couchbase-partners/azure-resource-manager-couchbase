@@ -1,0 +1,38 @@
+{
+    "serverNodeCount": {
+      "value": 3
+    },
+    "serverDiskSize": {
+      "value": 30
+    },
+    "serverVersion": {
+      "value": "6.6.1"
+    },
+    "syncGatewayNodeCount": {
+      "value": 1
+    },
+    "syncGatewayVersion": {
+      "value": "2.7.3"
+    },
+    "vmSize": {
+      "value": "Standard_DS3_v2"
+    },
+    "adminUsername": {
+      "value": "couchbase"
+    },
+    "adminPassword": {
+      "value": "Foo123!"
+    },
+    "location": {
+      "value": "eastus"
+    },
+    "license": {
+      "value": "byol_2019"
+    },
+    "_artifactsLocation": {
+      "value": "https://raw.githubusercontent.com/malscent/azure-resource-manager-couchbase/master/scripts/"
+    },
+    "_artifactsLocationSasToken": {
+      "value": ""
+    }
+  }
