@@ -28,6 +28,11 @@ if [[ -f "$FILE" ]]; then
   PID=$(lsof -t $DB)
   echo "DB locked by $PID"
   kill -9 "${PID##p}"
+  if ps -p "${PID##p}" > /dev/null
+  then
+    __log_error "${PID} was not successfully killed, Installation cannot continue"
+    exit 1
+  fi
   rm $DB
   dpkg --configure -a
 fi

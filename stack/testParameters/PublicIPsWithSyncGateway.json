@@ -21,7 +21,7 @@
       "value": true
     },
     "scriptsUri": {
-        "value": "https://raw.githubusercontent.com/malscent/azure-resource-manager-couchbase/master/stack/"
+        "value": "https://raw.githubusercontent.com/couchbase-partners/azure-resource-manager-couchbase/master/stack/"
     },
     "syncGatewayVersion": {
        "value": "2.7.3"
