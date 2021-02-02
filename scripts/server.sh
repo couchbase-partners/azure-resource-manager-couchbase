@@ -16,6 +16,28 @@ echo adminPassword \'$adminPassword\'
 echo uniqueString \'$uniqueString\'
 echo location \'$location\'
 
+FILE="/var/lib/dpkg/lock-frontend"
+DB="/var/lib/dpkg/lock"
+if [[ -f "$FILE" ]]; then
+  PID=$(lsof -t $FILE)
+  echo "lock-frontend locked by $PID"
+  echo "Killing $PID"
+  kill -9 "${PID##p}"
+  echo "$PID Killed"
+  rm $FILE
+  PID=$(lsof -t $DB)
+  echo "DB locked by $PID"
+  kill -9 "${PID##p}"
+  if ps -p "${PID##p}" > /dev/null
+  then
+    __log_error "${PID} was not successfully killed, Installation cannot continue"
+    exit 1
+  fi
+  rm $DB
+  dpkg --configure -a
+fi
+
+
 echo "Installing prerequisites..."
 apt-get update
 apt-get -y install python-httplib2
@@ -43,15 +65,16 @@ echo "Configuring Couchbase Server..."
 nodeIndex="null"
 while [[ $nodeIndex == "null" ]]
 do
-  nodeIndex=`curl -H Metadata:true "http://169.254.169.254/metadata/instance/compute?api-version=2017-04-02" \
+  nodeIndex=$(curl -H Metadata:true "http://169.254.169.254/metadata/instance/compute?api-version=2017-04-02" \
     | jq ".name" \
     | sed 's/.*_//' \
-    | sed 's/"//'`
+    | sed 's/"//')
 done
 
 nodeDNS='vm'$nodeIndex'.server-'$uniqueString'.'$location'.cloudapp.azure.com'
 rallyDNS='vm0.server-'$uniqueString'.'$location'.cloudapp.azure.com'
-
+echo "Node DNS:  ${nodeDNS}"
+echo "Rally DNS: ${rallyDNS}"
 echo "Adding an entry to /etc/hosts to simulate split brain DNS..."
 echo "
 # Simulate split brain DNS for Couchbase
@@ -86,8 +109,8 @@ echo "Running couchbase-cli node-init"
   --node-init-data-path=/datadisk/data \
   --node-init-index-path=/datadisk/index \
   --node-init-analytics-path=/datadisk/analytics \
-  -u=$adminUsername \
-  -p=$adminPassword
+  --user=$adminUsername \
+  --pass=$adminPassword
 
 if [[ $nodeIndex == "0" ]]
 then
@@ -109,16 +132,16 @@ then
 else
   echo "Running couchbase-cli server-add"
   output=""
-  while [[ ! "$output" =~ "SUCCESS" ]]
+  while [[ $output != "Server $nodeDNS:8091 added" && ! $output == *"Node is already part of cluster."* ]]
   do
-    output=`./couchbase-cli server-add \
+    output=$(./couchbase-cli server-add \
       --cluster=$rallyDNS \
-      -u=$adminUsername \
-      -p=$adminPassword \
+      --username=$adminUsername \
+      --password=$adminPassword \
       --server-add=$nodeDNS \
       --server-add-username=$adminUsername \
       --server-add-password=$adminPassword \
-      --services=$services`
+      --services=$services)
     echo server-add output \'$output\'
     sleep 10
   done
@@ -127,10 +150,10 @@ else
   output=""
   while [[ ! $output =~ "SUCCESS" ]]
   do
-    output=`./couchbase-cli rebalance \
+    output=$(./couchbase-cli rebalance \
       --cluster=$rallyDNS \
-      -u=$adminUsername \
-      -p=$adminPassword`
+      --username=$adminUsername \
+      --password=$adminPassword)
     echo rebalance output \'$output\'
     sleep 10
   done
